@@ -1,0 +1,213 @@
+<ngx-spinner [fullScreen]="true" type="square-jelly-box" size="medium">
+  <p class="loading">Loading data...</p>
+</ngx-spinner>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <ejs-grid
+          #grid
+          [dataSource]="Data"
+          allowPaging="true"
+          gridLines="Both"
+          (created)="createdUsers()"
+          (dataBound)="dataBound()"
+          (actionBegin)="actionBegin($event)"
+          [toolbar]="toolbarAccount"
+          [pageSettings]="pageSettings"
+          allowExcelExport="true"
+          (toolbarClick)="toolbarClick($event)"
+          [editSettings]="editSettings"
+        >
+          <e-columns>
+
+            <e-column field="ID" width="50" isPrimaryKey="true" headerText="#">
+
+              <ng-template #template let-data>
+                {{ NO(data.index) }}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+
+              </ng-template>
+            </e-column>
+
+            <e-column field="file_Name" width="150" isPrimaryKey="true" textAlign="Center" headerText="Username">
+              <ng-template #headerTemplate let-data>
+                File
+              </ng-template>
+              <ng-template #template let-data>
+                <button (click)='DownloadExcel(data)' ejs-button cssClass="e-info"><i class="fa fa-file-excel-o" ></i></button>
+              </ng-template>
+            </e-column>
+
+            <e-column field="created_By_Name" isPrimaryKey="true" width="200" textAlign="Center" headerText="Account">
+              <ng-template #headerTemplate let-data>
+                Sender
+              </ng-template>
+            </e-column>
+
+            <e-column field="" isPrimaryKey="true" textAlign="Center" headerText="Status" >
+              <ng-template #headerTemplate let-data>
+                STATUS
+              </ng-template>
+              <ng-template #template let-data>
+
+                <ng-container *ngIf="data.pending_Status; else elseTemplate">
+                 <button type="button" class="btn btn-pill btn-block btn-warning">Pending</button>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ng-container *ngIf="data.complete_Status; else elseBlock">
+                    <button type="button" class="btn btn-pill btn-block btn-success">Approved</button>
+                  </ng-container>
+                  <ng-template #elseBlock>
+                    <button type="button" class="btn btn-pill btn-block btn-danger">Rejected</button>
+                  </ng-template>
+                </ng-template>
+
+
+              </ng-template>
+              <ng-template #editTemplate let-data>
+              </ng-template>
+            </e-column>
+
+             <e-column field="" isPrimaryKey="true" textAlign="Center" headerText=" Date Sent" >
+              <ng-template #headerTemplate let-data>
+                Date Sent
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.created_Date | date: "MM/dd/yyyy, HH:mm a"}}
+              </ng-template>
+              <ng-template #editTemplate let-data> </ng-template>
+            </e-column>
+
+
+            <e-column field="" isPrimaryKey="true"  textAlign="Center" headerText="Account">
+              <ng-template #headerTemplate let-data>
+                Signer/Date Signed
+              </ng-template>
+              <ng-template #template let-data>
+                <!-- detail btn -->
+                <ng-container *ngIf="data.created_By === userID ; else elseTemplate">
+
+                  <button ejs-button (click)='Timelines(data)' cssClass="e-info"><i class="fa fa-eye"></i></button>
+                  <span style="color: transparent;"> | </span>
+                  <button ejs-button cssClass="e-danger" (click)='delete(data)'><i class="fa fa-trash"></i></button>
+
+                </ng-container>
+                <ng-template #elseTemplate>
+
+                  <button ejs-button (click)='Approve(data)' cssClass="e-info"><i class="fa fa-check-circle" aria-hidden="true"></i> Approve</button>
+                  <span style="color: transparent;"> | </span>
+                  <button ejs-button (click)='Reject(data)' cssClass="e-danger"><i class="fa fa-times" aria-hidden="true"></i> Reject</button>
+
+                </ng-template>
+
+              </ng-template>
+            </e-column>
+
+          </e-columns>
+        </ejs-grid>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- List File Download -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title"><i class="fa fa-upload" aria-hidden="true"></i> Upload File</h4>
+      <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <file-pond #myPondUpload
+        label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
+        allow-multiple="true"
+        allowFileSizeValidation="true"
+        maxFileSize="5MB"
+        labelMaxFileSizeExceeded="File is too large"
+        [files]="file"
+        [options]="pondOptions"
+        (onprocessfile)="handleFileProcess($event)"
+        (onaddfile)="pondHandleAddFile($event)"
+        (onremovefile)="pondHandleRemoveFile($event)">
+      </file-pond>
+    <div class="row">
+    </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="close()">Close</button>
+      <button type="submit" (click)='Upload()' class="btn btn-primary">Upload</button>
+    </div>
+
+
+  </ng-template>
+<!-- end List File Download-->
+
+
+<!-- Preview File -->
+  <ng-template #previewFile let-modal>
+    <ngx-doc-viewer [url]="doc" [viewer]="viewer" style="width:100%;height:80vh;"></ngx-doc-viewer>
+   <!-- <div class="modal-header">
+      <h4 class="modal-title"><i class="fa fa-upload" aria-hidden="true"></i> Preview File</h4>
+      <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+      </div>
+    </div> -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="close()">Close</button>
+      <button type="submit" (click)='Upload()' class="btn btn-primary">DownLoad</button>
+    </div>
+  </ng-template>
+<!-- end Preview File-->
+
+<!-- Time Line -->
+  <ng-template #timeline let-modal>
+
+    <div class="modal-body">
+       <div class="vtimeline row">
+          <div class="tltitle">
+            <i class="fa fa-lightbulb-o" aria-hidden="true"></i><b>Time Line:</b>
+          </div>
+          <ul>
+            <li *ngFor="let item of TimelineData; let i=index" >
+              <span *ngIf="item.signed_Time != null" > {{item.role_Name}} - {{item.userName}} {{item.timeLine_Action}} -  {{item.signed_Time | date:'yyyy/MM/dd - HH:mm:ss a'}}  </span>
+              <span *ngIf="item.approve_Time != null" > {{item.role_Name}} - {{item.userName}} {{item.timeLine_Action}} -  {{item.approve_Time | date:'yyyy/MM/dd - HH:mm:ss a'}} </span>
+              <span *ngIf="item.reject_Time != null" > {{item.role_Name}} - {{item.userName}} {{item.timeLine_Action}} -  {{item.reject_Time | date:'yyyy/MM/dd - HH:mm:ss a' }} </span>
+              <hr>
+            </li>
+          </ul>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="close()">Close</button>
+    </div>
+  </ng-template>
+<!-- end Time Line-->
+
+<!-- reject -->
+  <ng-template #reject let-modal>
+   <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+       <div class="form-group green-border-focus">
+        <label for="exampleFormControlTextarea5">Enter content here</label>
+        <textarea [(ngModel)]="contents" name="contents"  class="form-control" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="close()">Close</button>
+      <button type="submit" (click)='Confirm()' class="btn btn-primary">Confirm</button>
+    </div>
+  </ng-template>
+<!-- end reject-->
