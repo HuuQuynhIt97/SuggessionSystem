@@ -22,7 +22,7 @@ namespace Suggession.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
-            return Ok(await _service.GetAllAsync());
+            return Ok(await _service.GetAll());
         }
 
         //[HttpPost]

@@ -8,7 +8,7 @@ import { PlanComponent } from './plan/plan.component';
 import { PerformanceService } from './../../../../_core/_service/performance.service';
 import { Subscription } from 'rxjs';
 import { AccountGroupService } from './../../../../_core/_service/account.group.service';
-import { Component, OnInit, TemplateRef, ViewChild, QueryList, ViewChildren, OnDestroy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, QueryList, ViewChildren, OnDestroy, ElementRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { ObjectiveService } from 'src/app/_core/_service/objective.service';
@@ -151,7 +151,9 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   changeTab(item) {
     this.spinner.show()
-    console.log(item.name);
+    this.tabData.forEach(element => {
+      element.name == item.name ? element.statues = true : element.statues =false
+    });
     switch (item.name) {
       case StatusCode.Proposal:
         this.getTabProposal()
@@ -537,6 +539,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   getAllTab(){
     this.accountGroupService.getAllTab().subscribe(res => {
+
       if(this.accountGroupText === StatusCode.Spokesman) {
         this.tabData = res.filter(x => x.name !== StatusCode.Erick)
       }

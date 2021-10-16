@@ -12,6 +12,7 @@ namespace Suggession.Services
 {
     public interface ITabService: IServiceBase<Tab, TabDto>
     {
+        Task<object> GetAll();
     }
     public class TabService : ServiceBase<Tab, TabDto>, ITabService
     {
@@ -32,5 +33,25 @@ namespace Suggession.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
+
+        public async Task<object> GetAll()
+        {
+            var data = _repo.FindAll().Select(x => new TabDto
+            { 
+                Id = x.Id,
+                Name = x.Name,
+                Statues = false
+            }).ToList();
+            foreach (var item in data)
+            {
+                if (item.Name == "Proposal")
+                {
+                    item.Statues = true;
+                }
+            }
+            return data;
+        }
     }
+
+   
 }

@@ -3,17 +3,30 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
+        <div style="display: flex;">
+          <div id='pending' *ngFor="let item of tabData; let i=index">
+            <button *ngIf="item.statues" [style.background-color]="'red'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
+            <button *ngIf="!item.statues" [style.background-color]="'#20a8d8'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
+          </div>
+        </div>
 
-        <ejs-toolbar #toolbarTodo>
+        <!-- <ejs-toolbar #toolbarTodo>
           <e-items>
             <e-item id='pending' *ngFor="let item of tabData; let i=index">
               <ng-template #template>
-                <button type="button"  (click)="changeTab(item)" class="myButton btn btn-primary"  >{{ item.name}} </button>
+                <ng-container *ngIf="item.name == 'Proposal'; else elseTemplate">
+                  <button id='proposal' type="button" #buttonRef (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
+
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <button  type="button" #buttonRef (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
+                </ng-template>
+
               </ng-template>
             </e-item>
 
           </e-items>
-        </ejs-toolbar>
+        </ejs-toolbar> -->
       </div>
       <div class="card-body table-responsive p-0">
         <ejs-toolbar #toolbarTodo>
