@@ -43,6 +43,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   factId: number;
   centerId: number;
   deptId: number;
+  public maximumSelectionLength: number = 1;
   accounts: any[];
   dataOclv3: any;
   dataOclv4: any;

@@ -62,7 +62,7 @@
                 {{data.accountGroupText}}
               </ng-template>
               <ng-template #editTemplate let-data>
-                <ejs-multiselect [(ngModel)]='accountGroupItem' [fields]="fields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select months of the Year' [dataSource]='accountGroupData'></ejs-multiselect>
+                <ejs-multiselect [maximumSelectionLength]='maximumSelectionLength' [(ngModel)]='accountGroupItem' [fields]="fields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select account group' [dataSource]='accountGroupData'></ejs-multiselect>
               </ng-template>
             </e-column>
 
