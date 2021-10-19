@@ -24,6 +24,7 @@ namespace Suggession.Services
         Task<object> TabProposalGetAll();
         Task<object> GetIdeaHisById(int id);
         Task<object> TabProcessingGetAll();
+        Task<bool> UploadFile(IdeaDto entity);
         Task<object> TabErickGetAll();
         Task<object> TabCloseGetAll();
         Task<bool> Delete(int id);
@@ -40,7 +41,6 @@ namespace Suggession.Services
     {
         private readonly IRepositoryBase<Idea> _repo;
         private readonly IRepositoryBase<IdeaHistory> _repoIdeaHis;
-        private readonly IRepositoryBase<Policy> _repoPolicy;
         private readonly IRepositoryBase<UploadFile> _repoUp;
         private readonly IRepositoryBase<Models.Status> _repoStatus;
         private readonly IRepositoryBase<OCPolicy> _repoOcPolicy;
@@ -56,7 +56,6 @@ namespace Suggession.Services
             IRepositoryBase<Idea> repo,
             IRepositoryBase<UploadFile> repoUp,
             IRepositoryBase<IdeaHistory> repoIdeaHis,
-            IRepositoryBase<Policy> repoPolicy,
             IRepositoryBase<Models.Status> repoStatus,
             IRepositoryBase<Types> repoType,
             IRepositoryBase<Account> repoAc,
@@ -71,7 +70,6 @@ namespace Suggession.Services
         {
             _repo = repo;
             _repoUp = repoUp;
-            _repoPolicy = repoPolicy;
             _repoIdeaHis = repoIdeaHis;
             _repoStatus = repoStatus;
             _repoOcPolicy = repoOcPolicy;
@@ -83,7 +81,43 @@ namespace Suggession.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
+        public async Task<bool> UploadFile(IdeaDto entity)
+        {
+            var ListUpload = new List<UploadFile>();
+            var idea = _mapper.Map<Idea>(entity);
+            _repo.Add(idea);
+            await _unitOfWork.SaveChangeAsync();
 
+            var ideaHist = new IdeaHistory();
+            ideaHist.IdeaID = idea.Id;
+            ideaHist.InsertBy = entity.CreatedBy;
+            ideaHist.Status = entity.Status;
+            ideaHist.Isshow = true;
+            ideaHist.Comment = "Issue: " + entity.Issue + "\n" + "Suggession: " + entity.Suggession;
+            _repoIdeaHis.Add(ideaHist);
+
+            await _unitOfWork.SaveChangeAsync();
+            foreach (var item in entity.File)
+            {
+                ListUpload.Add(new UploadFile
+                {
+                    Path = item.Path,
+                    IdealID = ideaHist.Id
+                });
+            }
+            try
+            {
+                _repoUp.AddRange(ListUpload);
+                await _unitOfWork.SaveChangeAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw;
+            }
+            throw new NotImplementedException();
+        }
         public Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
@@ -94,14 +128,16 @@ namespace Suggession.Services
         {
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
-            var data = await _repo.FindAll(x => x.CreatedBy == accountId || x.ReceiveID == accountId)
-            .Where(x =>
-            x.Status == Suggession.Constants.Status.Apply ||
-            x.Status == Suggession.Constants.Status.NA ||
-            x.Status == Suggession.Constants.Status.Reject ||
-            x.Status == Suggession.Constants.Status.Terminate ||
-            x.Status == Suggession.Constants.Status.Complete
-            ).Select(x => new IdeaDto {
+            var data = await _repo.FindAll(
+            //    x => x.CreatedBy == accountId || x.ReceiveID == accountId)
+            //.Where(x =>
+            //x.Status == Suggession.Constants.Status.Apply ||
+            //x.Status == Suggession.Constants.Status.NA ||
+            //x.Status == Suggession.Constants.Status.Reject ||
+            //x.Status == Suggession.Constants.Status.Terminate ||
+            //x.Status == Suggession.Constants.Status.Complete
+            )
+            .Select(x => new IdeaDto {
                 Id = x.Id,
                 SendID = x.SendID,
                 ReceiveID = x.ReceiveID,

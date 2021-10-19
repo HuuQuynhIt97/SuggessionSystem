@@ -34,13 +34,6 @@ namespace Suggession.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
-        public override async Task<List<AccountGroupPeriodDto>> GetAllAsync()
-        {
-            return await _repo.FindAll()
-                .Include(x=> x.Period)
-                .Include(x=> x.AccountGroup)
-                .ProjectTo<AccountGroupPeriodDto>(_configMapper).ToListAsync();
-
-        }
+        
     }
 }

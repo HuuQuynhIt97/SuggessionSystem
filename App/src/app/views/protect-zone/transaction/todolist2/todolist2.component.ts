@@ -22,7 +22,7 @@ import { DatePipe } from '@angular/common';
 import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { NgTemplateNameDirective } from '../ng-template-name.directive';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { StatusCode } from 'src/app/_core/enum/JobType';
@@ -109,7 +109,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     multiple: true,
     // acceptedFileTypes: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     server: {
-      process: this.env.apiUrl + 'todolist/SaveFile',
+      process: this.env.apiUrl + 'Idea/SaveFile',
       revert: null
     }
   }
@@ -119,7 +119,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   toId: number = 0 ;
   titleText: string
   issueText: string
-  commentText: string
+  commentText: string = ""
   suggessionText: string
   proposal: boolean = true
   files: any;
@@ -132,6 +132,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   toggle = true;
   status = 'Enable';
   statusName: any;
+  tab: string;
   constructor(
     private service: ObjectiveService,
     private router: Router,
@@ -144,6 +145,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     private performanceService: PerformanceService,
     public env: EnvService,
+    private route: ActivatedRoute,
     private spinner: NgxSpinnerService
   ) {
   }
@@ -155,6 +157,45 @@ export class Todolist2Component implements OnInit, OnDestroy {
       element.name == item.name ? element.statues = true : element.statues =false
     });
     switch (item.name) {
+      case StatusCode.Proposal:
+        this.tab = "Proposal";
+        this.router.navigate([`/transaction/todolist2/${this.tab}`]);
+        this.getTabProposal()
+        this.proposal = true
+        break;
+      case StatusCode.Processing:
+        this.tab = "Processing";
+        this.router.navigate([`/transaction/todolist2/${this.tab}`]);
+        this.getTabProcessing()
+        this.proposal = false
+        break;
+      case StatusCode.Erick:
+        this.tab = "Erick";
+        this.router.navigate([`/transaction/todolist2/${this.tab}`]);
+        this.getTabErick()
+        this.proposal = false
+        break;
+      case StatusCode.Close:
+        this.tab = "Close";
+        this.router.navigate([`/transaction/todolist2/${this.tab}`]);
+        this.getTabClose()
+        this.proposal = false
+        break;
+      default:
+        break;
+    }
+  }
+  ngOnInit(): void {
+    this.tab = this.route.snapshot.params.tab || "Proposal";
+    console.log(this.tab);
+    this.proposal = true
+    this.accountGroupText = JSON.parse(localStorage.getItem('user')).accountGroupText;
+
+
+    this.getAllTab();
+    this.spinner.show()
+    // this.getTabProposal()
+    switch (this.tab) {
       case StatusCode.Proposal:
         this.getTabProposal()
         this.proposal = true
@@ -174,13 +215,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
       default:
         break;
     }
-  }
-  ngOnInit(): void {
-    this.proposal = true
-    this.accountGroupText = JSON.parse(localStorage.getItem('user')).accountGroupText;
-    this.getAllTab();
-    this.spinner.show()
-    this.getTabProposal()
     if (localStorage.getItem('user') !== null) {
       this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
       console.log(this.userId);
@@ -254,6 +288,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.alertify.success("Update Successfully")
       this.modalReference.close()
       this.file = []
+      this.commentText = ""
       this.getTabProcessing()
     })
   }
@@ -270,6 +305,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.alertify.success("Successfully")
       this.modalReference.close()
       this.file = []
+      this.commentText = ""
       this.getTabErick()
     })
   }
@@ -285,6 +321,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.alertify.success("Update Successfully")
       this.modalReference.close()
       this.file = []
+      this.commentText = ""
       this.getTabErick()
     })
   }
@@ -299,6 +336,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.todolist2Service.terminate(formData).subscribe(res => {
       this.alertify.success("Successfully")
       this.file = []
+      this.commentText = ""
       this.getTabProcessing()
       this.modalReference.close()
     })
@@ -314,6 +352,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.todolist2Service.complete(formData).subscribe(res => {
       this.alertify.success("Successfully")
       this.file = []
+      this.commentText = ""
       this.getTabProcessing()
       this.modalReference.close()
     })
@@ -329,6 +368,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.todolist2Service.reject(formData).subscribe(res => {
       this.alertify.success("Successfully")
       this.file = []
+      this.commentText = ""
       this.getTabProposal()
       this.modalReference.close()
     })
@@ -345,6 +385,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.todolist2Service.satisfied(formData).subscribe(res => {
       this.alertify.success("Successfully")
       this.file = []
+      this.commentText = ""
       this.getTabProposal()
       this.modalReference.close()
     })
@@ -361,6 +402,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.todolist2Service.dissatisfied(formData).subscribe(res => {
       this.alertify.success("Successfully")
       this.file = []
+      this.commentText = ""
       this.getTabProposal()
       this.modalReference.close()
     })
@@ -373,9 +415,10 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.files = files.map(x=> {
         return {
           name: x.name,
-          path: this.env.fileUrl + x.path
+          path: this.env.fileUrl.replace('/api/', '') + x.path
         }
       });
+      console.log(this.files);
     })
   }
   getIdeaHisById(id) {
@@ -408,7 +451,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
   getTabProposal() {
     this.todolist2Service.getTabProposal().subscribe((res: any) => {
       console.log('getTabProposal',res);
-      this.data = res
+      if(this.accountGroupText === StatusCode.Spokesman) {
+        this.data = res.filter(x => x.receiveID === this.userId)
+      }
+      if(this.accountGroupText === StatusCode.Propersal) {
+        this.data = res.filter(x => x.createdBy === this.userId)
+      }
+
+      if(this.accountGroupText === StatusCode.Erick) {
+        this.data = res
+      }
+      // this.data = res
       this.spinner.hide()
     })
   }
@@ -507,6 +560,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   showModalDetails(modal){
     this.modalReference = this.modalService.open(modal, { size: 'xxl'});
+    // event click out side modal and close model
+    this.modalReference.result.then((result) => {
+      console.log(result);
+      this.commentText = ""
+      this.file = []
+    }, (reason) => {
+      console.log(reason);
+      this.commentText = ""
+      this.file = []
+    });
+    // end event
   }
   Upload() {
 
@@ -539,7 +603,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   getAllTab(){
     this.accountGroupService.getAllTab().subscribe(res => {
-
       if(this.accountGroupText === StatusCode.Spokesman) {
         this.tabData = res.filter(x => x.name !== StatusCode.Erick)
       }
@@ -550,7 +613,10 @@ export class Todolist2Component implements OnInit, OnDestroy {
       if(this.accountGroupText === StatusCode.Erick) {
         this.tabData = res
       }
-
+      this.tabData.forEach(element => {
+        element.name ==  this.tab ? element.statues = true : element.statues = false
+      });
+      this.spinner.hide()
     })
   }
   NO(index) {

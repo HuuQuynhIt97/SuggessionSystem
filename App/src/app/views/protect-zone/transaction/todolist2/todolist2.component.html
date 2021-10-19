@@ -33,7 +33,7 @@
           <e-items>
             <e-item id='buy-list' >
               <ng-template #template>
-                <button *ngIf="proposal" type="button" (click)="openSuggessionModal()" class="btn btn-danger" > Suggession </button>
+                <button *ngIf="this.tab === 'Proposal' && accountGroupText === 'Propersal'" type="button" (click)="openSuggessionModal()" class="btn btn-danger" > Suggession </button>
               </ng-template>
             </e-item>
 
@@ -105,7 +105,7 @@
 <ng-template #suggession let-modal>
   <div class="modal-header">
     <h4 class="modal-title"><i class="fa fa-upload" aria-hidden="true"></i> Suggession</h4>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -182,7 +182,7 @@
 <ng-template #details let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -221,7 +221,8 @@
               </ng-template>
             </e-column>
             <e-column field="name" width="80" textAlign='Center' headerText="{{ 'Person of confirmation' | translate}}"> </e-column>
-            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}"> </e-column>
+            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}">
+            </e-column>
             <e-column field="" width="80" textAlign='Center' headerText="{{ 'Time' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
@@ -296,7 +297,7 @@
   <div class="modal-footer">
     <button type="submit" (click)="accept()" *ngIf="userId !== createdBy" class="btn btn-success">Accept</button>
     <button type="submit" (click)="reject()" *ngIf="userId !== createdBy" class="btn btn-danger">Reject</button>
-    <button type="button" class="btn btn-light" (click)="close()">Back</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
 
@@ -307,7 +308,7 @@
 <ng-template #tabProcess let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -418,10 +419,10 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" (click)="update()"  class="btn btn-primary">Update</button>
-    <button type="submit" (click)="complete()"  class="btn btn-success">Complete</button>
-    <button type="submit" (click)="terminate()"  class="btn btn-danger">Terminate</button>
-    <button type="button" class="btn btn-light" (click)="close()">Back</button>
+    <button type="submit" (click)="update()" *ngIf="accountGroupText !== 'Propersal'" class="btn btn-primary">Update</button>
+    <button type="submit" (click)="complete()" *ngIf="accountGroupText !== 'Propersal'" class="btn btn-success">Complete</button>
+    <button type="submit" (click)="terminate()" *ngIf="accountGroupText !== 'Propersal'" class="btn btn-danger">Terminate</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
 
@@ -433,7 +434,7 @@
 <ng-template #completeTerminateModel let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -547,7 +548,7 @@
   <div class="modal-footer">
     <button type="submit" (click)="satisfied()"  class="btn btn-success">Satisfied</button>
     <button type="submit" (click)="dissatisfied()"  class="btn btn-danger">Dissatisfied</button>
-    <button type="button" class="btn btn-light" (click)="close()">Back</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
 
@@ -558,7 +559,7 @@
 <ng-template #satisfiedCloseModel let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -626,7 +627,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="close()">Back</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
 
@@ -637,7 +638,7 @@
 <ng-template #rejectModel let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -751,7 +752,7 @@
   <div class="modal-footer">
     <button type="submit" (click)="satisfied()"  class="btn btn-success">Satisfied</button>
     <button type="submit" (click)="dissatisfied()"  class="btn btn-danger">Dissatisfied</button>
-    <button type="button" class="btn btn-light" (click)="close()">Back</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
 
@@ -762,7 +763,7 @@
 <ng-template #dissatisfiedModel let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <button type="button" class="close" aria-label="Close" (click)="close()">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -876,7 +877,7 @@
   <div class="modal-footer">
     <button type="submit" (click)="closeIdea()"  class="btn btn-success">Close</button>
     <button type="submit" (click)="asign()"  class="btn btn-danger">Asign</button>
-    <button type="button" class="btn btn-light" (click)="close()">Back</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
 

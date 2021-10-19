@@ -36,12 +36,22 @@ const routes: Routes = [
       },
       {
         path: 'todolist2',
-        component: Todolist2Component,
+        // component: Todolist2Component,
         data: {
           title: 'To Do List',
           breadcrumb: 'To Do List',
           functionCode: 'todolist'
         },
+        children: [
+          {
+            path: '',
+            component: Todolist2Component,
+          },
+          {
+            path: ':tab',
+            component: Todolist2Component,
+          },
+        ]
         // canActivate: [AuthGuard]
       },
       {

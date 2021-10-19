@@ -8,6 +8,12 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using NetUtility;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http.Features;
+using System;
+using Suggession.Helpers.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Suggession.Controllers
 {
@@ -15,13 +21,235 @@ namespace Suggession.Controllers
     {
         private readonly IIdeaService _service;
         public readonly IWebHostEnvironment _environment;
-        public IdeaController(IIdeaService service, IWebHostEnvironment environment)
+        private readonly IHubContext<SuggessionHub> _hubContext;
+        public IdeaController(
+            IIdeaService service, 
+            IWebHostEnvironment environment,
+            IHubContext<SuggessionHub> hubContext
+            )
         {
             _service = service;
+            _hubContext = hubContext;
             _environment = environment;
         }
-        
-       
+
+        [HttpGet("{filename}")]
+        public ActionResult DownloadExcel(string filename)
+
+        {
+            string Files = $"wwwroot/FileUpload/{filename}";
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(Files);
+
+            System.IO.File.WriteAllBytes(Files, fileBytes);
+
+            MemoryStream ms = new MemoryStream(fileBytes);
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
+
+        }
+
+        [HttpPost("{filename}")]
+        public ActionResult DeleteFile(string filename)
+
+        {
+            string Files = $"wwwroot/FileUpload/{filename}";
+            FileInfo TheFileInfo = new FileInfo(Files);
+            if (TheFileInfo.Exists)
+            {
+                System.IO.File.Delete(Files);
+            }
+            return Ok();
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SaveFile(IFormFile formFile)
+        {
+            try
+            {
+                IFormFile file = Request.Form.Files["formFile"];
+                if (file != null)
+                {
+                    string filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    filename = _environment.WebRootPath + "\\ExcelUpload" + $@"\{filename}";
+                    if (!System.IO.File.Exists(filename))
+                    {
+                        using (FileStream fs = System.IO.File.Create(filename))
+                        {
+                            file.CopyTo(fs);
+                            fs.Flush();
+                        }
+                    }
+                    else
+                    {
+                        Response.Clear();
+                        Response.StatusCode = 204;
+                        Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "File already exists.";
+                        return Ok(new { status = false, ExistFile = true });
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Response.Clear();
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.StatusCode = 204;
+                Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "No Content";
+                Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = ex.Message;
+            }
+            return Content("");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<IdeaDto>> ImportSubmit([FromForm] IdeaDto entity)
+        {
+            if (ModelState.IsValid)
+            {
+                var fileupload = new List<Files>();
+
+                var file = Request.Form.Files["UploadedFile"];
+
+
+
+                var issue = Request.Form["Issue"];
+                var title = Request.Form["Title"];
+                var receiveId = Request.Form["ReceiveID"];
+                var sendId = Request.Form["SendID"];
+                var suggession = Request.Form["Suggession"];
+
+                if (file != null)
+                {
+                    //kiem tra da ton tai thu muc de upload file hay chua
+
+                    //neu chua co thi tao moi
+                    if (!Directory.Exists(_environment.WebRootPath + "\\UploadedFiles\\"))
+                    {
+                        Directory.CreateDirectory(_environment.WebRootPath + "\\UploadedFiles\\");
+                    }
+
+                    //lap file duoc truyen len
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var currentFile = Request.Form.Files[i];
+                        using FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\UploadedFiles\\" + currentFile.FileName);
+                        await currentFile.CopyToAsync(fileStream);
+                        fileStream.Flush();
+                        var data = new Files
+                        {
+                            Path = $"/UploadedFiles/{currentFile.FileName}"
+                        };
+                        fileupload.Add(data);
+                    }
+                    entity.SendID = sendId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.File = fileupload;
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.Status = Suggession.Constants.Status.Apply;
+                    entity.Isshow = true;
+                }
+                else
+                {
+                    entity.SendID = sendId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.File = fileupload;
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.Status = Suggession.Constants.Status.Apply;
+                    entity.Isshow = true;
+                }
+
+
+                var model = await _service.UploadFile(entity);
+                return Ok(model);
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+            }
+            return Ok(entity);
+        }
+        [HttpPost]
+        public async Task<ActionResult<IdeaDto>> ImportSave([FromForm] IdeaDto entity)
+        {
+            if (ModelState.IsValid)
+            {
+                var fileupload = new List<Files>();
+
+                var file = Request.Form.Files["UploadedFile"];
+
+
+
+                var issue = Request.Form["Issue"];
+                var title = Request.Form["Title"];
+                var receiveId = Request.Form["ReceiveID"];
+                var sendId = Request.Form["SendID"];
+                var suggession = Request.Form["Suggession"];
+
+                if (file != null)
+                {
+                    //kiem tra da ton tai thu muc de upload file hay chua
+
+                    //neu chua co thi tao moi
+                    if (!Directory.Exists(_environment.WebRootPath + "\\FileUpload\\"))
+                    {
+                        Directory.CreateDirectory(_environment.WebRootPath + "\\FileUpload\\");
+                    }
+
+                    //lap file duoc truyen len
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var currentFile = Request.Form.Files[i];
+                        using FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\FileUpload\\" + currentFile.FileName);
+                        await currentFile.CopyToAsync(fileStream);
+                        fileStream.Flush();
+                        var data = new Files
+                        {
+                            Path = $"/FileUpload/{currentFile.FileName}"
+                        };
+                        fileupload.Add(data);
+                    }
+
+                    entity.SendID = sendId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.File = fileupload;
+                    entity.Status = Suggession.Constants.Status.NA;
+                    entity.Isshow = true;
+                }
+                else
+                {
+                    entity.SendID = sendId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.File = fileupload;
+                    entity.Status = Suggession.Constants.Status.NA;
+                    entity.Isshow = true;
+                }
+
+
+                var model = await _service.UploadFile(entity);
+                return Ok(model);
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+            }
+            return Ok(entity);
+        }
 
         [HttpGet]
         public async Task<ActionResult> TabProposalGetAll()
@@ -242,6 +470,7 @@ namespace Suggession.Controllers
 
 
                 var data = await _service.Satisfied(model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", data, "message");
                 return Ok(data);
             }
             else
@@ -306,6 +535,7 @@ namespace Suggession.Controllers
 
 
                 var data = await _service.Dissatisfied(model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", data, "message");
                 return Ok(data);
             }
             else
@@ -371,6 +601,7 @@ namespace Suggession.Controllers
 
 
                 var data = await _service.Update(model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", data, "message");
                 return Ok(data);
             }
             else
@@ -435,6 +666,7 @@ namespace Suggession.Controllers
 
 
                 var data = await _service.Close(model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", data, "message");
                 return Ok(data);
             }
             else
@@ -499,6 +731,7 @@ namespace Suggession.Controllers
 
 
                 var data = await _service.Update(model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", data, "message");
                 return Ok(data);
             }
             else
@@ -562,6 +795,7 @@ namespace Suggession.Controllers
 
 
                 var data = await _service.Complete(model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", data, "message");
                 return Ok(data);
             }
             else
@@ -626,6 +860,7 @@ namespace Suggession.Controllers
 
 
                 var data = await _service.Terminate(model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", data, "message");
                 return Ok(data);
             }
             else

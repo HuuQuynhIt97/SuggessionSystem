@@ -8,6 +8,7 @@ using Suggession.Helpers;
 using Suggession.Installer;
 using System.IO;
 using System;
+using Suggession.Helpers.SignalR;
 
 namespace Suggession
 {
@@ -79,6 +80,7 @@ namespace Suggession
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SuggessionHub>("/suggession-hub");
             });
             //app.UseSpaStaticFiles();
             //app.UseSpa(spa =>

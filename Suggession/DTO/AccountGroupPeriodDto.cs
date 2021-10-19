@@ -15,7 +15,6 @@ namespace Suggession.DTO
         public int AccountGroupId { get; set; }
   
         public int PeriodId { get; set; }
-        public Period Period { get; set; }
         public AccountGroup AccountGroup { get; set; }
 
 

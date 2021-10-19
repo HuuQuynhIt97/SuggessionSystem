@@ -110,13 +110,13 @@ export class Todolist2Service  {
     // const formData = new FormData();
     // formData.append('UploadedFile', file);
     // formData.append('CreatedBy', createdBy);
-    return this.http.post(this.env.apiUrl + 'Todolist/ImportSubmit', formData);
+    return this.http.post(this.env.apiUrl + 'Idea/ImportSubmit', formData);
   }
   importSave(formData) {
     // const formData = new FormData();
     // formData.append('UploadedFile', file);
     // formData.append('CreatedBy', createdBy);
-    return this.http.post(this.env.apiUrl + 'Todolist/ImportSave', formData);
+    return this.http.post(this.env.apiUrl + 'Idea/ImportSave', formData);
   }
   getTabProposal() {
     return this.http.get(this.env.apiUrl + 'Idea/TabProposalGetAll', {});

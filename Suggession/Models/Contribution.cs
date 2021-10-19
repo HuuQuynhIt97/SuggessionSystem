@@ -23,7 +23,6 @@ namespace Suggession.Models
         public DateTime? ModifiedTime { get; set; }
         [ForeignKey(nameof(AccountId))]
         public virtual Account Account { get; set; }
-        [ForeignKey(nameof(PeriodTypeId))]
-        public virtual PeriodType PeriodType { get; set; }
+       
     }
 }
