@@ -85,7 +85,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   loadData() {
     this.service.getAll().subscribe(data => {
-      console.log(data);
       this.data = data;
     });
   }
@@ -227,6 +226,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
         break;
     }
   }
+
   actionComplete(args) {
     if (args.requestType === 'add') {
       args.form.elements.namedItem('username').focus(); // Set focus to the Target element
@@ -242,7 +242,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
       (res) => {
         if (res.success === true) {
           const message = res.message;
-          this.alertify.success(message);
+          this.alertify.success("Successfully");
           this.loadData();
         } else {
            this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
@@ -260,11 +260,13 @@ export class AccountComponent extends BaseComponent implements OnInit {
       this.managers = data;
     });
   }
+
   loadAccountGroupData() {
     this.accountGroupService.getAll().subscribe(data => {
       this.accountGroupData = data;
     });
   }
+
   delete(id) {
     this.service.delete(id).subscribe(
       (res) => {

@@ -25,6 +25,7 @@ namespace Suggession.Controllers
             _currentEnvironment = currentEnvironment;
             _context = context;
         }
+
         [AcceptVerbs("Post")]
         public void Save(int kpiId, DateTime uploadTime)
         {
@@ -79,6 +80,7 @@ namespace Suggession.Controllers
                 Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = e.Message;
             }
         }
+
         [AcceptVerbs("Post")]
         public void Remove(int kpiId, DateTime uploadTime)
         {
@@ -124,6 +126,7 @@ namespace Suggession.Controllers
                 Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "Falied to remove!";
             }
         }
+
         [HttpGet]
         public IActionResult Download(int kpiId, DateTime uploadTime)
         {
@@ -140,10 +143,11 @@ namespace Suggession.Controllers
             }
 
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAttackFiles(int kpiId, DateTime uploadTime)
         {
-              var kpiid = kpiId;
+            var kpiid = kpiId;
             var month = uploadTime.Month == 1 ? 12 : uploadTime.Month - 1;
             var year = uploadTime.Month == 1 ? uploadTime.Year - 1 : uploadTime.Year;
             var ut = new DateTime(year, month, 1);
@@ -165,11 +169,10 @@ namespace Suggession.Controllers
 
                             });
                         }
-
-                       
                     });
             return Ok(fileInfoList);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetDownloadFiles(int kpiId, DateTime uploadTime)
         {
@@ -194,6 +197,7 @@ namespace Suggession.Controllers
             });
             return Ok(list);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetDownloadFilesIdea(int ideaID)
         {
@@ -214,6 +218,7 @@ namespace Suggession.Controllers
             });
             return Ok(list);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetDownloadFilesMeeting(int kpiId, DateTime uploadTime)
         {
@@ -238,6 +243,7 @@ namespace Suggession.Controllers
             });
             return Ok(list);
         }
+
         #region Download File  
         private (string fileType, byte[] archiveData, string archiveName) DownloadFiles(int kpiId , DateTime uploadTime)
         {
@@ -267,7 +273,8 @@ namespace Suggession.Controllers
             }
 
         }
-          private string GetContentType(string path)
+
+        private string GetContentType(string path)
         {
             var types = GetMimeTypes();
             var ext = Path.GetExtension(path).ToLowerInvariant();

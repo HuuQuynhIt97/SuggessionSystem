@@ -53,6 +53,45 @@
   min-width: 50%!important;
   min-height: 50%!important;
 }
+.modal-header {
+  background-color: #f7f76e73;
+
+}
+.e-grid .e-headercell {
+  background-color: #f0f3f5;
+}
+
+button.myButton.btn.btn-primary.mr-2.ng-star-inserted {
+  box-shadow: 2px 2px 2px black;
+}
+
+button.btn.btn-primary.ng-star-inserted {
+  box-shadow: 1px 2px 3px black;
+}
+
+button.btn.btn-success.ng-star-inserted {
+  box-shadow: 1px 2px 3px black;
+}
+button.btn.btn-danger.ng-star-inserted {
+  box-shadow: 1px 2px 3px black;
+}
+button.btn.btn-light {
+  box-shadow: 1px 2px 3px black;
+}
+// .modal-header {
+//   background-color: #f7f76e73;
+
+// }
+
+
+.e-grid {
+  box-shadow: 0 0 20px;
+  border-radius: 5px;
+}
+
+.e-pager {
+  font-size: 10px;
+}
 
 /*!
  * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)

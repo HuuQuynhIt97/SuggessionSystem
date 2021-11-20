@@ -4,6 +4,7 @@ export enum StatusCode {
   Spokesman = "Spokesman",
   Processing = "Processing",
   Erick = "Erick",
+  FactoryHead = "Factory head",
   PIC = "PIC",
   Close = "Close"
 

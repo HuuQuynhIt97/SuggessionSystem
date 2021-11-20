@@ -21,7 +21,7 @@ namespace Suggession.Installer
             {
                 options.UseSqlServer(connetionString,
                 o => o.MigrationsAssembly("Suggession"));
-                options.UseLazyLoadingProxies();
+                //options.UseLazyLoadingProxies();
             });
 
             services.AddScoped<Func<DataContext>>((provider) => () => provider.GetService<DataContext>());

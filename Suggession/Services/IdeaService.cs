@@ -136,8 +136,7 @@ namespace Suggession.Services
             //x.Status == Suggession.Constants.Status.Reject ||
             //x.Status == Suggession.Constants.Status.Terminate ||
             //x.Status == Suggession.Constants.Status.Complete
-            )
-            .Select(x => new IdeaDto {
+            ).Select(x => new IdeaDto {
                 Id = x.Id,
                 SendID = x.SendID,
                 ReceiveID = x.ReceiveID,
@@ -155,9 +154,7 @@ namespace Suggession.Services
 
         public async Task<object> TabProcessingGetAll()
         {
-            var data = await _repo.FindAll().Where(x =>
-            x.Status == Suggession.Constants.Status.Update
-            ).Select(x => new IdeaDto
+            var data = await _repo.FindAll(x => x.Status == Suggession.Constants.Status.Update).Select(x => new IdeaDto
             {
                 Id = x.Id,
                 SendID = x.SendID,
@@ -176,9 +173,7 @@ namespace Suggession.Services
 
         public async Task<object> TabErickGetAll()
         {
-            var data = await _repo.FindAll().Where(x =>
-            x.Status == Suggession.Constants.Status.Dissatisfied
-            ).Select(x => new IdeaDto
+            var data = await _repo.FindAll(x => x.Status == Suggession.Constants.Status.Dissatisfied).Select(x => new IdeaDto
             {
                 Id = x.Id,
                 SendID = x.SendID,
@@ -197,10 +192,9 @@ namespace Suggession.Services
 
         public async Task<object> TabCloseGetAll()
         {
-            var data = await _repo.FindAll().Where(x =>
+            var data = await _repo.FindAll(x =>
             x.Status == Suggession.Constants.Status.Satisfied ||
-            x.Status == Suggession.Constants.Status.Close
-            ).Select(x => new IdeaDto
+            x.Status == Suggession.Constants.Status.Close).Select(x => new IdeaDto
             {
                 Id = x.Id,
                 SendID = x.SendID,
@@ -223,7 +217,7 @@ namespace Suggession.Services
                 Id = x.Id,
                 IdeaId = x.IdeaID,
                 Comment = x.Comment,
-                Name = _repoAc.FindById(x.InsertBy).FullName,
+                Name = _repoAc.FindById(x.InsertBy).FullName ?? "",
                 CreatedTime = x.CreatedTime,
                 StatusName = _repoStatus.FindById(x.Status).Name ?? ""
             }).ToListAsync();
@@ -305,6 +299,7 @@ namespace Suggession.Services
             }
             throw new NotImplementedException();
         }
+
         public async Task<bool> Close(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -342,6 +337,7 @@ namespace Suggession.Services
             }
             throw new NotImplementedException();
         }
+
         public async Task<bool> Update(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -379,6 +375,7 @@ namespace Suggession.Services
             }
             throw new NotImplementedException();
         }
+
         public async Task<bool> Complete(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -469,6 +466,7 @@ namespace Suggession.Services
             idea.Status = Suggession.Constants.Status.Satisfied;
 
             await _unitOfWork.SaveChangeAsync();
+
             foreach (var item in entity.File)
             {
                 ListUpload.Add(new UploadFile
@@ -483,6 +481,7 @@ namespace Suggession.Services
                 await _unitOfWork.SaveChangeAsync();
                 return true;
             }
+
             catch (Exception ex)
             {
                 return false;
@@ -490,6 +489,7 @@ namespace Suggession.Services
             }
             throw new NotImplementedException();
         }
+
         public async Task<bool> Dissatisfied(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();

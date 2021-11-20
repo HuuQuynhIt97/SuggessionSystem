@@ -33,6 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="_Services\" />
+    <Folder Include="_Repositories\" />
     <Folder Include="wwwroot\UploadingFiles\" />
     <Folder Include="wwwroot\UploadedFiless\" />
   </ItemGroup>

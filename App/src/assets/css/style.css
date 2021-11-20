@@ -4,3 +4,6 @@
 .filepond--root.my-filepond.filepond--hopper .filepond--credits {
   color: transparent;
 }
+button.btn.btn-xs.btn-primary {
+  box-shadow: 1px 2px 2px black;
+}

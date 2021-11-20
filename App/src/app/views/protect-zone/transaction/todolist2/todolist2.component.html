@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-header">
         <div style="display: flex;">
-          <div id='pending' *ngFor="let item of tabData; let i=index">
+          <div  id='pending' *ngFor="let item of tabData; let i=index">
             <button *ngIf="item.statues" [style.background-color]="'red'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
             <button *ngIf="!item.statues" [style.background-color]="'#20a8d8'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
           </div>
@@ -96,6 +96,7 @@
 
           </e-columns>
         </ejs-grid>
+
       </div>
     </div>
   </div>
@@ -182,6 +183,7 @@
 <ng-template #details let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Detail</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -189,12 +191,31 @@
   <div class="modal-body">
     <div class="row mb-2">
       <div class="col-md-6">
-        <div class="row">
+
+        <!-- <div class="row">
           <div class="col-md-7">Proposer: {{nameTitle}}</div>
         </div>
         <div class="row">
           <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div>
+        </div> -->
+
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="row">
@@ -308,6 +329,7 @@
 <ng-template #tabProcess let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">Process Detail</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -315,12 +337,29 @@
   <div class="modal-body">
     <div class="row mb-2">
       <div class="col-md-6">
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-7">Proposer: {{nameTitle}}</div>
         </div>
         <div class="row">
           <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div>
+        </div> -->
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="row">
@@ -433,7 +472,7 @@
 <!-- Complete-Terminate Modal -->
 <ng-template #completeTerminateModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"> </h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Detail</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -441,12 +480,23 @@
   <div class="modal-body">
     <div class="row mb-2">
       <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-7">Proposer: {{nameTitle}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div>
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="row">
@@ -558,7 +608,7 @@
 <!-- satisfied-Close Modal -->
 <ng-template #satisfiedCloseModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"> </h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Satisfied</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -566,12 +616,24 @@
   <div class="modal-body">
     <div class="row mb-2">
       <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-7">Proposer: {{nameTitle}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div>
+
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="row">
@@ -637,7 +699,7 @@
 <!-- Reject Modal -->
 <ng-template #rejectModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"> </h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Reject</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -645,12 +707,23 @@
   <div class="modal-body">
     <div class="row mb-2">
       <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-7">Proposer: {{nameTitle}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div>
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="row">
@@ -762,7 +835,7 @@
 <!-- dissatisfied Modal -->
 <ng-template #dissatisfiedModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"> </h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Dissatisfied</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -770,12 +843,23 @@
   <div class="modal-body">
     <div class="row mb-2">
       <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-7">Proposer: {{nameTitle}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div>
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="row">

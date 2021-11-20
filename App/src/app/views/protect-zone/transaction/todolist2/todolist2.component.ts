@@ -100,7 +100,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   teamData: any[];
   teamIdStore: string;
-  tabData: any[];
+  tabData: any[] = [];
   file: any = [];
   filesLeft = [];
   filesRight = [];
@@ -187,7 +187,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.tab = this.route.snapshot.params.tab || "Proposal";
-    console.log(this.tab);
     this.proposal = true
     this.accountGroupText = JSON.parse(localStorage.getItem('user')).accountGroupText;
 
@@ -217,7 +216,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
     }
     if (localStorage.getItem('user') !== null) {
       this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
-      console.log(this.userId);
     }
   }
   enableDisableRule() {
@@ -225,7 +223,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.status = this.toggle ? 'Enable' : 'Disable';
   }
   detail(item) {
-    console.log(item);
     this.ideaId = item.id
     this.createdBy = item.createdBy
     this.nameTitle = item.name
@@ -418,39 +415,33 @@ export class Todolist2Component implements OnInit, OnDestroy {
           path: this.env.fileUrl.replace('/api/', '') + x.path
         }
       });
-      console.log(this.files);
     })
   }
   getIdeaHisById(id) {
     this.todolist2Service.getIdeaHisById(id).subscribe((res: any) => {
       this.dataHis = res
-      console.log(res);
     })
   }
   getTabProcessing() {
     this.todolist2Service.getTabProcessing().subscribe((res: any) => {
-      console.log('getTabProcessing',res);
       this.spinner.hide()
       this.data = res
     })
   }
   getTabErick() {
     this.todolist2Service.getTabErick().subscribe((res: any) => {
-      console.log('getTabErick',res);
       this.spinner.hide()
       this.data = res
     })
   }
   getTabClose() {
     this.todolist2Service.getTabClose().subscribe((res: any) => {
-      console.log('getTabClose',res);
       this.spinner.hide()
       this.data = res
     })
   }
   getTabProposal() {
     this.todolist2Service.getTabProposal().subscribe((res: any) => {
-      console.log('getTabProposal',res);
       if(this.accountGroupText === StatusCode.Spokesman) {
         this.data = res.filter(x => x.receiveID === this.userId)
       }
@@ -489,6 +480,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.alertify.error('Not File Upload!')
     }
   }
+
   refreshText() {
     this.toId = 0
     this.titleText = null
@@ -496,6 +488,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.issueText = null
     this.file = []
   }
+
   submit() {
     const formData = new FormData();
     formData.append("SendID", this.userId.toString());
@@ -520,6 +513,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.alertify.error('Not File Upload!')
     }
   }
+
   openUploadModalComponent() {
     const modalRef = this.modalService.open(UploadFileComponent, { size: 'md', backdrop: 'static', keyboard: false });
     modalRef.componentInstance.data = this.data;
@@ -527,18 +521,22 @@ export class Todolist2Component implements OnInit, OnDestroy {
     }, (reason) => {
     });
   }
+
   loadData() {
     this.accountService.getAll().subscribe((data: any) => {
       this.dataUser = data.filter(x => x.accountGroupText === StatusCode.Spokesman);
     });
   }
+
   close() {
     this.file = [] ;
     this.modalReference.close();
   }
+
   handleFileProcess(event: any){
     this.file.push(event.file.file) ;
   }
+
   pondHandleAddFile(event: any) {
   }
 
@@ -551,27 +549,29 @@ export class Todolist2Component implements OnInit, OnDestroy {
     }
 
   }
+
   openSuggessionModal() {
     this.showModal(this.suggession)
     this.loadData()
   }
+
   showModal(modal){
     this.modalReference = this.modalService.open(modal, { size: 'sm'});
   }
+
   showModalDetails(modal){
     this.modalReference = this.modalService.open(modal, { size: 'xxl'});
     // event click out side modal and close model
     this.modalReference.result.then((result) => {
-      console.log(result);
       this.commentText = ""
       this.file = []
     }, (reason) => {
-      console.log(reason);
       this.commentText = ""
       this.file = []
     });
     // end event
   }
+
   Upload() {
 
     const formData = new FormData();
@@ -593,6 +593,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.alertify.error('Not File Upload!')
     }
   }
+
   search(args) {
     if(this.pendingTab)
       this.grid.search(this.name);
@@ -613,9 +614,11 @@ export class Todolist2Component implements OnInit, OnDestroy {
       if(this.accountGroupText === StatusCode.Erick) {
         this.tabData = res
       }
-      this.tabData.forEach(element => {
-        element.name ==  this.tab ? element.statues = true : element.statues = false
-      });
+      if(this.tabData.length > 0) {
+        this.tabData.forEach(element => {
+          element.name ==  this.tab ? element.statues = true : element.statues = false
+        });
+      }
       this.spinner.hide()
     })
   }
