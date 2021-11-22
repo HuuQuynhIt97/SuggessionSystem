@@ -1,7 +1,4 @@
-import { KpiCreate2Component } from './kpi-create2/kpi-create2.component';
-import { SettingMonthlyComponent } from './setting-monthly/setting-monthly.component';
-import { KpiCreateComponent } from './kpi-create/kpi-create.component';
-import { PolicyComponent } from './policy/policy.component';
+
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -17,12 +14,9 @@ import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid'
 
 import { OcComponent } from './oc/oc.component'
 import { OcUserComponent } from './oc-user/oc-user.component'
-import { PeriodTypeComponent } from './period-type/period-type.component'
-import { AccountGroupPeriodComponent } from './account-group-period/account-group-period.component'
 import { AccountComponent } from './account/account.component'
 import { AccountGroupComponent } from './account-group/account-group.component'
 import { SystemRoutingModule } from './system.routing.module'
-import { ProgressComponent } from './progress/progress.component'
 // import { PeriodComponent } from './period/period.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -63,16 +57,9 @@ loadCldr(
   declarations: [
     AccountComponent,
     AccountGroupComponent,
-    ProgressComponent,
     // PeriodComponent,
     OcComponent,
     OcUserComponent,
-    PeriodTypeComponent,
-    AccountGroupPeriodComponent,
-    PolicyComponent,
-    SettingMonthlyComponent,
-    KpiCreateComponent,
-    KpiCreate2Component
   ],
   imports: [
     CommonModule,

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Suggession.DTO;
 using Suggession.Helpers;
-using Suggession.Services;
+using Suggession._Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +24,11 @@ namespace Suggession.Controllers
         {
             return Ok((await _service.GetAccountGroupForTodolistByAccountId()).OrderBy(x => x.Sequence));
         }
+
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
-            return Ok((await _service.GetAllAsync()).OrderBy(x=>x.Sequence));
+            return Ok((await _service.GetAllAsync()).OrderBy(x => x.Sequence));
         }
 
         [HttpPost]
@@ -48,17 +49,6 @@ namespace Suggession.Controllers
             return StatusCodeResult(await _service.DeleteAsync(id));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetByIdAsync(int id)
-        {
-            return Ok(await _service.GetByIdAsync(id));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetWithPaginationsAsync(PaginationParams paramater)
-        {
-            return Ok(await _service.GetWithPaginationsAsync(paramater));
-        }
 
     }
 }

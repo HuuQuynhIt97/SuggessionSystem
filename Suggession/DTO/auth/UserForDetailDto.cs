@@ -13,6 +13,7 @@ namespace Suggession.DTO.auth
         public string Email { get; set; }
         public List<int> AccountGroupPositions { get; set; }
         public string AccountGroupText { get; set; }
+        public int? AccountGroupSequence { get; set; }
         public int? AccountGroupId { get; set; }
         public int? AccountTypeId { get; set; }
         public bool IsManager { get; set; }

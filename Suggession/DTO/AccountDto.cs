@@ -31,5 +31,6 @@ namespace Suggession.DTO
         public DateTime? ModifiedTime { get; set; }
         public List<int> AccountGroupIds { get; set; }
         public string AccountGroupText { get; set; }
+        public int? AccountGroupSequence { get; set; }
     }
 }

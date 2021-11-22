@@ -15,24 +15,10 @@ namespace Suggession.Helpers.AutoMapper
         {
             CreateMap<AccountDto, Account>();
             CreateMap<TabDto, Tab>();
-
-            CreateMap<AccountTypeDto, AccountType>()
-                .ForMember(d => d.Accounts, o => o.Ignore());
             CreateMap<AccountGroupDto, AccountGroup>();
-
-     
-            CreateMap<MailingDto, Mailing>();
-
-
             CreateMap<UserForDetailDto, Account>();
-
             CreateMap<CommentDto, Comment>();
-            CreateMap<ContributionDto, Contribution>();
-            CreateMap<OCDto, OC>();
             CreateMap<AccountGroupAccountDto, AccountGroupAccount>();
-
-            CreateMap<OCAccountDto, OCAccount>();
-            
             CreateMap<IdeaDto, Idea>();
         }
     }

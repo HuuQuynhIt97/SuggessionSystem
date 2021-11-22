@@ -84,7 +84,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     this.role = JSON.parse(localStorage.getItem('level'));
     this.value = localStorage.getItem('lang');
     const user = JSON.parse(localStorage.getItem("user"));
-    this.userName = user?.username;
+    this.userName = user?.fullName;
     this.userID = user?.id;
     const navs = this.value == 'vi'? navItemsVI : this.value === 'en'? navItemsEN : navItems;
     this.navItems = navs

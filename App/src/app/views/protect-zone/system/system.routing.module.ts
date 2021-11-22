@@ -1,18 +1,11 @@
-import { KpiCreate2Component } from './kpi-create2/kpi-create2.component';
-import { SettingMonthlyComponent } from './setting-monthly/setting-monthly.component';
-import { KpiCreateComponent } from './kpi-create/kpi-create.component';
-import { PolicyComponent } from './policy/policy.component';
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { AuthGuard } from 'src/app/_core/_guards/auth.guard'
 
 import { OcUserComponent } from './oc-user/oc-user.component'
 import { OcComponent } from './oc/oc.component'
-import { AccountGroupPeriodComponent } from './account-group-period/account-group-period.component'
 import { AccountGroupComponent } from './account-group/account-group.component'
 import { AccountComponent } from './account/account.component'
-import { ProgressComponent } from './progress/progress.component'
-import { PeriodTypeComponent } from './period-type/period-type.component'
 
 // import { PeriodComponent } from './period/period.component';
 const routes: Routes = [
@@ -43,46 +36,9 @@ const routes: Routes = [
         },
         // canActivate: [AuthGuard]
       },
-      {
-        path: 'setting-monthly',
-        component: SettingMonthlyComponent,
-        data: {
-          title: 'Setting Monthly',
-          breadcrumb: 'Setting Monthly',
-          functionCode: 'setting-monthly'
-        },
-        // canActivate: [AuthGuard]
-      },
-      {
-        path: 'progress',
-        component: ProgressComponent,
-        data: {
-          title: 'Progress',
-          breadcrumb: 'Progress',
-          functionCode: 'progress'
-        },
-        // canActivate: [AuthGuard]
-      },
-      {
-        path: 'period',
-        component: PeriodTypeComponent,
-        data: {
-          title: 'Period',
-          breadcrumb: 'Period',
-          functionCode: 'period'
-        },
-        // canActivate: [AuthGuard]
-      },
-      {
-        path: 'account-group-period',
-        component: AccountGroupPeriodComponent,
-        data: {
-          title: 'Account Group Period',
-          breadcrumb: 'Account Group Period',
-          functionCode: 'account-group-period'
-        },
-        // canActivate: [AuthGuard]
-      },
+
+
+
       {
         path: 'oc',
         component: OcComponent,
@@ -103,36 +59,7 @@ const routes: Routes = [
         },
         // canActivate: [AuthGuard]
       },
-      {
-        path: 'policy',
-        component: PolicyComponent,
-        data: {
-          title: 'Policy',
-          breadcrumb: 'Policy',
-          functionCode: 'policy'
-        },
-        // canActivate: [AuthGuard]
-      },
-      {
-        path: 'kpi-create',
-        component: KpiCreateComponent,
-        data: {
-          title: 'KPI Create',
-          breadcrumb: 'KPI Create',
-          functionCode: 'kpi-create'
-        },
-        // canActivate: [AuthGuard]
-      },
-      {
-        path: 'kpi-create2',
-        component: KpiCreate2Component,
-        data: {
-          title: 'KPI Create 2',
-          breadcrumb: 'KPI Create 2',
-          functionCode: 'kpi-create2'
-        },
-        // canActivate: [AuthGuard]
-      }
+
 
     ]
   },

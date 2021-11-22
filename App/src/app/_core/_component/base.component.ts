@@ -8,14 +8,14 @@ export abstract class BaseComponent {
   editSettingsTree = { allowEditing: false, allowAdding: false, allowDeleting: false, newRowPosition: 'Child', mode: 'Row' };
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   editSettingOCs = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
-  toolbarOptions = ['ExcelExport', 'Add', 'Update','Edit', 'Delete', 'Cancel', 'Search'];
+  toolbarOptions = [ 'Add', 'Update','Edit', 'Delete', 'Cancel', 'Search'];
+  toolbarOptionsAcg = [ 'Update','Edit',  'Cancel', 'Search'];
   toolbarOptionsTree = [
   'Add',
   'Delete',
   'Search',
   'ExpandAll',
   'CollapseAll',
-  'ExcelExport'
   ];
   contextMenuItems = [
     {

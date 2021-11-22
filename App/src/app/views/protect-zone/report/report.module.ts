@@ -1,7 +1,3 @@
-import { GhrReportComponent } from './ghr-report/ghr-report.component';
-import { HqHrReportComponent } from './hq-hr-report/hq-hr-report.component';
-import { H1H2ReportComponent } from './h1-h2-report/h1-h2-report.component';
-import { Q1Q3ReportComponent } from './q1-q3-report/q1-q3-report.component';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -89,10 +85,6 @@ loadCldr(
     }),
   ],
   declarations: [
-    Q1Q3ReportComponent,
-    H1H2ReportComponent,
-    HqHrReportComponent,
-    GhrReportComponent
 
   ]
 })

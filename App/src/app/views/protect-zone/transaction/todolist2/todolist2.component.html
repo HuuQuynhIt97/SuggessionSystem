@@ -33,7 +33,7 @@
           <e-items>
             <e-item id='buy-list' >
               <ng-template #template>
-                <button *ngIf="this.tab === 'Proposal' && accountGroupText === 'Propersal'" type="button" (click)="openSuggessionModal()" class="btn btn-danger" > Suggession </button>
+                <button *ngIf="this.tab === 'Proposal' && accountGroupText === 1" type="button" (click)="openSuggessionModal()" class="btn btn-danger" > Suggession </button>
               </ng-template>
             </e-item>
 
@@ -458,9 +458,9 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" (click)="update()" *ngIf="accountGroupText !== 'Propersal'" class="btn btn-primary">Update</button>
-    <button type="submit" (click)="complete()" *ngIf="accountGroupText !== 'Propersal'" class="btn btn-success">Complete</button>
-    <button type="submit" (click)="terminate()" *ngIf="accountGroupText !== 'Propersal'" class="btn btn-danger">Terminate</button>
+    <button type="submit" (click)="update()" *ngIf="accountGroupText !== 1" class="btn btn-primary">Update</button>
+    <button type="submit" (click)="complete()" *ngIf="accountGroupText !== 1" class="btn btn-success">Complete</button>
+    <button type="submit" (click)="terminate()" *ngIf="accountGroupText !== 1" class="btn btn-danger">Terminate</button>
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 

@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Suggession.Data;
 using Suggession.DTO.auth;
 using Suggession.Models;
-using Suggession.Services;
+using Suggession._Services.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,6 +15,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Suggession._Repositories.Interface;
 
 namespace Suggession.Controllers
 {
@@ -23,13 +24,14 @@ namespace Suggession.Controllers
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
-        private readonly IRepositoryBase<AccountGroupAccount> _repoAcgA;
-        private readonly IRepositoryBase<AccountGroup> _repoAcg;
+        private readonly IAccountGroupAccountRepository _repoAcgA;
+
+        private readonly IAccountGroupRepository _repoAcg;
         public AuthController(
             IConfiguration config,
             IMapper mapper,
-            IRepositoryBase<AccountGroupAccount> repoAcgA,
-            IRepositoryBase<AccountGroup> repoAcg,
+            IAccountGroupAccountRepository repoAcgA,
+            IAccountGroupRepository repoAcg,
             IAuthService authService
             )
         {
@@ -86,7 +88,9 @@ namespace Suggession.Controllers
                 FullName = userTamp.FullName,
                 Username = userTamp.Username,
                 AccountGroupText = _repoAcg.FindById(userTamp.AccountGroupId) != null ?
-                _repoAcg.FindById(userTamp.AccountGroupId).Name : null
+                _repoAcg.FindById(userTamp.AccountGroupId).Name : null,
+                AccountGroupSequence = _repoAcg.FindById(userTamp.AccountGroupId) != null ?
+                _repoAcg.FindById(userTamp.AccountGroupId).Sequence : null
             };
             //_mapper.Map<UserForDetailDto>(userFromRepo);
 

@@ -65,6 +65,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   getAllOc(){
     this.ocService.getAll().subscribe((res: any) => {
+
       //Oclv3
       this.dataOclv3 = res.filter(x => x.level === 3)
       this.dataOclv3.unshift({ id: 0, name: 'N/A'  });
@@ -148,6 +149,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
       const item = args.rowData;
       this.updateModel(item);
     }
+
     if (args.requestType === 'save' && args.action === 'add') {
       this.accountCreate = {
         id: 0,
@@ -186,6 +188,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
       this.create();
     }
+
     if (args.requestType === 'save' && args.action === 'edit') {
       this.accountUpdate = {
         id: args.data.id,
@@ -212,9 +215,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
       };
       this.update();
     }
+
     if (args.requestType === 'delete') {
       this.delete(args.data[0].id);
     }
+
   }
 
   toolbarClick(args) {

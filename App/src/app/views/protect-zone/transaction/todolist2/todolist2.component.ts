@@ -1,27 +1,17 @@
 import { StatusName } from './../../../../_core/enum/JobType';
-import { filter } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Account2Service } from 'src/app/_core/_service/account2.service';
 import { EnvService } from './../../../../_core/_service/env.service';
-import { PdcaComponent } from './pdca/pdca.component';
-import { PlanComponent } from './plan/plan.component';
 import { PerformanceService } from './../../../../_core/_service/performance.service';
-import { Subscription } from 'rxjs';
 import { AccountGroupService } from './../../../../_core/_service/account.group.service';
 import { Component, OnInit, TemplateRef, ViewChild, QueryList, ViewChildren, OnDestroy, ElementRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { ObjectiveService } from 'src/app/_core/_service/objective.service';
-import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
-import { PeriodType, SystemRole, ToDoListType, SystemScoreType } from 'src/app/_core/enum/system';
 import { environment } from 'src/environments/environment';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
-import { Performance } from 'src/app/_core/_model/performance';
 import { DatePipe } from '@angular/common';
-import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
-import { MessageConstants } from 'src/app/_core/_constants/system';
-import { NgTemplateNameDirective } from '../ng-template-name.directive';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { UploadFileComponent } from './upload-file/upload-file.component';
@@ -169,7 +159,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
         this.getTabProcessing()
         this.proposal = false
         break;
-      case StatusCode.Erick:
+      case StatusCode.ErickTab:
         this.tab = "Erick";
         this.router.navigate([`/transaction/todolist2/${this.tab}`]);
         this.getTabErick()
@@ -188,7 +178,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tab = this.route.snapshot.params.tab || "Proposal";
     this.proposal = true
-    this.accountGroupText = JSON.parse(localStorage.getItem('user')).accountGroupText;
+    this.accountGroupText = Number(JSON.parse(localStorage.getItem('user')).accountGroupSequence);
 
 
     this.getAllTab();
@@ -203,7 +193,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
         this.getTabProcessing()
         this.proposal = false
         break;
-      case StatusCode.Erick:
+      case StatusCode.ErickTab:
         this.getTabErick()
         this.proposal = false
         break;
@@ -424,24 +414,25 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   getTabProcessing() {
     this.todolist2Service.getTabProcessing().subscribe((res: any) => {
-      this.spinner.hide()
       this.data = res
+      this.spinner.hide()
     })
   }
   getTabErick() {
     this.todolist2Service.getTabErick().subscribe((res: any) => {
-      this.spinner.hide()
       this.data = res
+      this.spinner.hide()
     })
   }
   getTabClose() {
     this.todolist2Service.getTabClose().subscribe((res: any) => {
-      this.spinner.hide()
       this.data = res
+      this.spinner.hide()
     })
   }
   getTabProposal() {
     this.todolist2Service.getTabProposal().subscribe((res: any) => {
+      console.log(res);
       if(this.accountGroupText === StatusCode.Spokesman) {
         this.data = res.filter(x => x.receiveID === this.userId)
       }
@@ -524,7 +515,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   loadData() {
     this.accountService.getAll().subscribe((data: any) => {
-      this.dataUser = data.filter(x => x.accountGroupText === StatusCode.Spokesman);
+      this.dataUser = data.filter(x => x.accountGroupSequence === StatusCode.Spokesman);
     });
   }
 
@@ -604,14 +595,16 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   getAllTab(){
     this.accountGroupService.getAllTab().subscribe(res => {
+      console.log('getAllTab', res);
+      console.log('accountGroupText', this.accountGroupText);
       if(this.accountGroupText === StatusCode.Spokesman) {
-        this.tabData = res.filter(x => x.name !== StatusCode.Erick)
+        this.tabData = res.filter(x => x.name !== StatusCode.ErickTab)
       }
       if(this.accountGroupText === StatusCode.Propersal) {
-        this.tabData = res.filter(x => x.name !== StatusCode.Processing && x.name !== StatusCode.Erick)
+        this.tabData = res.filter(x => x.name !== StatusCode.Processing && x.name !== StatusCode.ErickTab)
       }
 
-      if(this.accountGroupText === StatusCode.Erick) {
+      if(this.accountGroupText === StatusCode.ErickTab) {
         this.tabData = res
       }
       if(this.tabData.length > 0) {

@@ -1,12 +1,14 @@
 export enum StatusCode {
   Proposal = "Proposal",
-  Propersal = "Propersal",
-  Spokesman = "Spokesman",
-  Processing = "Processing",
-  Erick = "Erick",
   FactoryHead = "Factory head",
   PIC = "PIC",
-  Close = "Close"
+  Processing = "Processing",
+  ErickTab = "Erick",
+  Close = "Close",
+
+  Propersal = 1,
+  Spokesman = 2,
+  Erick = 3
 
 }
 

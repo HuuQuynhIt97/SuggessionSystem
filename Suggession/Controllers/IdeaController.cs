@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Suggession.DTO;
 using Suggession.Helpers;
-using Suggession.Services;
+using Suggession._Services.Services;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
@@ -277,16 +277,7 @@ namespace Suggession.Controllers
         {
             return Ok((await _service.TabCloseGetAll()));
         }
-        [HttpGet]
-        public async Task<ActionResult> GetAllAsync()
-        {
-            return Ok((await _service.GetAllAsync()));
-        }
-        [HttpPost]
-        public async Task<ActionResult> AddAsync([FromBody] IdeaDto model)
-        {
-            return StatusCodeResult(await _service.AddAsync(model));
-        }
+        
 
         [HttpPost]
         public async Task<ActionResult> Accept([FromForm] IdeaDto model)
@@ -870,29 +861,9 @@ namespace Suggession.Controllers
             return Ok(model);
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateAsync([FromBody] IdeaDto model)
-        {
-            return StatusCodeResult(await _service.UpdateAsync(model));
-        }
+       
 
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> DeleteAsync(int id)
-        //{
-        //    return Ok(await _service.Delete(id));
-        //}
-
-        [HttpGet]
-        public async Task<ActionResult> GetByIdAsync(int id)
-        {
-            return Ok(await _service.GetByIdAsync(id));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetWithPaginationsAsync(PaginationParams paramater)
-        {
-            return Ok(await _service.GetWithPaginationsAsync(paramater));
-        }
+        
 
     }
 }

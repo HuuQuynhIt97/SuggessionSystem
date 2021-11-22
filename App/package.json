@@ -18,7 +18,7 @@
   "copyright": "Copyright 2021 creativeLabs Łukasz Holeczek",
   "license": "MIT",
   "scripts": {
-    "start": "ng serve --open --host 10.4.5.174 --port 66 --disable-host-check",
+    "start": "ng serve --open --host 10.4.5.174 --port 61 --disable-host-check",
     "dev_henry": "ng serve --port 1005 --disable-host-check",
     "dev": "ng serve --open --port 1005 --disable-host-check",
     "ng": "ng",
@@ -27,7 +27,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod  --aot --build-optimizer --common-chunk --vendor-chunk --optimization"
+    "prod": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod  --aot --output-hashing=all --build-optimizer --common-chunk --vendor-chunk --optimization"
   },
   "private": true,
   "dependencies": {

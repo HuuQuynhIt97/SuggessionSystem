@@ -1,9 +1,5 @@
-import { MeetingComponent } from './meeting/meeting.component';
 import { UploadFileComponent } from './todolist2/upload-file/upload-file.component';
-import { PdcaComponent } from './todolist2/pdca/pdca.component';
-import { PlanComponent } from './todolist2/plan/plan.component';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { AttitudeScoreComponent } from './todolist/attitude-score/attitude-score.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,25 +12,13 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { L10n, loadCldr, setCulture } from '@syncfusion/ej2-base';
 
 import { HttpClient } from '@angular/common/http';
-import { ObjectiveComponent } from './objective/objective.component';
 import { TransactionRoutingModule } from './transaction.routing.module';
-import { TodolistComponent } from './todolist/todolist.component';
 import { TabModule, ToolbarModule } from '@syncfusion/ej2-angular-navigations';
-import { ActionComponent } from './todolist/action/action.component';
-import { UpdateResultComponent } from './todolist/update-result/update-result.component';
-import { SelfScoreComponent } from './todolist/self-score/self-score.component';
-import { KpiScoreComponent } from './todolist/kpi-score/kpi-score.component';
-import { AttitudeScoreL2Component } from './todolist/attitude-score-l2/attitude-score-l2.component';
-import { KpiScoreGHRComponent } from './todolist/kpi-score-ghr/kpi-score-ghr.component';
-import { KpiScoreGMComponent } from './todolist/kpi-score-gm/kpi-score-gm.component';
-import { AttitudeScoreGHRComponent } from './todolist/attitude-score-ghr/attitude-score-ghr.component';
+
 import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid';
-import { AttitudeScoreFunctionalLeaderComponent } from './todolist/attitude-score-functional-leader/attitude-score-functional-leader.component';
-import { KpiScoreL2Component } from './todolist/kpi-score-l2/kpi-score-l2.component';
 
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { NgTemplateNameDirective } from './ng-template-name.directive';
-import { UploadKpiComponent } from './todolist/upload-kpi/upload-kpi.component';
 import { Todolist2Component } from './todolist2/todolist2.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -84,25 +68,8 @@ loadCldr(
     }
 @NgModule({
   declarations: [
-    ObjectiveComponent,
-    TodolistComponent,
     Todolist2Component,
-    MeetingComponent,
-    ActionComponent,
-    UpdateResultComponent,
-    SelfScoreComponent,
-    KpiScoreComponent,
-    KpiScoreL2Component,
-    AttitudeScoreComponent,
-    AttitudeScoreFunctionalLeaderComponent,
-    AttitudeScoreL2Component,
-    KpiScoreGHRComponent,
-    KpiScoreGMComponent,
-    AttitudeScoreGHRComponent,
     NgTemplateNameDirective,
-    UploadKpiComponent,
-    PlanComponent,
-    PdcaComponent,
     UploadFileComponent
   ],
   imports: [
