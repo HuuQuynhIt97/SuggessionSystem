@@ -109,11 +109,7 @@ namespace Suggession.Controllers
             if (ModelState.IsValid)
             {
                 var fileupload = new List<Files>();
-
                 var file = Request.Form.Files["UploadedFile"];
-
-
-
                 var issue = Request.Form["Issue"];
                 var title = Request.Form["Title"];
                 var receiveId = Request.Form["ReceiveID"];
@@ -176,6 +172,80 @@ namespace Suggession.Controllers
             }
             return Ok(entity);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<IdeaDto>> ImportSubmitEdit([FromForm] IdeaDto entity)
+        {
+            if (ModelState.IsValid)
+            {
+                var fileupload = new List<Files>();
+                var file = Request.Form.Files["UploadedFile"];
+                var issue = Request.Form["Issue"];
+                var ideadId = Request.Form["IdeaID"];
+                var title = Request.Form["Title"];
+                var receiveId = Request.Form["ReceiveID"];
+                var sendId = Request.Form["SendID"];
+                var suggession = Request.Form["Suggession"];
+
+                if (file != null)
+                {
+                    //kiem tra da ton tai thu muc de upload file hay chua
+
+                    //neu chua co thi tao moi
+                    if (!Directory.Exists(_environment.WebRootPath + "\\UploadedFiles\\"))
+                    {
+                        Directory.CreateDirectory(_environment.WebRootPath + "\\UploadedFiles\\");
+                    }
+
+                    //lap file duoc truyen len
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var currentFile = Request.Form.Files[i];
+                        using FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\UploadedFiles\\" + currentFile.FileName);
+                        await currentFile.CopyToAsync(fileStream);
+                        fileStream.Flush();
+                        var data = new Files
+                        {
+                            Path = $"/UploadedFiles/{currentFile.FileName}"
+                        };
+                        fileupload.Add(data);
+                    }
+                    entity.SendID = sendId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.Id = ideadId.ToInt();
+                    entity.File = fileupload;
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.Status = Suggession.Constants.Status.Apply;
+                    entity.Isshow = true;
+                }
+                else
+                {
+                    entity.SendID = sendId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.File = fileupload;
+                    entity.Id = ideadId.ToInt();
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.Status = Suggession.Constants.Status.Apply;
+                    entity.Isshow = true;
+                }
+
+
+                var model = await _service.EditSubmitSuggession(entity);
+                return Ok(model);
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+            }
+            return Ok(entity);
+        }
+
         [HttpPost]
         public async Task<ActionResult<IdeaDto>> ImportSave([FromForm] IdeaDto entity)
         {
@@ -198,21 +268,21 @@ namespace Suggession.Controllers
                     //kiem tra da ton tai thu muc de upload file hay chua
 
                     //neu chua co thi tao moi
-                    if (!Directory.Exists(_environment.WebRootPath + "\\FileUpload\\"))
+                    if (!Directory.Exists(_environment.WebRootPath + "\\UploadedFiles\\"))
                     {
-                        Directory.CreateDirectory(_environment.WebRootPath + "\\FileUpload\\");
+                        Directory.CreateDirectory(_environment.WebRootPath + "\\UploadedFiles\\");
                     }
 
                     //lap file duoc truyen len
                     for (int i = 0; i < Request.Form.Files.Count; i++)
                     {
                         var currentFile = Request.Form.Files[i];
-                        using FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\FileUpload\\" + currentFile.FileName);
+                        using FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\UploadedFiles\\" + currentFile.FileName);
                         await currentFile.CopyToAsync(fileStream);
                         fileStream.Flush();
                         var data = new Files
                         {
-                            Path = $"/FileUpload/{currentFile.FileName}"
+                            Path = $"/UploadedFiles/{currentFile.FileName}"
                         };
                         fileupload.Add(data);
                     }
@@ -242,6 +312,81 @@ namespace Suggession.Controllers
 
 
                 var model = await _service.UploadFile(entity);
+                return Ok(model);
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+            }
+            return Ok(entity);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<IdeaDto>> ImportSaveEdit([FromForm] IdeaDto entity)
+        {
+            if (ModelState.IsValid)
+            {
+                var fileupload = new List<Files>();
+
+                var file = Request.Form.Files["UploadedFile"];
+                var issue = Request.Form["Issue"];
+                var ideadId = Request.Form["IdeaID"];
+                var title = Request.Form["Title"];
+                var receiveId = Request.Form["ReceiveID"];
+                var sendId = Request.Form["SendID"];
+                var suggession = Request.Form["Suggession"];
+
+                if (file != null)
+                {
+                    //kiem tra da ton tai thu muc de upload file hay chua
+
+                    //neu chua co thi tao moi
+                    if (!Directory.Exists(_environment.WebRootPath + "\\UploadedFiles\\"))
+                    {
+                        Directory.CreateDirectory(_environment.WebRootPath + "\\UploadedFiles\\");
+                    }
+
+                    //lap file duoc truyen len
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var currentFile = Request.Form.Files[i];
+                        using FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\UploadedFiles\\" + currentFile.FileName);
+                        await currentFile.CopyToAsync(fileStream);
+                        fileStream.Flush();
+                        var data = new Files
+                        {
+                            Path = $"/UploadedFiles/{currentFile.FileName}"
+                        };
+                        fileupload.Add(data);
+                    }
+
+                    entity.SendID = sendId.ToInt();
+                    entity.Id = ideadId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.File = fileupload;
+                    entity.Status = Suggession.Constants.Status.NA;
+                    entity.Isshow = true;
+                }
+                else
+                {
+                    entity.Id = ideadId.ToInt();
+                    entity.SendID = sendId.ToInt();
+                    entity.ReceiveID = receiveId.ToInt();
+                    entity.Title = title;
+                    entity.Issue = issue;
+                    entity.Suggession = suggession;
+                    entity.CreatedBy = sendId.ToInt();
+                    entity.File = fileupload;
+                    entity.Status = Suggession.Constants.Status.NA;
+                    entity.Isshow = true;
+                }
+
+
+                var model = await _service.EditSuggession(entity);
                 return Ok(model);
             }
             else

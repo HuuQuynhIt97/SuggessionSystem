@@ -50,6 +50,7 @@ namespace Suggession._Services.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
+
         public async Task<bool> UploadFile(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -85,7 +86,77 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
+        }
+        public async Task<bool> EditSuggession(IdeaDto entity)
+        {
+            var ListUpload = new List<UploadFile>();
+            var itemID = _repoIdeaHis.FindAll(x => x.IdeaID == entity.Id).FirstOrDefault().Id;
+            var itemUpdate = _repo.FindById(entity.Id);
+            itemUpdate.Status = entity.Status;
+            itemUpdate.SendID = entity.SendID;
+            itemUpdate.ReceiveID = entity.ReceiveID;
+            itemUpdate.Title = entity.Title;
+            itemUpdate.Issue = entity.Issue;
+            itemUpdate.Suggession = entity.Suggession;
+            itemUpdate.CreatedBy = entity.CreatedBy;
+
+            _repo.Update(itemUpdate);
+            await _repo.SaveAll();
+            foreach (var item in entity.File)
+            {
+                ListUpload.Add(new UploadFile
+                {
+                    Path = item.Path,
+                    IdealID = itemID
+                });
+            }
+            try
+            {
+                _repoUp.AddRange(ListUpload);
+                await _repoUp.SaveAll();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw;
+            }
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> EditSubmitSuggession(IdeaDto entity)
+        {
+            var ListUpload = new List<UploadFile>();
+            var itemID = _repoIdeaHis.FindAll(x => x.IdeaID == entity.Id).FirstOrDefault().Id;
+            var itemUpdate = _repo.FindById(entity.Id);
+            itemUpdate.Status = entity.Status;
+            itemUpdate.SendID = entity.SendID;
+            itemUpdate.ReceiveID = entity.ReceiveID;
+            itemUpdate.Title = entity.Title;
+            itemUpdate.Issue = entity.Issue;
+            itemUpdate.Suggession = entity.Suggession;
+            itemUpdate.CreatedBy = entity.CreatedBy;
+            _repo.Update(itemUpdate);
+            await _repo.SaveAll();
+            foreach (var item in entity.File)
+            {
+                ListUpload.Add(new UploadFile
+                {
+                    Path = item.Path,
+                    IdealID = itemID
+                });
+            }
+            try
+            {
+                _repoUp.AddRange(ListUpload);
+                await _repoUp.SaveAll();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw;
+            }
         }
         public Task<bool> Delete(int id)
         {
@@ -228,7 +299,6 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
 
         public async Task<bool> Reject(IdeaDto entity)
@@ -245,8 +315,6 @@ namespace Suggession._Services.Services
 
             var idea = _repo.FindById(entity.IdeaId);
             idea.Status = Suggession.Constants.Status.Reject;
-
-            await _repo.SaveAll();
             foreach (var item in entity.File)
             {
                 ListUpload.Add(new UploadFile
@@ -266,7 +334,6 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
 
         public async Task<bool> Close(IdeaDto entity)
@@ -304,7 +371,6 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
 
         public async Task<bool> Update(IdeaDto entity)
@@ -342,7 +408,6 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
 
         public async Task<bool> Complete(IdeaDto entity)
@@ -380,7 +445,6 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
         public async Task<bool> Terminate(IdeaDto entity)
         {
@@ -417,7 +481,6 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
         public async Task<bool> Satisfied(IdeaDto entity)
         {
@@ -456,7 +519,6 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
 
         public async Task<bool> Dissatisfied(IdeaDto entity)
@@ -494,7 +556,8 @@ namespace Suggession._Services.Services
                 return false;
                 throw;
             }
-            throw new NotImplementedException();
         }
+
+        
     }
 }

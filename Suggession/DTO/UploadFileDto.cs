@@ -16,6 +16,7 @@ namespace Suggession.DTO
     public class PreloadFileDto
     {
         public string Name { get; set; }
+        public string filename { get; set; }
         public object Size{ get; set; }
         public object Type{ get; set; }
     }
@@ -23,5 +24,6 @@ namespace Suggession.DTO
     {
         public string Name { get; set; }
         public string Path { get; set; }
+        public int IdeaId { get; set; }
     }
 }

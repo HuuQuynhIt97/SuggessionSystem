@@ -14,6 +14,7 @@ export enum StatusCode {
 
 export enum StatusName {
   Apply = "Apply",
+  NA = "N/A",
   Reject = "Reject",
   Complete = "Complete",
   Terminate = "Terminate",

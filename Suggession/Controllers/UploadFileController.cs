@@ -145,14 +145,10 @@ namespace Suggession.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAttackFiles(int kpiId, DateTime uploadTime)
+        public async Task<IActionResult> GetAttackFiles(int ideaId)
         {
-            var kpiid = kpiId;
-            var month = uploadTime.Month == 1 ? 12 : uploadTime.Month - 1;
-            var year = uploadTime.Month == 1 ? uploadTime.Year - 1 : uploadTime.Year;
-            var ut = new DateTime(year, month, 1);
-
-            var data = await _context.UploadFiles.Where(x => x.IdealID == kpiid && x.UploadTime == ut).ToListAsync();
+            var ideadID = _context.IdeaHistories.FirstOrDefault(x => x.IdeaID == ideaId).Id;
+            var data = await _context.UploadFiles.Where(x => x.IdealID == ideadID).ToListAsync();
             var files = data.Select(x=> x.Path ).ToList();
             var fileInfoList = new List<PreloadFileDto>();
                 files.ForEach(file =>
@@ -163,7 +159,7 @@ namespace Suggession.Controllers
                             var info = new FileInfo(filePath);
                             fileInfoList.Add(new PreloadFileDto
                             {
-                                Name = Path.GetFileNameWithoutExtension(filePath),
+                                Name = Path.GetFileNameWithoutExtension(filePath) + info.Extension,
                                 Size = info.Length,
                                 Type = info.Extension
 
@@ -171,6 +167,89 @@ namespace Suggession.Controllers
                         }
                     });
             return Ok(fileInfoList);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAttackFilesIdea(int ideaId)
+        {
+            var NullData = new List<DownloadFileDto>();
+            var ideadID = _context.IdeaHistories.FirstOrDefault(x => x.IdeaID == ideaId) != null ? _context.IdeaHistories.FirstOrDefault(x => x.IdeaID == ideaId).Id : 0;
+            var data = await _context.UploadFiles.Where(x => x.IdealID == ideadID).ToListAsync();
+            if (data.Count == 0)
+                return Ok(NullData);
+            var files = data.Select(x => x.Path).ToList();
+            var list = new List<DownloadFileDto>();
+            files.ForEach(file =>
+            {
+                string filePath = _currentEnvironment.WebRootPath + file;
+                var info = new FileInfo(filePath);
+                list.Add(new DownloadFileDto
+                {
+                    Name = Path.GetFileName(filePath),
+                    Path = file,
+                    IdeaId = ideadID
+
+                });
+            });
+            return Ok(list);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAttackFilesIdeaPreview(int ideaId)
+        {
+            var NullData = new List<DownloadFileDto>();
+            var ideadID = ideaId;
+            var data = await _context.UploadFiles.Where(x => x.IdealID == ideadID).ToListAsync();
+            if (data.Count == 0)
+                return Ok(NullData);
+            var files = data.Select(x => x.Path).ToList();
+            var list = new List<DownloadFileDto>();
+            files.ForEach(file =>
+            {
+                string filePath = _currentEnvironment.WebRootPath + file;
+                var info = new FileInfo(filePath);
+                list.Add(new DownloadFileDto
+                {
+                    Name = Path.GetFileName(filePath),
+                    Path = file,
+                    IdeaId = ideadID
+
+                });
+            });
+            return Ok(list);
+        }
+        [HttpDelete("{ideaId}/{file}")]
+        public void RemoveFileIdea(int ideaId, string file)
+        {
+
+            try
+            {
+                var fileSave = Path.Combine(_currentEnvironment.WebRootPath, "UploadedFiles");
+
+                var fileName = file;
+
+                var fileSavePath = Path.Combine(fileSave, fileName);
+                if (System.IO.File.Exists(fileSavePath))
+                {
+                    System.IO.File.Delete(fileSavePath);
+                }
+
+
+                string path = $"/UploadedFiles/{fileName}";
+                var item = _context.UploadFiles.FirstOrDefault(x => x.IdealID == ideaId && x.Path == path);
+                _context.UploadFiles.Remove(item);
+                _context.SaveChanges();
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "File removed succesfully";
+
+            }
+            catch (Exception e)
+            {
+                HttpResponse Response = HttpContext.Response;
+                Response.Clear();
+                Response.StatusCode = 400;
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "Falied to remove!";
+            }
         }
 
         [HttpGet]
@@ -212,7 +291,8 @@ namespace Suggession.Controllers
                 list.Add(new DownloadFileDto
                 {
                     Name = Path.GetFileName(filePath),
-                    Path = file
+                    Path = file,
+                    IdeaId = ideaID
 
                 });
             });

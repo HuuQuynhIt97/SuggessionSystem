@@ -33,7 +33,7 @@
           <e-items>
             <e-item id='buy-list' >
               <ng-template #template>
-                <button *ngIf="this.tab === 'Proposal' && accountGroupText === 1" type="button" (click)="openSuggessionModal()" class="btn btn-danger" > Suggession </button>
+                <button *ngIf="this.tab === 'Proposal' && accountGroupText === PROPOSAL" type="button" (click)="openSuggessionModal()" class="btn btn-danger" > Suggession </button>
               </ng-template>
             </e-item>
 
@@ -75,7 +75,7 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="issue" width="80" textAlign='Center' headerText="{{ 'Issue' | translate}}"> </e-column>
+            <e-column field="title" width="80" textAlign='Center' headerText="{{ 'Title' | translate}}"> </e-column>
             <e-column field="" width="80" textAlign='Center' headerText="{{ 'Date' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
@@ -85,8 +85,11 @@
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}"></e-column>
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Detail' | translate}}">
               <ng-template #template let-data>
-                <div class="btn-group">
+                <div *ngIf="data.statusName !== 'N/A'" class="btn-group">
                   <button type="button" (click)="detail(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
+                </div>
+                <div *ngIf="data.statusName === 'N/A' " class="btn-group">
+                  <button *ngIf="accountGroupText === PROPOSAL" type="button" (click)="suggessionUpdate(data)" class="btn btn-xs btn-secondary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
@@ -105,7 +108,7 @@
 <!-- suggession -->
 <ng-template #suggession let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"><i class="fa fa-upload" aria-hidden="true"></i> Suggession</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Suggession</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -172,6 +175,99 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="save()">Save</button>
     <button type="submit" (click)='submit()' class="btn btn-primary">Submit</button>
+  </div>
+
+
+</ng-template>
+<!-- end suggession-->
+
+<!-- suggession Edit -->
+<ng-template #suggessionEdit let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"> <img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">Edit Suggession </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="">To</label>
+          <ejs-dropdownlist [(ngModel)]='toId' [allowFiltering]='true'[fields]="userFields"   placeholder='Select a User' [dataSource]='dataUser'></ejs-dropdownlist>
+
+          <!-- <textarea   cols="30" rows="10" class="form-control"></textarea> -->
+        </div>
+        <div class="form-group">
+          <label for="">Title</label>
+          <input type="text" [(ngModel)]="titleText" class="form-control">
+          <!-- <textarea   cols="30" rows="10" class="form-control"></textarea> -->
+        </div>
+        <div class="form-group">
+          <label for="">Issue</label>
+          <!-- <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist> -->
+
+          <textarea [(ngModel)]="issueText"  cols="30" rows="10" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="">Suggession</label>
+          <!-- <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist> -->
+
+          <textarea [(ngModel)]="suggessionText"  cols="30" rows="10" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="">File</label>
+          <file-pond #myPondUpload
+          label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
+          allow-multiple="true"
+          allowFileSizeValidation="true"
+          maxFileSize="5MB"
+          labelMaxFileSizeExceeded="File is too large"
+          [files]="file"
+          [options]="pondOptions"
+          (onprocessfile)="handleFileProcess($event)"
+          (onaddfile)="pondHandleAddFile($event)"
+          (onremovefile)="pondHandleRemoveFile($event)">
+        </file-pond>
+
+          <div class="mt-3 d-flex justify-content-start">
+
+            <ul class="list-group mr-3" style="width: 50%;" [style.width]='filesRight.length > 0 ? "50%": "100%"'>
+              <li class="list-group-item" *ngFor="let item of filesLeft">
+                <div class="row">
+                  <div class="col-md-10">
+                    <a [id]='item.path' [href]="item.path">{{item.name}}</a>
+
+                  </div>
+                  <div class="col-md-2 float-right">
+                    <button (click)="removeFile(item)" type="button" class="btn btn-xs btn-danger"> X</button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <!-- <ul class="list-group" style="width: 50%;" *ngIf="filesRight.length > 0">
+              <li class="list-group-item" *ngFor="let item of filesRight">
+                <div class="row">
+                  <div class="col-md-10">
+                    <a [id]='item.path' [href]="item.path">{{item.name}}</a>
+
+                  </div>
+                  <div class="col-md-2">
+                    <button (click)="removeFile(item)" type="button" class="btn btn-xs btn-danger"> X</button>
+                  </div>
+                </div>
+              </li>
+            </ul> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="saveEditSuggession()">Save</button>
+    <button type="submit" (click)='submitEditSuggession()' class="btn btn-primary">Submit</button>
   </div>
 
 
@@ -271,7 +367,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" *ngIf="accountGroupText === SPOKERMAN">
     <div class="row">
       <div class="col-md-6">
         <div class="row bootstrap snippets">
@@ -314,10 +410,10 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
   <div class="modal-footer">
-    <button type="submit" (click)="accept()" *ngIf="userId !== createdBy" class="btn btn-success">Accept</button>
-    <button type="submit" (click)="reject()" *ngIf="userId !== createdBy" class="btn btn-danger">Reject</button>
+    <button type="submit" (click)="accept()" *ngIf="accountGroupText === SPOKERMAN" class="btn btn-success">Accept</button>
+    <button type="submit" (click)="reject()" *ngIf="accountGroupText === SPOKERMAN" class="btn btn-danger">Reject</button>
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
@@ -414,7 +510,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING">
     <div class="row">
       <div class="col-md-6">
         <div class="row bootstrap snippets">
@@ -458,9 +554,9 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" (click)="update()" *ngIf="accountGroupText !== 1" class="btn btn-primary">Update</button>
-    <button type="submit" (click)="complete()" *ngIf="accountGroupText !== 1" class="btn btn-success">Complete</button>
-    <button type="submit" (click)="terminate()" *ngIf="accountGroupText !== 1" class="btn btn-danger">Terminate</button>
+    <button type="submit" (click)="update()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING" class="btn btn-primary">Update</button>
+    <button type="submit" (click)="complete()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING" class="btn btn-success">Complete</button>
+    <button type="submit" (click)="terminate()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING"  class="btn btn-danger">Terminate</button>
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
@@ -551,7 +647,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" *ngIf="accountGroupText === PROPOSAL">
     <div class="row">
       <div class="col-md-6">
         <div class="row bootstrap snippets">
@@ -596,8 +692,8 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" (click)="satisfied()"  class="btn btn-success">Satisfied</button>
-    <button type="submit" (click)="dissatisfied()"  class="btn btn-danger">Dissatisfied</button>
+    <button type="submit" (click)="satisfied()" *ngIf="accountGroupText === PROPOSAL" class="btn btn-success">Satisfied</button>
+    <button type="submit" (click)="dissatisfied()" *ngIf="accountGroupText === PROPOSAL" class="btn btn-danger">Dissatisfied</button>
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
@@ -778,7 +874,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" *ngIf="accountGroupText !== SPOKERMAN && accountGroupText !== ERICK">
     <div class="row">
       <div class="col-md-6">
         <div class="row bootstrap snippets">
@@ -823,8 +919,8 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" (click)="satisfied()"  class="btn btn-success">Satisfied</button>
-    <button type="submit" (click)="dissatisfied()"  class="btn btn-danger">Dissatisfied</button>
+    <button type="submit" *ngIf="accountGroupText !== SPOKERMAN && accountGroupText !== ERICK" (click)="satisfied()"  class="btn btn-success">Satisfied</button>
+    <button type="submit" *ngIf="accountGroupText !== SPOKERMAN && accountGroupText !== ERICK" (click)="dissatisfied()"  class="btn btn-danger">Dissatisfied</button>
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
@@ -914,7 +1010,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" *ngIf="accountGroupText === ERICK && this.tab === ERICKTAB">
     <div class="row">
       <div class="col-md-6">
         <div class="row bootstrap snippets">
@@ -959,8 +1055,8 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" (click)="closeIdea()"  class="btn btn-success">Close</button>
-    <button type="submit" (click)="asign()"  class="btn btn-danger">Asign</button>
+    <button type="submit" *ngIf="accountGroupText === ERICK && this.tab === ERICKTAB" (click)="closeIdea()"  class="btn btn-success">Close</button>
+    <button type="submit" *ngIf="accountGroupText === ERICK && this.tab === ERICKTAB" (click)="asign()"  class="btn btn-danger">Asign</button>
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
   </div>
 
@@ -982,7 +1078,7 @@
     <div class="mt-3 d-flex justify-content-start">
       <ul class="list-group" style="width: 100%;" >
         <li class="list-group-item" *ngFor="let item of files">
-          <a [id]='item.path' [href]="item.path">{{item.name}}</a>
+          <a [id]='item.path' target="_blank" [href]="item.path">{{item.name}}</a>
         </li>
       </ul>
       <!-- <ng-container *ngIf="files.length >= 0; else elseTemplate">

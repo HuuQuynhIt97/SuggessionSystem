@@ -50,12 +50,19 @@ export class Todolist2Component implements OnInit, OnDestroy {
   buyingTab: boolean = true;
   completeTab: boolean = false;
   dispatchData: any
+
   @ViewChild('suggession', { static: true })
   public suggession: TemplateRef<any>;
+
+  @ViewChild('suggessionEdit', { static: true })
+  public suggessionEdit: TemplateRef<any>;
+
   @ViewChild('fileModal', { static: true })
   public fileModal: TemplateRef<any>;
+
   @ViewChild('suggessionReturn', { static: true })
   public suggessionReturn: TemplateRef<any>;
+
   @ViewChild('details', { static: true })
   public details: TemplateRef<any>;
   @ViewChild('tabProcess', { static: true })
@@ -79,7 +86,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   TabClass: any = "btn btn-primary"
   buyingTabClass: any = "btn btn-success"
   completeTabClass: any = "btn btn-default"
-  base = environment.apiUrl
+  base = environment.apiUrl.replace('/api/', '');
   noImage = '/assets/img/photo1.png';
   img: any
   dataFake: any
@@ -99,8 +106,9 @@ export class Todolist2Component implements OnInit, OnDestroy {
     multiple: true,
     // acceptedFileTypes: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     server: {
-      process: this.env.apiUrl + 'Idea/SaveFile',
-      revert: null
+      url: this.env.apiUrl,
+      process: 'Idea/SaveFile',
+      revert: null,
     }
   }
   dataUser: import("f:/Angular/SYSTEM/SuggessionSystem/App/src/app/_core/_model/objective").Objective[];
@@ -123,6 +131,11 @@ export class Todolist2Component implements OnInit, OnDestroy {
   status = 'Enable';
   statusName: any;
   tab: string;
+  PROPOSAL = StatusCode.Propersal
+  SPOKERMAN = StatusCode.Spokesman
+  ERICK = StatusCode.Erick
+  PROCESSING = StatusCode.Processing
+  ERICKTAB = StatusCode.ErickTab
   constructor(
     private service: ObjectiveService,
     private router: Router,
@@ -208,6 +221,112 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     }
   }
+  suggessionUpdate(item) {
+    this.toId = item.receiveID
+    this.loadData()
+    this.showModal(this.suggessionEdit)
+    this.titleText = item.title
+    this.issueText = item.issue
+    this.suggessionText = item.suggession
+    this.getDownloadFiles(item.id)
+    this.ideaId = item.id
+    // this.getAttackFiles(item.id)
+  }
+  removeFile(item) {
+    this.todolist2Service.removeFileIdea(item.ideaId , item.name).subscribe(res => {
+      this.getFilesPreview(item.ideaId)
+    })
+  }
+  saveEditSuggession() {
+    const formData = new FormData();
+    formData.append("SendID", this.userId.toString());
+    formData.append("IdeaID", this.ideaId.toString());
+    formData.append("ReceiveID", this.toId.toString());
+    formData.append("Title", this.titleText);
+    formData.append("Suggession", this.suggessionText);
+    formData.append("Issue", this.issueText);
+    for (let item of this.file) {
+      formData.append('UploadedFile', item);
+    }
+    if(this.file) {
+      this.todolist2Service.importSaveEdit(formData).subscribe((res: any) => {
+        this.alertify.success('Upload Success!')
+        this.getTabProposal()
+        this.refreshText()
+        this.modalReference.close();
+      })
+
+    } else {
+      this.alertify.error('Not File Upload!')
+    }
+  }
+  submitEditSuggession() {
+    const formData = new FormData();
+    formData.append("SendID", this.userId.toString());
+    formData.append("IdeaID", this.ideaId.toString());
+    formData.append("ReceiveID", this.toId.toString());
+    formData.append("Title", this.titleText);
+    formData.append("Suggession", this.suggessionText);
+    formData.append("Issue", this.issueText);
+    for (let item of this.file) {
+      formData.append('UploadedFile', item);
+    }
+    if(this.file) {
+      this.todolist2Service.importSubmitEdit(formData).subscribe((res: any) => {
+        this.alertify.success('Upload Success!')
+        this.getTabProposal()
+        this.refreshText()
+        this.modalReference.close();
+      })
+
+    } else {
+      this.alertify.error('Not File Upload!')
+    }
+  }
+  // getAttackFiles(ideaId) {
+  //   this.file = [];
+  //   this.todolist2Service.getAttackFiles(ideaId).subscribe(res => {
+  //     this.file = res as any || [];
+  //   });
+  // }
+  getDownloadFiles(ideaId) {
+    this.todolist2Service.GetAttackFilesIdea(ideaId).subscribe(res => {
+      this.files = [];
+      const files = res as any || [];
+      this.files = files.map(x=> {
+        return {
+          name: x.name,
+          path: this.base + x.path,
+          ideaId: x.ideaId
+        }
+      });
+      this.filesLeft = [];
+      this.filesRight = [];
+      let i = 0;
+      for (const item of this.files) {
+        this.filesLeft.push(item);
+      }
+    });
+  }
+  getFilesPreview(ideaId) {
+    this.todolist2Service.GetAttackFilesIdeaPreview(ideaId).subscribe(res => {
+      this.files = [];
+      const files = res as any || [];
+      this.files = files.map(x=> {
+        return {
+          name: x.name,
+          path: this.base + x.path,
+          ideaId: x.ideaId
+        }
+      });
+      this.filesLeft = [];
+      this.filesRight = [];
+      let i = 0;
+      for (const item of this.files) {
+        this.filesLeft.push(item);
+      }
+    });
+  }
   enableDisableRule() {
     this.toggle = !this.toggle;
     this.status = this.toggle ? 'Enable' : 'Disable';
@@ -216,9 +335,12 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.ideaId = item.id
     this.createdBy = item.createdBy
     this.nameTitle = item.name
-    this.issueTitle = item.title
+    this.issueTitle = item.issue
     this.statusName = item.statusName
     switch (item.statusName) {
+      case StatusName.NA:
+        this.showModal(this.suggessionEdit)
+        break;
       case StatusName.Apply:
         this.showModalDetails(this.details)
         break;
@@ -432,7 +554,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   getTabProposal() {
     this.todolist2Service.getTabProposal().subscribe((res: any) => {
-      console.log(res);
       if(this.accountGroupText === StatusCode.Spokesman) {
         this.data = res.filter(x => x.receiveID === this.userId)
       }
@@ -454,7 +575,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
     formData.append("Title", this.titleText);
     formData.append("Suggession", this.suggessionText);
     formData.append("Issue", this.issueText);
-    // formData.append("topic", this.Topic_Name);
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
@@ -464,7 +584,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
         this.getTabProposal()
         this.refreshText()
         this.modalReference.close();
-        // this.Topic_Name = null;
       })
 
     } else {
@@ -548,6 +667,11 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   showModal(modal){
     this.modalReference = this.modalService.open(modal, { size: 'sm'});
+    this.modalReference.result.then((result) => {
+      this.file = []
+    }, (reason) => {
+      this.file = []
+    });
   }
 
   showModalDetails(modal){
@@ -595,8 +719,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   getAllTab(){
     this.accountGroupService.getAllTab().subscribe(res => {
-      console.log('getAllTab', res);
-      console.log('accountGroupText', this.accountGroupText);
       if(this.accountGroupText === StatusCode.Spokesman) {
         this.tabData = res.filter(x => x.name !== StatusCode.ErickTab)
       }
@@ -604,7 +726,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
         this.tabData = res.filter(x => x.name !== StatusCode.Processing && x.name !== StatusCode.ErickTab)
       }
 
-      if(this.accountGroupText === StatusCode.ErickTab) {
+      if(this.accountGroupText === StatusCode.Erick) {
         this.tabData = res
       }
       if(this.tabData.length > 0) {

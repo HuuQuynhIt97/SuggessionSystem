@@ -85,9 +85,9 @@ export class Todolist2Service  {
       .get(`${this.env.apiUrl}UploadFile/download?kpiId=${kpiId}&uploadTime=${uploadTime}`, { responseType: 'blob' })
       .pipe(catchError(this.handleError));
   }
-  getAttackFiles(kpiId,uploadTime ) {
+  getAttackFiles(ideaId) {
     return this.http
-      .get(`${this.env.apiUrl}UploadFile/GetAttackFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
+      .get(`${this.env.apiUrl}UploadFile/GetAttackFiles?ideaId=${ideaId}`)
       .pipe(catchError(this.handleError));
   }
   getDownloadFiles(kpiId,uploadTime ) {
@@ -106,17 +106,31 @@ export class Todolist2Service  {
       .get(`${this.env.apiUrl}UploadFile/GetDownloadFilesIdea?ideaID=${ideaID}`)
       .pipe(catchError(this.handleError));
   }
+  GetAttackFilesIdea(ideaID) {
+    return this.http
+      .get(`${this.env.apiUrl}UploadFile/GetAttackFilesIdea?ideaID=${ideaID}`)
+      .pipe(catchError(this.handleError));
+  }
+  GetAttackFilesIdeaPreview(ideaID) {
+    return this.http
+      .get(`${this.env.apiUrl}UploadFile/GetAttackFilesIdeaPreview?ideaID=${ideaID}`)
+      .pipe(catchError(this.handleError));
+  }
+  removeFileIdea(ideaID, filename) {
+      return this.http.delete(this.env.apiUrl + `UploadFile/RemoveFileIdea/${ideaID}/${filename}`);
+  }
   importSubmit(formData) {
-    // const formData = new FormData();
-    // formData.append('UploadedFile', file);
-    // formData.append('CreatedBy', createdBy);
     return this.http.post(this.env.apiUrl + 'Idea/ImportSubmit', formData);
   }
   importSave(formData) {
-    // const formData = new FormData();
-    // formData.append('UploadedFile', file);
-    // formData.append('CreatedBy', createdBy);
     return this.http.post(this.env.apiUrl + 'Idea/ImportSave', formData);
+  }
+  importSaveEdit(formData) {
+    return this.http.post(this.env.apiUrl + 'Idea/ImportSaveEdit', formData);
+  }
+
+  importSubmitEdit(formData) {
+    return this.http.post(this.env.apiUrl + 'Idea/ImportSubmitEdit', formData);
   }
   getTabProposal() {
     return this.http.get(this.env.apiUrl + 'Idea/TabProposalGetAll', {});

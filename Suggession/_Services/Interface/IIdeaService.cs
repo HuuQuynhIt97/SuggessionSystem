@@ -25,6 +25,8 @@ namespace Suggession._Services.Services
         Task<object> GetIdeaHisById(int id);
         Task<object> TabProcessingGetAll();
         Task<bool> UploadFile(IdeaDto entity);
+        Task<bool> EditSuggession(IdeaDto entity);
+        Task<bool> EditSubmitSuggession(IdeaDto entity);
         Task<object> TabErickGetAll();
         Task<object> TabCloseGetAll();
         Task<bool> Delete(int id);
