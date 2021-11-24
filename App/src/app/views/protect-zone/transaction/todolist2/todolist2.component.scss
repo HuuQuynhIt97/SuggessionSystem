@@ -10,3 +10,15 @@ button.myButton:hover {
   background-color: #f86c6b !important;
   color: white;
 }
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  background-color: white;
+  border: none;
+  color: #000;
+  background-color: transparent;
+  outline: none;
+  resize: none;
+}
+.form-control:focus {
+  box-shadow: none;
+}

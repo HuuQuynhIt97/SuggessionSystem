@@ -60,7 +60,6 @@ namespace Suggession.Controllers
                             Response.Clear();
                             Response.ContentType = "application/json; charset=utf-8";
                             Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "File uploaded succesfully";
-
                          
                         }
                         else
@@ -233,7 +232,6 @@ namespace Suggession.Controllers
                     System.IO.File.Delete(fileSavePath);
                 }
 
-
                 string path = $"/UploadedFiles/{fileName}";
                 var item = _context.UploadFiles.FirstOrDefault(x => x.IdealID == ideaId && x.Path == path);
                 _context.UploadFiles.Remove(item);
@@ -335,6 +333,7 @@ namespace Suggession.Controllers
             var ut = new DateTime(year, month, 1);
 
             var data = _context.UploadFiles.Where(x => x.IdealID == kpiid && x.UploadTime == ut).ToList();
+
             var files = data.Select(x=> x.Path ).ToList();
             
             using (var memoryStream = new MemoryStream())

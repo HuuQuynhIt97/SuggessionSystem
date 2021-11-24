@@ -111,14 +111,14 @@ export class Todolist2Component implements OnInit, OnDestroy {
       revert: null,
     }
   }
-  dataUser: import("f:/Angular/SYSTEM/SuggessionSystem/App/src/app/_core/_model/objective").Objective[];
+  dataUser: [];
   userFields: object = { text: 'fullName', value: 'id' };
   userId: number = 0
   toId: number = 0 ;
-  titleText: string
-  issueText: string
+  titleText: string = ""
+  issueText: string = ""
   commentText: string = ""
-  suggessionText: string
+  suggessionText: string = ""
   proposal: boolean = true
   files: any;
   ideaId: any;
@@ -152,8 +152,10 @@ export class Todolist2Component implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService
   ) {
   }
+
   ngOnDestroy(): void {
   }
+
   changeTab(item) {
     this.spinner.show()
     this.tabData.forEach(element => {
@@ -188,6 +190,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
         break;
     }
   }
+
   ngOnInit(): void {
     this.tab = this.route.snapshot.params.tab || "Proposal";
     this.proposal = true
@@ -221,6 +224,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     }
   }
+
   suggessionUpdate(item) {
     this.toId = item.receiveID
     this.loadData()
@@ -232,11 +236,13 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.ideaId = item.id
     // this.getAttackFiles(item.id)
   }
+
   removeFile(item) {
     this.todolist2Service.removeFileIdea(item.ideaId , item.name).subscribe(res => {
       this.getFilesPreview(item.ideaId)
     })
   }
+
   saveEditSuggession() {
     const formData = new FormData();
     formData.append("SendID", this.userId.toString());
@@ -260,6 +266,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.alertify.error('Not File Upload!')
     }
   }
+
   submitEditSuggession() {
     const formData = new FormData();
     formData.append("SendID", this.userId.toString());
@@ -289,6 +296,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   //     this.file = res as any || [];
   //   });
   // }
+
   getDownloadFiles(ideaId) {
     this.todolist2Service.GetAttackFilesIdea(ideaId).subscribe(res => {
       this.files = [];
@@ -308,6 +316,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       }
     });
   }
+
   getFilesPreview(ideaId) {
     this.todolist2Service.GetAttackFilesIdeaPreview(ideaId).subscribe(res => {
       this.files = [];
@@ -327,15 +336,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
       }
     });
   }
+
   enableDisableRule() {
     this.toggle = !this.toggle;
     this.status = this.toggle ? 'Enable' : 'Disable';
   }
+
   detail(item) {
     this.ideaId = item.id
     this.createdBy = item.createdBy
     this.nameTitle = item.name
-    this.issueTitle = item.issue
+    this.issueTitle = item.title
     this.statusName = item.statusName
     switch (item.statusName) {
       case StatusName.NA:
@@ -370,6 +381,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     }
     this.getIdeaHisById(item.id)
   }
+
   accept() {
     const formData = new FormData();
     formData.append("IdeaID", this.ideaId.toString());
@@ -385,6 +397,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.modalReference.close()
     })
   }
+
   update() {
     const formData = new FormData();
     formData.append("IdeaID", this.ideaId.toString());

@@ -32,7 +32,7 @@ import * as FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import * as FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 registerPlugin(FilePondPluginFileValidateType,FilePondPluginFileValidateSize,FilePondPluginImagePreview);
 import  { NgxDocViewerModule } from 'ngx-doc-viewer';
-
+import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
 
 declare var require: any;
 let defaultLang: string;
@@ -75,6 +75,7 @@ loadCldr(
   imports: [
     NgxDocViewerModule,
     FilePondModule,
+    TextareaAutosizeModule,
     CommonModule,
     TooltipModule,
     FormsModule,

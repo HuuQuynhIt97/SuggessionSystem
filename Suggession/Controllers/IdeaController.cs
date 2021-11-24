@@ -210,6 +210,7 @@ namespace Suggession.Controllers
                         };
                         fileupload.Add(data);
                     }
+
                     entity.SendID = sendId.ToInt();
                     entity.ReceiveID = receiveId.ToInt();
                     entity.Title = title;

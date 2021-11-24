@@ -305,7 +305,7 @@
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -329,7 +329,7 @@
           [editSettings]='editSettings'
         >
           <e-columns>
-            <e-column field="Id" textAlign='Center' width="50" isPrimaryKey="true" headerText="#">
+            <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
                 {{NO(data.index)}}
               </ng-template>
@@ -337,10 +337,13 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="name" width="80" textAlign='Center' headerText="{{ 'Person of confirmation' | translate}}"> </e-column>
-            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}">
+            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
+            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #template let-data>
+                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+              </ng-template>
             </e-column>
-            <e-column field="" width="80" textAlign='Center' headerText="{{ 'Time' | translate}}">
+            <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -351,7 +354,7 @@
 
             </e-column>
 
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+            <e-column field="Attachment" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
               <ng-template #template let-data>
                 <div class="btn-group">
                   <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</button>
@@ -449,7 +452,7 @@
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -473,7 +476,7 @@
           [editSettings]='editSettings'
         >
           <e-columns>
-            <e-column field="Id" textAlign='Center' width="50" isPrimaryKey="true" headerText="#">
+            <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
                 {{NO(data.index)}}
               </ng-template>
@@ -481,9 +484,13 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="name" width="80" textAlign='Center' headerText="{{ 'Person of confirmation' | translate}}"> </e-column>
-            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}"> </e-column>
-            <e-column field="" width="80" textAlign='Center' headerText="{{ 'Time' | translate}}">
+            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
+            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #template let-data>
+                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+              </ng-template>
+            </e-column>
+            <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -586,7 +593,7 @@
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -610,7 +617,7 @@
           [editSettings]='editSettings'
         >
           <e-columns>
-            <e-column field="Id" textAlign='Center' width="50" isPrimaryKey="true" headerText="#">
+            <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
                 {{NO(data.index)}}
               </ng-template>
@@ -618,9 +625,13 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="name" width="80" textAlign='Center' headerText="{{ 'Person of confirmation' | translate}}"> </e-column>
-            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}"> </e-column>
-            <e-column field="" width="80" textAlign='Center' headerText="{{ 'Time' | translate}}">
+            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
+            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #template let-data>
+                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+              </ng-template>
+            </e-column>
+            <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -723,7 +734,7 @@
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -747,7 +758,7 @@
           [editSettings]='editSettings'
         >
           <e-columns>
-            <e-column field="Id" textAlign='Center' width="50" isPrimaryKey="true" headerText="#">
+            <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
                 {{NO(data.index)}}
               </ng-template>
@@ -755,9 +766,14 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="name" width="80" textAlign='Center' headerText="{{ 'Person of confirmation' | translate}}"> </e-column>
-            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}"> </e-column>
-            <e-column field="" width="80" textAlign='Center' headerText="{{ 'Time' | translate}}">
+            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
+            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #template let-data>
+                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+              </ng-template>
+
+            </e-column>
+            <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -813,7 +829,7 @@
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -837,7 +853,7 @@
           [editSettings]='editSettings'
         >
           <e-columns>
-            <e-column field="Id" textAlign='Center' width="50" isPrimaryKey="true" headerText="#">
+            <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
                 {{NO(data.index)}}
               </ng-template>
@@ -845,9 +861,13 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="name" width="80" textAlign='Center' headerText="{{ 'Person of confirmation' | translate}}"> </e-column>
-            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}"> </e-column>
-            <e-column field="" width="80" textAlign='Center' headerText="{{ 'Time' | translate}}">
+            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
+            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #template let-data>
+                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+              </ng-template>
+            </e-column>
+            <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -949,7 +969,7 @@
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Issue: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -973,7 +993,7 @@
           [editSettings]='editSettings'
         >
           <e-columns>
-            <e-column field="Id" textAlign='Center' width="50" isPrimaryKey="true" headerText="#">
+            <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
                 {{NO(data.index)}}
               </ng-template>
@@ -981,9 +1001,13 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="name" width="80" textAlign='Center' headerText="{{ 'Person of confirmation' | translate}}"> </e-column>
-            <e-column field="comment" width="80" textAlign='Center' headerText="{{ 'Comment' | translate}}"> </e-column>
-            <e-column field="" width="80" textAlign='Center' headerText="{{ 'Time' | translate}}">
+            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
+            <e-column field="comment" textAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #template let-data>
+                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+              </ng-template>
+            </e-column>
+            <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>

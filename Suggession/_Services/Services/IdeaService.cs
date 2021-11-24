@@ -259,7 +259,7 @@ namespace Suggession._Services.Services
                 Comment = x.Comment,
                 Name = _repoAc.FindById(x.InsertBy).FullName ?? "",
                 CreatedTime = x.CreatedTime,
-                StatusName = _repoStatus.FindById(x.Status).Name ?? ""
+                StatusName = _repoStatus.FindById(x.Status).Name ?? "N/A"
             }).ToListAsync();
             return data;
         }
