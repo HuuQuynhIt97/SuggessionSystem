@@ -11,6 +11,7 @@ import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AccountGroupService } from 'src/app/_core/_service/account.group.service';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { OcService } from 'src/app/_core/_service/oc.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account',
@@ -36,6 +37,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
   locale = localStorage.getItem('lang');
   accountGroupData: AccountGroup[];
   accountGroupItem: any;
+  pageSettingsAccount = {
+    pageCount: 10,
+    pageSizes: [5, 10,15,20, 'All'],
+    pageSize: 10,
+  };
   leaders: any[] = [];
   managers: any[] = [];
   leaderId: number;
@@ -54,8 +60,16 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public modalService: NgbModal,
     private ocService: OcService,
     private alertify: AlertifyService,
+    public translate: TranslateService,
     private route: ActivatedRoute,
-  ) { super(); }
+  ) {
+    super();
+    setTimeout(() => {
+      this.locale = localStorage.getItem('lang')
+      translate.getTranslation(this.locale);
+      translate.use(this.locale)
+    }, 300);
+  }
 
   ngOnInit() {
     // this.Permission(this.route);

@@ -3,11 +3,11 @@ import { INavData } from '@coreui/angular'
 export const navItems: INavData[] = [
   {
     name: 'Dashboard',
-    url: '/dashboard',
+    url: '/transaction/todolist2',
     icon: 'icon-speedometer',
     badge: {
       variant: 'info',
-      text: 'NEW'
+      text: ''
     }
   },
 
@@ -26,6 +26,11 @@ export const navItems: INavData[] = [
         url: '/system/account',
         icon: 'icon-puzzle'
       },
+      {
+        name: '0.3 System Language',
+        url: '/system/system-language',
+        icon: 'icon-puzzle'
+      }
 
       // {
       //   name: '0.3 Period',
@@ -137,11 +142,11 @@ export const navItems: INavData[] = [
 export const navItemsVI: INavData[] = [
   {
     name: 'Dashboard',
-    url: '/dashboard',
+    url: '/transaction/todolist2',
     icon: 'icon-speedometer',
     badge: {
       variant: 'info',
-      text: 'NEW'
+      text: ''
     }
   },
 
@@ -271,11 +276,11 @@ export const navItemsVI: INavData[] = [
 export const navItemsEN: INavData[] = [
   {
     name: 'Dashboard',
-    url: '/dashboard',
+    url: '/transaction/todolist2',
     icon: 'icon-speedometer',
     badge: {
       variant: 'info',
-      text: 'NEW'
+      text: ''
     }
   },
 
@@ -292,6 +297,11 @@ export const navItemsEN: INavData[] = [
       {
         name: '0.2 Account',
         url: '/system/account',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '0.3 System Language',
+        url: '/system/system-language',
         icon: 'icon-puzzle'
       },
 

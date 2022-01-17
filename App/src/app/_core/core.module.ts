@@ -5,24 +5,26 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthenticationService } from './_service/authentication.service';
 import { appInitializer } from './_helper/appInitializer';
 import { JwtInterceptor } from '@auth0/angular-jwt';
-
+import { SystemLanguageService } from './_service/systemLanguage.service';
+function languagesInitializer(service: SystemLanguageService) {
+  return () =>
+    new Promise((resolve, reject) => {
+      service.getLanguages(localStorage.getItem('lang') || 'zh').subscribe(data => {
+        localStorage.setItem('languages', JSON.stringify(data));
+      }).add(resolve);
+  });
+}
 
 @NgModule({
   declarations: [],
   imports: [CommonModule],
   providers: [
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: appInitializer,
-    //   multi: true,
-    //   deps: [AuthenticationService],
-    // },
-    // { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: UnauthorizedInterceptor,
-    //   multi: true,
-    // },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: languagesInitializer,
+      multi: true,
+      deps: [SystemLanguageService],
+    }
   ],
 })
 export class CoreModule {

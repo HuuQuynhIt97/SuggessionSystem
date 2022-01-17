@@ -15,6 +15,7 @@ using NetUtility;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Suggession._Repositories.Interface;
+using Suggession._Services.Interface;
 
 namespace Suggession._Services.Services
 {
@@ -51,6 +52,24 @@ namespace Suggession._Services.Services
             _configMapper = configMapper;
         }
 
+        public async Task<bool> UpdateAnnouncement(int id)
+        {
+            try
+            {
+                var item = _repo.FindById(id);
+                item.IsAnnouncement = !item.IsAnnouncement;
+                _repo.Update(item);
+                await _repo.SaveAll();
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+        }
         public async Task<bool> UploadFile(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -63,7 +82,8 @@ namespace Suggession._Services.Services
             ideaHist.InsertBy = entity.CreatedBy;
             ideaHist.Status = entity.Status;
             ideaHist.Isshow = true;
-            ideaHist.Comment = "Issue: " + entity.Issue + "\n" + "Suggession: " + entity.Suggession;
+            ideaHist.Comment = "Issue: " + entity.Issue + "\n" + "Suggestion: " + entity.Suggession;
+            ideaHist.CommentZh = "問題: " + entity.Issue + "\n" + "建議: " + entity.Suggession;
             _repoIdeaHis.Add(ideaHist);
 
             await _repoIdeaHis.SaveAll();
@@ -81,12 +101,13 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
             }
         }
+
         public async Task<bool> EditSuggession(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -116,7 +137,7 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
@@ -136,6 +157,9 @@ namespace Suggession._Services.Services
             itemUpdate.Issue = entity.Issue;
             itemUpdate.Suggession = entity.Suggession;
             itemUpdate.CreatedBy = entity.CreatedBy;
+            var ideaHis = _repoIdeaHis.FindAll(x => x.IdeaID == entity.Id).FirstOrDefault();
+            ideaHis.Status = entity.Status;
+            _repoIdeaHis.Update(ideaHis);
             _repo.Update(itemUpdate);
             await _repo.SaveAll();
             foreach (var item in entity.File)
@@ -152,49 +176,60 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
             }
         }
+
         public Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-
-        public async Task<object> TabProposalGetAll()
+        public async Task<object> TabProposalGetAll(string lang)
         {
+            var index = 1;
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
-            var data = await _repo.FindAll(
-            //    x => x.CreatedBy == accountId || x.ReceiveID == accountId)
-            //.Where(x =>
-            //x.Status == Suggession.Constants.Status.Apply ||
-            //x.Status == Suggession.Constants.Status.NA ||
-            //x.Status == Suggession.Constants.Status.Reject ||
-            //x.Status == Suggession.Constants.Status.Terminate ||
-            //x.Status == Suggession.Constants.Status.Complete
-            ).Select(x => new IdeaDto {
+            var data = (from x in await _repo.FindAll().ToListAsync()
+                        join y in _repoIdeaHis.FindAll() on x.Id equals y.IdeaID into last
+                        let l = last.LastOrDefault()
+                        select new IdeaDto {
                 Id = x.Id,
                 SendID = x.SendID,
                 ReceiveID = x.ReceiveID,
                 CreatedTime = x.CreatedTime,
                 CreatedBy = x.CreatedBy,
+                Index = index,
                 Name = _repoAc.FindById(x.CreatedBy).FullName,
                 Issue = x.Issue,
                 Suggession = x.Suggession,
                 Title = x.Title,
-                StatusName = _repoStatus.FindById(x.Status).Name ?? "N/A"
+                Comment= l.Comment,
+                Isshow = x.Isshow,
+                IsAnnouncement = x.IsAnnouncement,
+                Description = _repoStatus.FindById(l.Status) != null ? _repoStatus.FindById(l.Status).Description : "N/A",
+                StatusName = lang == Constants.SystemLanguage.EN ? _repoStatus.FindById(x.Status) != null ? _repoStatus.FindById(x.Status).NameEn : "N/A" : _repoStatus.FindById(x.Status) != null ? _repoStatus.FindById(x.Status).NameZh : "N/A",
+                Type = _repoStatus.FindById(x.Status) != null ? _repoStatus.FindById(x.Status).Description : "N/A"
 
-            }).ToListAsync();
+            }).OrderByDescending(x => x.CreatedTime).ToList();
+            data.ForEach(item =>
+            {
+                item.Index = index;
+                index++;
+            });
             return data;
         }
 
-        public async Task<object> TabProcessingGetAll()
+        public async Task<object> TabProcessingGetAll(string lang)
         {
-            var data = await _repo.FindAll(x => x.Status == Suggession.Constants.Status.Update).Select(x => new IdeaDto
+            int index = 1;
+            var data =  (from x in await _repo.FindAll(x => x.Status == Suggession.Constants.Status.Update).ToListAsync()
+                        join y in _repoIdeaHis.FindAll() on x.Id equals y.IdeaID into last
+                        let l = last.LastOrDefault()
+                select new IdeaDto
             {
                 Id = x.Id,
                 SendID = x.SendID,
@@ -202,18 +237,32 @@ namespace Suggession._Services.Services
                 CreatedTime = x.CreatedTime,
                 CreatedBy = x.CreatedBy,
                 Issue = x.Issue,
+                Index = index,
+                Comment = l.Comment,
                 Name = _repoAc.FindById(x.CreatedBy).FullName,
                 Suggession = x.Suggession,
+                Isshow = x.Isshow,
+                IsAnnouncement = x.IsAnnouncement,
                 Title = x.Title,
-                StatusName = _repoStatus.FindById(x.Status).Name ?? ""
+                StatusName = lang == Constants.SystemLanguage.EN ? _repoStatus.FindById(x.Status).NameEn ?? "N/A" : _repoStatus.FindById(x.Status).NameZh ?? "N/A",
+                Type = _repoStatus.FindById(x.Status).Description ?? "N/A"
 
-            }).ToListAsync();
+            }).OrderByDescending(x => x.CreatedTime).ToList();
+            data.ForEach(item =>
+            {
+                item.Index = index;
+                index++;
+            });
             return data;
         }
 
-        public async Task<object> TabErickGetAll()
+        public async Task<object> TabErickGetAll(string lang)
         {
-            var data = await _repo.FindAll(x => x.Status == Suggession.Constants.Status.Dissatisfied).Select(x => new IdeaDto
+            int index = 1;
+            var data = (from x in await _repo.FindAll(x => x.Status == Suggession.Constants.Status.Dissatisfied).ToListAsync()
+                        join y in _repoIdeaHis.FindAll() on x.Id equals y.IdeaID into last
+                        let l = last.LastOrDefault()
+                select new IdeaDto
             {
                 Id = x.Id,
                 SendID = x.SendID,
@@ -222,19 +271,32 @@ namespace Suggession._Services.Services
                 CreatedBy = x.CreatedBy,
                 Name = _repoAc.FindById(x.CreatedBy).FullName,
                 Issue = x.Issue,
+                Comment = l.Comment,
                 Suggession = x.Suggession,
                 Title = x.Title,
-                StatusName = _repoStatus.FindById(x.Status).Name ?? ""
+                Isshow = x.Isshow,
+                IsAnnouncement = x.IsAnnouncement,
+                StatusName = lang == Constants.SystemLanguage.EN ? _repoStatus.FindById(x.Status).NameEn ?? "N/A" : _repoStatus.FindById(x.Status).NameZh ?? "N/A",
+                Type = _repoStatus.FindById(x.Status).Description ?? "N/A"
 
-            }).ToListAsync();
+            }).OrderByDescending(x => x.CreatedTime).ToList();
+            data.ForEach(item =>
+            {
+                item.Index = index;
+                index++;
+            });
             return data;
         }
 
-        public async Task<object> TabCloseGetAll()
+        public async Task<object> TabCloseGetAll(string lang)
         {
-            var data = await _repo.FindAll(x =>
+            int index = 1;
+            var data = (from x in await _repo.FindAll(x =>
             x.Status == Suggession.Constants.Status.Satisfied ||
-            x.Status == Suggession.Constants.Status.Close).Select(x => new IdeaDto
+            x.Status == Suggession.Constants.Status.Close).ToListAsync()
+            join y in _repoIdeaHis.FindAll() on x.Id equals y.IdeaID into last
+            let l = last.LastOrDefault()
+            select new IdeaDto
             {
                 Id = x.Id,
                 SendID = x.SendID,
@@ -245,22 +307,74 @@ namespace Suggession._Services.Services
                 Issue = x.Issue,
                 Suggession = x.Suggession,
                 Title = x.Title,
-                StatusName = _repoStatus.FindById(x.Status).Name ?? ""
+                Comment = l .Comment,
+                Isshow = x.Isshow,
+                IsAnnouncement = x.IsAnnouncement,
+                StatusName = lang == Constants.SystemLanguage.EN ? _repoStatus.FindById(x.Status).NameEn ?? "N/A" : _repoStatus.FindById(x.Status).NameZh ?? "N/A",
+                Type = _repoStatus.FindById(x.Status).Description ?? "N/A"
 
-            }).ToListAsync();
+            }).OrderByDescending(x => x.CreatedTime).ToList();
+            data.ForEach(item =>
+            {
+                item.Index = index;
+                index++;
+            });
             return data;
         }
 
-        public async Task<object> GetIdeaHisById(int id)
+        public async Task<object> TabAnnouncementGetAll(string lang)
         {
+            int index = 1;
+            var data = (from x in await _repo.FindAll().ToListAsync()
+                        join y in _repoIdeaHis.FindAll() on x.Id equals y.IdeaID into last
+                        let l = last.LastOrDefault()
+                
+            select new IdeaDto
+            {
+                Id = x.Id,
+                SendID = x.SendID,
+                ReceiveID = x.ReceiveID,
+                CreatedTime = x.CreatedTime,
+                CreatedBy = x.CreatedBy,
+                Name = _repoAc.FindById(x.CreatedBy).FullName,
+                Issue = x.Issue,
+                Comment = l.Comment,
+                Suggession = x.Suggession,
+                Title = x.Title,
+                Isshow = x.Isshow,
+                IsAnnouncement = x.IsAnnouncement,
+                StatusName = lang == Constants.SystemLanguage.EN ? _repoStatus.FindById(x.Status).NameEn ?? "N/A" : _repoStatus.FindById(x.Status).NameZh ?? "N/A",
+                Type = _repoStatus.FindById(x.Status).Description ?? "N/A"
+            }).Where(x => x.IsAnnouncement).OrderByDescending(x => x.CreatedTime).ToList();
+            data.ForEach(item =>
+            {
+                item.Index = index;
+                index++;
+            });
+            return data;
+        }
+
+
+        public async Task<object> GetIdeaHisById(int id, string lang)
+        {
+            var index = 1;
             var data = await _repoIdeaHis.FindAll(x => x.IdeaID == id).Select(x => new IdeaDto { 
                 Id = x.Id,
                 IdeaId = x.IdeaID,
-                Comment = x.Comment,
+                Comment = lang == Constants.SystemLanguage.EN ? x.Comment : x.CommentZh,
                 Name = _repoAc.FindById(x.InsertBy).FullName ?? "",
                 CreatedTime = x.CreatedTime,
-                StatusName = _repoStatus.FindById(x.Status).Name ?? "N/A"
+                Issue = _repo.FindById(id).Issue,
+                Suggession = _repo.FindById(id).Suggession,
+                Sequence = index.ToString(),
+                StatusName = lang == Constants.SystemLanguage.EN ? _repoStatus.FindById(x.Status).NameEn ?? "N/A" : _repoStatus.FindById(x.Status).NameZh ?? "N/A",
+                Description = _repoStatus.FindById(x.Status).Description,
             }).ToListAsync();
+            data.ForEach(item =>
+            {
+                item.Sequence = index.ToString();
+                index++;
+            });
             return data;
         }
 
@@ -273,6 +387,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Update;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -294,7 +409,7 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
@@ -310,6 +425,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Reject;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -329,7 +445,7 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
@@ -345,6 +461,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Close;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -366,7 +483,7 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
@@ -382,6 +499,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Update;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -403,7 +521,7 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
@@ -419,6 +537,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Complete;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -440,12 +559,13 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
             }
         }
+
         public async Task<bool> Terminate(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -455,6 +575,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Terminate;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -476,12 +597,13 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
             }
         }
+
         public async Task<bool> Satisfied(IdeaDto entity)
         {
             var ListUpload = new List<UploadFile>();
@@ -491,6 +613,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Satisfied;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -514,7 +637,7 @@ namespace Suggession._Services.Services
                 return true;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
@@ -530,6 +653,7 @@ namespace Suggession._Services.Services
             ideaHist.Status = Suggession.Constants.Status.Dissatisfied;
             ideaHist.Isshow = true;
             ideaHist.Comment = entity.Comment;
+            ideaHist.CommentZh = entity.Comment;
             _repoIdeaHis.Add(ideaHist);
             await _repoIdeaHis.SaveAll();
 
@@ -551,13 +675,13 @@ namespace Suggession._Services.Services
                 await _repoUp.SaveAll();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
                 throw;
             }
         }
 
-        
+       
     }
 }

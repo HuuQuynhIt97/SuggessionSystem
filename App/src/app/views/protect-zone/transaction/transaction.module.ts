@@ -1,6 +1,9 @@
+import { LinebreaksPipe } from './../../../_core/_helper/linebreak.pipe';
+import { CoreModule } from './../../../_core/core.module';
+import { CustomLoader } from './../../../_core/_helper/customLoader';
 import { UploadFileComponent } from './todolist2/upload-file/upload-file.component';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
@@ -23,9 +26,9 @@ import { Todolist2Component } from './todolist2/todolist2.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+// export function HttpLoaderFactory(http: HttpClient) {
+//   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+// }
 import { FilePondModule, registerPlugin } from 'ngx-filepond';
 import * as FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import * as FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -33,7 +36,7 @@ import * as FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-s
 registerPlugin(FilePondPluginFileValidateType,FilePondPluginFileValidateSize,FilePondPluginImagePreview);
 import  { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
-
+import { SystemLanguageService } from 'src/app/_core/_service/systemLanguage.service';
 declare var require: any;
 let defaultLang: string;
 const lang = localStorage.getItem('lang');
@@ -66,10 +69,12 @@ loadCldr(
     } else if (lang === 'zh'){
       defaultLang = 'zh';
     }
+
 @NgModule({
   declarations: [
     Todolist2Component,
     NgTemplateNameDirective,
+    LinebreaksPipe,
     UploadFileComponent
   ],
   imports: [
@@ -97,10 +102,8 @@ loadCldr(
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      },
-      defaultLanguage: defaultLang
+        useClass: CustomLoader
+      }
     }),
   ]
 })

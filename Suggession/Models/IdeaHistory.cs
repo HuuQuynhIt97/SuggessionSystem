@@ -18,6 +18,7 @@ namespace Suggession.Models
         public int Status { get; set; }
         public bool Isshow { get; set; }
         public string Comment { get; set; }
+        public string CommentZh { get; set; }
         public DateTime CreatedTime { get ; set ; }
         public DateTime? ModifiedTime { get ; set ; }
       

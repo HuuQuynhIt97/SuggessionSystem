@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Suggession._Repositories.Interface;
 using System.Net;
 using Suggession.Constants;
+using Suggession._Services.Interface;
 
 namespace Suggession._Services.Services
 {

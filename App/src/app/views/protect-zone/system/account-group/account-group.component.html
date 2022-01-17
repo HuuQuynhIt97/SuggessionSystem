@@ -33,9 +33,16 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="name" textAlign='Center' headerText="Name"> </e-column>
+            <e-column field="name" textAlign='Center' headerText="Name">
+              <ng-template #headerTemplate let-data>
+                {{"ACCOUNTGROUP_NAME_LABEL" | translate}}
+              </ng-template>
+            </e-column>
             <!-- <e-column field="position" textAlign='Center' headerText="Position"> </e-column> -->
             <e-column field="sequence" textAlign='Center' headerText="Sequence">
+              <ng-template #headerTemplate let-data>
+                {{"ACCOUNTGROUP_SEQUENCE_LABEL" | translate}}
+              </ng-template>
               <ng-template #editTemplate let-data>
                 {{data.sequence}}
               </ng-template>

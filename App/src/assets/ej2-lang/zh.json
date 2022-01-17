@@ -1564,7 +1564,7 @@
             "nextPagerTooltip": "轉到下一頁",
             "previousPagerTooltip": "轉到上一頁",
             "pagerDropDown": "每頁項目",
-            "pagerAllDropDown": "物品",
+            "pagerAllDropDown": "每頁項目",
             "All": "所有"
         },
         "calendar": {

@@ -12,7 +12,7 @@ using Suggession.Helpers;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Suggession._Services.Services
+namespace Suggession._Services.Interface
 {
     public interface IAccountGroupService
     {

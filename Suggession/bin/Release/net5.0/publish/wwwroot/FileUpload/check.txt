@@ -1,0 +1,21 @@
+1. Do not use the "_ Repositories" construct -> not follow
+
+2. Interface and service are in the same file -> not follow
+
+3. Use only one Repository (RepositoryBase) -> not follow
+
+4. SD3 team don’t use UnitOfWork -> not follow
+
+5. SD3 team do not use DbFactory -> not follow
+
+6. Config launchSettings.json according to ip computer to start 
+project in local, Database official setup in local
+computer -> Coding rule does not mention
+
+7. Using MS Identity -> Coding rule does not mention
+
+8. Differents setting startup -> not follow
+
+9. Differents setting Aspose cell License -> Coding rule does not mention
+
+10. SPA use Syncfusion Components Library -> Coding rule does not mention

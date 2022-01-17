@@ -21,6 +21,7 @@ namespace Suggession.Models
         public int Status { get; set; }
         public int CreatedBy { get; set; }
         public bool Isshow { get; set; }
+        public bool IsAnnouncement { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime CreatedTime { get ; set ; }
         public DateTime? ModifiedTime { get ; set ; }

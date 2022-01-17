@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Suggession._Repositories.Interface;
+using Suggession._Services.Interface;
 
 namespace Suggession._Services.Services
 {
@@ -116,13 +117,16 @@ namespace Suggession._Services.Services
             }
             return operationResult;
         }
+
         public async Task<List<AccountDto>> GetAllAsync()
         {
-            var query = _repo.FindAll().Select(x => new AccountDto {
+            int index = 1; 
+            var query = _repo.FindAll(x => x.FullName != "admin").Select(x => new AccountDto {
                 Id = x.Id,
                 Username = x.Username,
                 Password = x.Password,
                 CreatedBy = x.CreatedBy,
+                Index = index,
                 CreatedTime = x.CreatedTime,
                 ModifiedBy = x.ModifiedBy,
                 ModifiedTime = x.ModifiedTime,
@@ -134,6 +138,11 @@ namespace Suggession._Services.Services
                 Email = x.Email,
             });
             var data = await query.ToListAsync();
+            data.ForEach(item =>
+            {
+                item.Index = index;
+                index++;
+            });
             return data;
 
         }

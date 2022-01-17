@@ -167,6 +167,7 @@ namespace Suggession.Controllers
                     });
             return Ok(fileInfoList);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAttackFilesIdea(int ideaId)
         {
@@ -216,6 +217,7 @@ namespace Suggession.Controllers
             });
             return Ok(list);
         }
+
         [HttpDelete("{ideaId}/{file}")]
         public void RemoveFileIdea(int ideaId, string file)
         {
@@ -334,7 +336,10 @@ namespace Suggession.Controllers
 
             var data = _context.UploadFiles.Where(x => x.IdealID == kpiid && x.UploadTime == ut).ToList();
 
+
             var files = data.Select(x=> x.Path ).ToList();
+
+
             
             using (var memoryStream = new MemoryStream())
             {

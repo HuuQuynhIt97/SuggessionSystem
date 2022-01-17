@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 using Suggession.Helpers;
 using Suggession._Repositories.Repositories;
 using AutoMapper;
+using Suggession._Repositories.Interface;
 
-namespace Suggession._Repositories.Interface
+namespace Suggession._Repositories.Repositories
 {
     public class AuthRepository : RepositoryBase<Account>, IAuthRepository
     {

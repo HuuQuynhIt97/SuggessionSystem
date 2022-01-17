@@ -18,7 +18,7 @@ export class AccountGroupService extends CURDService<AccountGroup> {
   getAccountGroupForTodolistByAccountId(): Observable<any[]> {
     return this.http.get<any[]>(`${this.env.apiUrl}${this.entity}/GetAccountGroupForTodolistByAccountId`);
   }
-  getAllTab() {
-    return this.http.get<any[]>(`${this.env.apiUrl}Tab/GetAll`);
+  getAllTab(lang) {
+    return this.http.get<any[]>(`${this.env.apiUrl}Tab/GetAll/${lang}`);
   }
 }

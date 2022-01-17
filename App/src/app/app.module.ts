@@ -1,7 +1,7 @@
 import { ScrollToTopComponent } from './containers/scrollToTop/scrollToTop.component';
 import { FooterComponent } from './views/layout/footer/footer.component';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy, CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -65,9 +65,10 @@ import { ErrorInterceptorProvider } from './_core/_service/error.interceptor';
 import { AuthGuard } from './_core/_guards/auth.guard';
 import { AlertifyService } from './_core/_service/alertify.service';
 import { Authv2Service } from './_core/_service/authv2.service';
-import { HttpLoaderFactory } from './views/protect-zone/system/system.module';
 import * as $ from "jquery";
 import { EnvServiceProvider } from './_core/_service/env.service.provider';
+import { CustomLoader } from './_core/_helper/customLoader';
+import { SystemLanguageService } from './_core/_service/systemLanguage.service';
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
@@ -95,10 +96,9 @@ export function tokenGetter() {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
+        useClass: CustomLoader
       },
-      defaultLanguage: 'vi'
+      defaultLanguage: 'zh'
     }),
     JwtModule.forRoot({
       config: {

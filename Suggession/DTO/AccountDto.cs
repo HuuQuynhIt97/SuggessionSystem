@@ -13,6 +13,7 @@ namespace Suggession.DTO
         public string Password { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
+        public int Index { get; set; }
         public bool IsLock { get; set; }
         public int? AccountTypeId { get; set; }
         public int? Leader { get; set; }

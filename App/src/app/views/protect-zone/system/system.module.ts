@@ -1,3 +1,5 @@
+import { SystemLanguageComponent } from './system-language/system-language.component';
+import { CustomLoader } from './../../../_core/_helper/customLoader';
 
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -18,9 +20,9 @@ import { AccountComponent } from './account/account.component'
 import { AccountGroupComponent } from './account-group/account-group.component'
 import { SystemRoutingModule } from './system.routing.module'
 // import { PeriodComponent } from './period/period.component';
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+// export function HttpLoaderFactory(http: HttpClient) {
+//   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+// }
 declare var require: any;
 let defaultLang: string;
 const lang = localStorage.getItem('lang');
@@ -59,6 +61,7 @@ loadCldr(
     AccountGroupComponent,
     // PeriodComponent,
     OcComponent,
+    SystemLanguageComponent,
     OcUserComponent,
   ],
   imports: [
@@ -77,10 +80,8 @@ loadCldr(
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      },
-      defaultLanguage: defaultLang
+        useClass: CustomLoader
+      }
     }),
   ]
 })

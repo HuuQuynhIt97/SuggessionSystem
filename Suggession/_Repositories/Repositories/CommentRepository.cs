@@ -14,8 +14,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Suggession._Repositories.Repositories;
+using Suggession._Repositories.Interface;
 
-namespace Suggession._Repositories.Interface
+namespace Suggession._Repositories.Repositories
 {
     public class CommentRepository : RepositoryBase<Comment>, ICommentRepository
     {

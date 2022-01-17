@@ -16,6 +16,7 @@ namespace Suggession.Data
         public DbSet<AccountGroup> AccountGroups { get; set; }
         public DbSet<AccountGroupAccount> AccountGroupAccount { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Models.SystemLanguage> systemLanguages { get; set; }
 
         public DbSet<UploadFile> UploadFiles { get; set; }
         public DbSet<Idea> Ideas { get; set; }

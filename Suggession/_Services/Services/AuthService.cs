@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Suggession.Helpers;
 using Suggession._Repositories.Interface;
+using Suggession._Services.Interface;
 
 namespace Suggession._Services.Services
 {
@@ -32,7 +33,14 @@ namespace Suggession._Services.Services
             return account.IsLock;
 
         }
+        public async Task<Account> LoginAnonymous(string username)
+        {
+            var account = await _repo.FindAll(x => x.Username == username).FirstOrDefaultAsync();
+            if (account == null)
+                return null;
+            return account;
 
+        }
         public async Task<Account> Login(string username, string password)
         {
             var account = await _repo.FindAll().FirstOrDefaultAsync(x => x.Username == username);

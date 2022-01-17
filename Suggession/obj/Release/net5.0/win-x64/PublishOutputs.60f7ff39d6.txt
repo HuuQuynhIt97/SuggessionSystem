@@ -1,0 +1,69 @@
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Suggession.exe
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\Aspose.Total.lic
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\excelTemplate\FHOTemplate.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\excelTemplate\H1H2REPORT.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\FileUpload\check.txt
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\Language\en.json
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\Language\zh.json
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\005aaeed660473-trnhnphclong.png
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\224637e2c7588f-trvitidmphclong.png
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\ba.docx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\ba3.docx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\exportBuyItem.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\exportBuyPersion.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\inkroom.docx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\KPI system.pdf
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\PendingExportBuyItem.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\Productfile.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\Suggestion box v5 (1).xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\Suggestion box v5.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\Vaccine report 09.09.2021.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\備份.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\更新PDCA UI v6.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\更新PDCA UI v7.xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\玖德VBA.xlsm
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\UploadedFiles\週二、四、六快篩時間名單 .xlsx
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\appsettings.Development.json
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\appsettings.json
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Suggession.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Suggession.runtimeconfig.json
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Suggession.pdb
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Aspose.Cells.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\AutoMapper.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Castle.Core.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\EPPlus.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.AspNetCore.JsonPatch.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.AspNetCore.SpaServices.Extensions.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.Data.SqlClient.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.Proxies.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.SqlServer.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.Identity.Client.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.IdentityModel.Logging.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.IdentityModel.Protocols.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.IdentityModel.Tokens.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.IO.RecyclableMemoryStream.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.OpenApi.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Newtonsoft.Json.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Newtonsoft.Json.Bson.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\System.Configuration.ConfigurationManager.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\System.Diagnostics.DiagnosticSource.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\System.IdentityModel.Tokens.Jwt.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\System.Runtime.Caching.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\System.Xml.XPath.XmlDocument.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.Data.SqlClient.SNI.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Microsoft.Data.SqlClient.SNI.pdb
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\NetUtility.dll
+F:\Angular\SYSTEM\SuggessionSystem\Suggession\obj\Release\net5.0\win-x64\PubTmp\Out\Suggession.deps.json

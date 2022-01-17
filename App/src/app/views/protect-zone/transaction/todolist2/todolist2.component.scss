@@ -7,7 +7,7 @@
 }
 
 button.myButton:hover {
-  background-color: #f86c6b !important;
+  background-color: #4dbd74 !important;
   color: white;
 }
 
@@ -21,4 +21,40 @@ button.myButton:hover {
 }
 .form-control:focus {
   box-shadow: none;
+}
+
+.e-tooltip-wrap .e-tip-content {
+  font-size: 14px;
+}
+
+
+/* iOS Switch */
+
+.e-switch-wrapper.custom-iOS .e-switch-inner.e-switch-active,
+.e-switch-wrapper.custom-iOS:hover .e-switch-inner.e-switch-active .e-switch-on {
+  background-color: rgb(77, 189, 116);
+  border-color: rgb(77, 189, 116);
+}
+.e-switch-wrapper:hover .e-switch-inner.e-switch-active .e-switch-on, .e-css.e-switch-wrapper:hover .e-switch-inner.e-switch-active .e-switch-on{
+  background-color: rgb(77, 189, 116);
+  border-color: rgb(77, 189, 116);
+}
+.e-switch-wrapper .e-switch-on, .e-css.e-switch-wrapper .e-switch-on {
+  background-color: rgb(77, 189, 116);
+  border-color: rgb(77, 189, 116);
+  color: #fff;
+}
+.e-switch-wrapper.custom-iOS {
+  width: 60px;
+  height: 27px;
+}
+
+
+.e-switch-wrapper.custom-iOS .e-switch-handle {
+  width: 20px;
+  height: 22px;
+}
+
+.e-switch-wrapper.custom-iOS .e-switch-handle.e-switch-active {
+  margin-left: -22px;
 }

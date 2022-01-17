@@ -9,10 +9,21 @@
   >
   <ul class="nav navbar-nav nav-link-dark d-md-down-none">
     <li class="nav-item">
-      <a class="nav-link font-2xl" routerLink="/transaction/todolist2">Suggession  System</a>
+      <a class="nav-link font-2xl" routerLink="/transaction/todolist2">{{'DEFAULT_SYSTEM_LABEL' | translate}}</a>
     </li>
   </ul>
   <ul class="nav navbar-nav ml-auto p-0">
+    <li *ngIf="userName == 'admin'" class="nav-item d-md-down-none mr-2" style="width: 200px;">
+      <a class="nav-link">
+
+        <ejs-dropdownlist #positionDropdownlist [dataSource]='userData' [value]="values"
+          [fields]='fieldsRole' [allowFiltering]='true'
+          (select)='onChangeRole($event)'
+          >
+        </ejs-dropdownlist>
+
+      </a>
+    </li>
     <!-- <li class="nav-item d-md-down-none mr-2">
       <a class="nav-link">
 

@@ -1,3 +1,4 @@
+import { SystemLanguageComponent } from './system-language/system-language.component';
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { AuthGuard } from 'src/app/_core/_guards/auth.guard'
@@ -23,6 +24,16 @@ const routes: Routes = [
           title: 'Account',
           breadcrumb: 'Account',
           functionCode: 'account'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'system-language',
+        component: SystemLanguageComponent,
+        data: {
+          title: 'System Language',
+          breadcrumb: 'System Language',
+          functionCode: 'system-language'
         },
         // canActivate: [AuthGuard]
       },

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Features;
 using System;
 using Suggession.Helpers.SignalR;
 using Microsoft.AspNetCore.SignalR;
+using Suggession._Services.Interface;
 
 namespace Suggession.Controllers
 {
@@ -63,6 +64,11 @@ namespace Suggession.Controllers
 
         }
 
+        [HttpPost("{id}")]
+        public async Task<IActionResult> UpdateAnnouncement(int id)
+        {
+            return Ok(await _service.UpdateAnnouncement(id));
+        }
 
         [HttpPost]
         public async Task<IActionResult> SaveFile(IFormFile formFile)
@@ -397,33 +403,38 @@ namespace Suggession.Controllers
             return Ok(entity);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> TabProposalGetAll()
+        [HttpGet("{lang}")]
+        public async Task<ActionResult> TabProposalGetAll(string lang)
         {
-            return Ok((await _service.TabProposalGetAll()));
+            return Ok((await _service.TabProposalGetAll(lang)));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetIdeaHisById(int id)
+        [HttpGet("{id}/{lang}")]
+        public async Task<ActionResult> GetIdeaHisById(int id, string lang)
         {
-            return Ok((await _service.GetIdeaHisById(id)));
+            return Ok((await _service.GetIdeaHisById(id , lang)));
         }
-        [HttpGet]
-        public async Task<ActionResult> TabProcessingGetAll()
+
+        [HttpGet("{lang}")]
+        public async Task<ActionResult> TabProcessingGetAll(string lang)
         {
-            return Ok((await _service.TabProcessingGetAll()));
+            return Ok((await _service.TabProcessingGetAll(lang)));
         }
-        [HttpGet]
-        public async Task<ActionResult> TabErickGetAll()
+        [HttpGet("{lang}")]
+        public async Task<ActionResult> TabErickGetAll(string lang)
         {
-            return Ok((await _service.TabErickGetAll()));
+            return Ok((await _service.TabErickGetAll(lang)));
         }
-        [HttpGet]
-        public async Task<ActionResult> TabCloseGetAll()
+        [HttpGet("{lang}")]
+        public async Task<ActionResult> TabCloseGetAll(string lang)
         {
-            return Ok((await _service.TabCloseGetAll()));
+            return Ok((await _service.TabCloseGetAll(lang)));
         }
-        
+        [HttpGet("{lang}")]
+        public async Task<ActionResult> TabAnnouncementGetAll(string lang)
+        {
+            return Ok((await _service.TabAnnouncementGetAll(lang)));
+        }
 
         [HttpPost]
         public async Task<ActionResult> Accept([FromForm] IdeaDto model)

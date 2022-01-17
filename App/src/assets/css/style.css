@@ -5,9 +5,9 @@
   color: transparent;
 }
 button.btn.btn-xs.btn-primary {
-  box-shadow: 1px 2px 2px black;
+  box-shadow: 0px 1px 1px black;
 }
 
 button.btn.btn-xs.btn-secondary {
-  box-shadow: 1px 2px 2px black;
+  box-shadow: 0px 1px 1px black;
 }

@@ -3,6 +3,7 @@ using Suggession.DTO;
 using Suggession.Helpers;
 using Suggession._Services.Services;
 using System.Threading.Tasks;
+using Suggession._Services.Interface;
 
 namespace Suggession.Controllers
 {

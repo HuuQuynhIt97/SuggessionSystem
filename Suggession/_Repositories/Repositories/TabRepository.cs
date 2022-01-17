@@ -8,8 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Suggession._Repositories.Repositories;
+using Suggession._Repositories.Interface;
 
-namespace Suggession._Repositories.Interface
+namespace Suggession._Repositories.Repositories
 {
     public class TabRepository : RepositoryBase<Tab>, ITabRepository
     {

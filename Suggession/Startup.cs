@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Suggession.Data;
 using Suggession._Services.Services;
 using Suggession._Repositories.Interface;
+using Suggession._Repositories.Repositories;
+using Suggession._Services.Interface;
 
 namespace Suggession
 {
@@ -96,7 +98,6 @@ namespace Suggession
             services.AddSignalR();
 
             //Repository
-
             services.AddScoped<IAccountGroupAccountRepository, AccountGroupAccountRepository>();
             services.AddScoped<IAccountGroupRepository, AccountGroupRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
@@ -107,6 +108,7 @@ namespace Suggession
             services.AddScoped<IStatusRepository, StatusRepository>();
             services.AddScoped<ITabRepository, TabRepository>();
             services.AddScoped<IUploadFileRepository, UploadFileRepository>();
+            services.AddScoped<ISystemLanguageRepository, SystemLanguageRepository>();
 
             //Services
             services.AddScoped<IAccountService, AccountService>();
@@ -116,6 +118,7 @@ namespace Suggession
             services.AddScoped<IAccountGroupAccountService, AccountGroupAccountService>();
             services.AddScoped<ITabService, TabService>();
             services.AddScoped<IIdeaService, IdeaService>();
+            services.AddScoped<ISystemLanguageService, SystemLanguageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

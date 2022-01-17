@@ -12,8 +12,9 @@ using Suggession.Helpers;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Suggession._Repositories.Repositories;
+using Suggession._Repositories.Interface;
 
-namespace Suggession._Repositories.Interface
+namespace Suggession._Repositories.Repositories
 {
     public class AccountGroupRepository : RepositoryBase<AccountGroup>, IAccountGroupRepository
     {

@@ -95,6 +95,7 @@ export class Authv2Service implements OnDestroy {
     public env: EnvService,
     private cookieService: CookieService  ) {
     window.addEventListener('storage', this.storageEventListener.bind(this));
+
   }
 
   ngOnDestroy(): void {
@@ -116,6 +117,25 @@ export class Authv2Service implements OnDestroy {
           this.currentUser = user;
          // this.setLocalStorage(loginResult);
           //this.startTokenTimer();
+          return loginResult;
+        })
+      );
+  }
+
+  loginAnonymous(username: string) {
+    return this.http
+      .post<ApplicationUser>(`${this.apiUrl}/loginAnonymous`, { username})
+      .pipe(
+        map((x: any) => {
+          // localStorage.clear();
+          const loginResult = x as ApplicationUser;
+          const user = x.user;
+          localStorage.setItem('anonymous', "yes");
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', x.token);
+          this._user.next(loginResult as ApplicationUser);
+          this.currentUser = user;
+          this.startTokenTimer();
           return loginResult;
         })
       );

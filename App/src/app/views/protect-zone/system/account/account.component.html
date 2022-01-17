@@ -13,7 +13,7 @@
           (actionBegin)="actionBegin($event)"
           (actionComplete)="actionComplete($event)"
           [toolbar]='toolbarOptions'
-          [pageSettings]='pageSettings'
+          [pageSettings]='pageSettingsAccount'
           [allowExcelExport]='true'
           (recordDoubleClick)='onDoubleClick($event)'
           (toolbarClick)='toolbarClick($event)'
@@ -22,7 +22,7 @@
           <e-columns>
             <e-column field="ID" textAlign='Center' width="80" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
+                {{data.index}}
               </ng-template>
               <ng-template #editTemplate let-data>
                 #
@@ -30,17 +30,17 @@
             </e-column>
             <e-column field="username" textAlign='Center' width="100" headerText="{{ 'Username'}}">
               <ng-template #headerTemplate let-data>
-                {{"Username" | translate}}
+                {{"ACCOUNT_USERNAME_LABEL" | translate}}
               </ng-template>
             </e-column>
             <e-column field="fullName" textAlign='Center' width="100" headerText="{{ 'FullName'}}">
               <ng-template #headerTemplate let-data>
-                {{"FullName" | translate}}
+                {{"ACCOUNT_FULLNAME_LABEL" | translate}}
               </ng-template>
             </e-column>
             <e-column field="password" textAlign='Center' width="100" headerText="{{ 'Password'}}">
               <ng-template #headerTemplate let-data>
-                {{"Password" | translate}}
+                {{"ACCOUNT_PASSWORD_LABEL" | translate}}
               </ng-template>
               <ng-template #template let-data>
                 ************
@@ -48,7 +48,7 @@
             </e-column>
             <e-column field="email" textAlign='Center' headerText="Email">
               <ng-template #headerTemplate let-data>
-                {{"Email" | translate}}
+                {{"ACCOUNT_EMAIL_LABEL" | translate}}
               </ng-template>
             </e-column>
 
@@ -56,7 +56,7 @@
 
             <e-column field='accountGroupText' headerText="{{'Account Group'}}" width='200' textAlign='Center'>
               <ng-template #headerTemplate let-data>
-                {{"AccountGroup" | translate}}
+                {{"ACCOUNT_ACCOUNTGROUP_LABEL" | translate}}
               </ng-template>
               <ng-template #template let-data>
                 {{data.accountGroupText}}
@@ -66,15 +66,9 @@
               </ng-template>
             </e-column>
 
-
-
-
-
-
-
             <e-column field="option" width="100" textAlign='Center' headerText="{{ 'Option'}}">
               <ng-template #headerTemplate let-data>
-                {{"OptionA" | translate}}
+                {{"ACCOUNT_OPTION_LABEL" | translate}}
               </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">

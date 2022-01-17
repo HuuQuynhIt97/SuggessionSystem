@@ -1565,7 +1565,7 @@
             "nextPagerTooltip": "Go to next pager",
             "previousPagerTooltip": "Go to previous pager",
             "pagerDropDown": "Items per page",
-            "pagerAllDropDown": "Items",
+            "pagerAllDropDown": "Items per page",
             "All": "All"
         },
         "calendar": {

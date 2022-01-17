@@ -5,35 +5,27 @@
       <div class="card-header">
         <div style="display: flex;">
           <div  id='pending' *ngFor="let item of tabData; let i=index">
-            <button *ngIf="item.statues" [style.background-color]="'red'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
-            <button *ngIf="!item.statues" [style.background-color]="'#20a8d8'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
+            <button *ngIf="item.statues" [style.background-color]="'#4dbd74'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >
+              {{(item.name + '_TAB_LABEL' | uppercase) | translate}}
+            </button>
+            <button *ngIf="!item.statues" [style.background-color]="'#20a8d8'" type="button" (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >
+              {{(item.name + '_TAB_LABEL' | uppercase) | translate}}
+            </button>
           </div>
         </div>
 
-        <!-- <ejs-toolbar #toolbarTodo>
-          <e-items>
-            <e-item id='pending' *ngFor="let item of tabData; let i=index">
-              <ng-template #template>
-                <ng-container *ngIf="item.name == 'Proposal'; else elseTemplate">
-                  <button id='proposal' type="button" #buttonRef (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
-
-                </ng-container>
-                <ng-template #elseTemplate>
-                  <button  type="button" #buttonRef (click)="changeTab(item)" class="myButton btn btn-primary mr-2"  >{{ item.name}} </button>
-                </ng-template>
-
-              </ng-template>
-            </e-item>
-
-          </e-items>
-        </ejs-toolbar> -->
       </div>
       <div class="card-body table-responsive p-0">
+
         <ejs-toolbar #toolbarTodo>
           <e-items>
             <e-item id='buy-list' >
               <ng-template #template>
-                <button *ngIf="this.tab === 'Proposal' && accountGroupText === PROPOSAL" type="button" (click)="openSuggessionModal()" class="btn btn-danger" > Suggession </button>
+                <button *ngIf="this.tab === 'Proposal' && accountGroupText === PROPOSAL" type="button" (click)="openSuggessionModal()"  style="color: white;" class="btn btn-success" >
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  {{ 'SUGGESTION_BUTTON_LABEL' | translate}}
+                  <!-- Suggestion  -->
+                </button>
               </ng-template>
             </e-item>
 
@@ -42,7 +34,7 @@
                 <div class="e-toolbar-item e-search-wrapper e-toolbar-right" aria-disabled="false" title="Search">
                   <div class="e-input-group e-search" role="search"> <input id="toolbar_searchbar" style="width:178px" autocomplete="off"
                       [(ngModel)]="name" (change)='search($event)' class="e-input"
-                      placeholder="{{ 'Search'}}">
+                      placeholder="{{ 'SEARCH_LABEL' | translate}}">
                     <span id="toolbar_searchbutton" class="e-input-group-icon fa fa-search e-icons" tabindex="-1"
                       title="Search" aria-label="search"></span>
                   </div>
@@ -52,7 +44,7 @@
           </e-items>
         </ejs-toolbar>
 
-        <ejs-grid  #grid
+        <ejs-grid  #gridToDo
           id='grid'
           [dataSource]="data"
           [allowResizing]='true'
@@ -61,39 +53,100 @@
           isPrimaryKey='true'
           [showColumnChooser]='true'
           [allowPaging]='true'
-          [pageSettings]='pageSettings'
+          [pageSettings]='pageSettingsTodo'
           [allowExcelExport]='true'
           [textWrapSettings]="wrapSettings"
           [editSettings]='editSettings'
+          (queryCellInfo)='tooltip($event)'
         >
+        <!-- <ng-template #toolbarTemplate let-data>
+          <ejs-toolbar (clicked)='clickHandler($event)'>
+              <e-items>
+                  <e-item id='collapse' prefixIcon='e-collapse'></e-item>
+              </e-items>
+          </ejs-toolbar>
+        </ng-template> -->
           <e-columns>
             <e-column field="Id" textAlign='Center' width="50" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
+                {{data.index}}
               </ng-template>
               <ng-template #editTemplate let-data>
                 #
               </ng-template>
             </e-column>
-            <e-column field="title" width="80" textAlign='Center' headerText="{{ 'Title' | translate}}"> </e-column>
-            <e-column field="" width="80" textAlign='Center' headerText="{{ 'Date' | translate}}">
+            <e-column field="title" width="80" textAlign='Center' >
+              <ng-template #headerTemplate>
+                {{ 'TODOLIST_TITLE_LABEL' | translate}}
+              </ng-template>
+            </e-column>
+
+            <e-column field="comment" width="80" textAlign='Left' headerTextAlign='Center' >
+              <ng-template #headerTemplate>
+                {{ 'TODOLIST_COMMENT_LABEL' | translate}}
+              </ng-template>
+
+              <ng-template #template let-data>
+                <ng-container *ngIf="data.type === StatusName.Apply || data.type === null; else elseTemplate">
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                    <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    <ng-template #content >
+                      <span style="text-align: left;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                    <ng-template #content >
+                      <span>{{data.comment}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+
+                </ng-template>
+              </ng-template>
+            </e-column>
+
+            <e-column field="" width="80" textAlign='Center' >
+              <ng-template #headerTemplate>
+                {{ 'TODOLIST_DATE_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
             </e-column>
 
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}"></e-column>
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Detail' | translate}}">
+            <e-column field="statusName" width="100" textAlign='Center' >
+              <ng-template #headerTemplate>
+                {{ 'TODOLIST_STATUS_LABEL' | translate}}
+              </ng-template>
+            </e-column>
+
+            <e-column field="statusName" width="100" textAlign='Center'>
+              <ng-template #headerTemplate>
+                {{ 'TODOLIST_DETAIL_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
-                <div *ngIf="data.statusName !== 'N/A'" class="btn-group">
+                <div *ngIf="data.type !== 'N/A'" class="btn-group">
                   <button type="button" (click)="detail(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
                 </div>
-                <div *ngIf="data.statusName === 'N/A' " class="btn-group">
+                <div *ngIf="data.type === 'N/A' " class="btn-group">
                   <button *ngIf="accountGroupText === PROPOSAL" type="button" (click)="suggessionUpdate(data)" class="btn btn-xs btn-secondary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
                N/A
+              </ng-template>
+            </e-column>
+
+            <e-column [visible]='accountGroupText === SPOKERMAN  ? true : false' field="isAnnouncement" width="100" textAlign='Center'>
+              <ng-template #headerTemplate>
+                {{ 'TODOLIST_ANNOUNCEMENT_LABEL' | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                <ejs-switch  onLabel="ON" cssClass="custom-iOS" (change)='announcement(data)' offLabel="OFF" [(checked)]="data.isAnnouncement"></ejs-switch>
               </ng-template>
             </e-column>
 
@@ -108,7 +161,9 @@
 <!-- suggession -->
 <ng-template #suggession let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Suggession</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_SUGGESTION_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -117,55 +172,66 @@
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          <label for="">To</label>
-          <ejs-dropdownlist [(ngModel)]='toId' [allowFiltering]='true'[fields]="userFields"   placeholder='Select a User' [dataSource]='dataUser'></ejs-dropdownlist>
+          <label for="">{{ 'MODAL_SUGGESTION_TO_LABEL' | translate}}</label>
+          <ejs-dropdownlist
+          [(ngModel)]='toId'
+          [allowFiltering]='true'
+          [fields]="userFields"
+          placeholder="{{ 'SUGGESTION_PLACEHOLDER_LABEL' | translate}}"
+          [dataSource]='dataUser'>
+        </ejs-dropdownlist>
 
           <!-- <textarea   cols="30" rows="10" class="form-control"></textarea> -->
         </div>
         <div class="form-group">
-          <label for="">Title</label>
+          <label for="">{{ 'MODAL_SUGGESTION_TITLE_LABEL' | translate}}</label>
           <input type="text" [(ngModel)]="titleText" class="form-control">
           <!-- <textarea   cols="30" rows="10" class="form-control"></textarea> -->
         </div>
         <div class="form-group">
-          <label for="">Issue</label>
+          <label for="">{{ 'MODAL_SUGGESTION_ISSUE_LABEL' | translate}}</label>
           <!-- <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist> -->
 
           <textarea [(ngModel)]="issueText"  cols="30" rows="10" class="form-control"></textarea>
         </div>
         <div class="form-group">
-          <label for="">Suggession</label>
+          <label for="">{{ 'MODAL_SUGGESTION_LABEL' | translate}}</label>
           <!-- <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist> -->
 
           <textarea [(ngModel)]="suggessionText"  cols="30" rows="10" class="form-control"></textarea>
         </div>
         <div class="form-group">
-          <!-- <button type="button" class="btn btn-secondary" (click)='openUploadModalComponent()' >{{'Upload file' }}</button>
-          <div class="mt-3 d-flex justify-content-start">
-            <ul class="list-group mr-3" style="width: 50%;" [style.width]='filesRight.length > 0 ? "50%": "100%"'>
-              <li class="list-group-item" *ngFor="let item of filesLeft">
-                <a [id]='item.path' [href]="item.path">{{item.name}}</a>
-              </li>
-            </ul>
-            <ul class="list-group" style="width: 50%;" *ngIf="filesRight.length > 0">
-              <li class="list-group-item" *ngFor="let item of filesRight">
-                <a [id]='item.path' [href]="item.path">{{item.name}}</a>
-              </li>
-            </ul>
-          </div> -->
-          <label for="">File</label>
-          <file-pond #myPondUpload
-            label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
-            allow-multiple="true"
-            allowFileSizeValidation="true"
-            maxFileSize="5MB"
-            labelMaxFileSizeExceeded="File is too large"
-            [files]="file"
-            [options]="pondOptions"
-            (onprocessfile)="handleFileProcess($event)"
-            (onaddfile)="pondHandleAddFile($event)"
-            (onremovefile)="pondHandleRemoveFile($event)">
-          </file-pond>
+
+          <label for="">{{ 'MODAL_SUGGESTION_FILE_LABEL' | translate}}</label>
+          <ng-container>
+            <ng-container *ngIf="locale === 'en'; else elseTemplate">
+              <file-pond #myPondUpload
+                allow-multiple="true"
+                allowFileSizeValidation="true"
+                maxFileSize="5MB"
+                labelMaxFileSizeExceeded="File is too large"
+                [files]="file"
+                [options]="pondOptionsEN"
+                (onprocessfile)="handleFileProcess($event)"
+                (onaddfile)="pondHandleAddFile($event)"
+                (onremovefile)="pondHandleRemoveFile($event)">
+              </file-pond>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <file-pond #myPondUpload
+                allow-multiple="true"
+                allowFileSizeValidation="true"
+                maxFileSize="5MB"
+                labelMaxFileSizeExceeded="File is too large"
+                [files]="file"
+                [options]="pondOptionsZH"
+                (onprocessfile)="handleFileProcess($event)"
+                (onaddfile)="pondHandleAddFile($event)"
+                (onremovefile)="pondHandleRemoveFile($event)">
+              </file-pond>
+            </ng-template>
+
+          </ng-container>
         </div>
       </div>
     </div>
@@ -173,8 +239,12 @@
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="save()">Save</button>
-    <button type="submit" (click)='submit()' class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-light" (click)="save()">
+      {{ 'MODAL_BUTTON_SAVE_LABEL' | translate}}
+    </button>
+    <button type="submit" (click)='submit()' class="btn btn-primary">
+      {{ 'MODAL_BUTTON_SUBMIT_LABEL' | translate}}
+    </button>
   </div>
 
 
@@ -184,7 +254,9 @@
 <!-- suggession Edit -->
 <ng-template #suggessionEdit let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"> <img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">Edit Suggession </h4>
+    <h4 class="modal-title"> <img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_SUGGESTION_EDIT_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -193,42 +265,67 @@
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          <label for="">To</label>
-          <ejs-dropdownlist [(ngModel)]='toId' [allowFiltering]='true'[fields]="userFields"   placeholder='Select a User' [dataSource]='dataUser'></ejs-dropdownlist>
+          <label for="">{{ 'MODAL_SUGGESTION_EDIT_TO_LABEL' | translate}}</label>
+          <ejs-dropdownlist
+          [(ngModel)]='toId'
+          [allowFiltering]='true'
+          [fields]="userFields"
+          placeholder="{{ 'SUGGESTION_PLACEHOLDER_LABEL' | translate}}"
+          [dataSource]='dataUser'>
+        </ejs-dropdownlist>
 
           <!-- <textarea   cols="30" rows="10" class="form-control"></textarea> -->
         </div>
         <div class="form-group">
-          <label for="">Title</label>
+          <label for="">{{ 'MODAL_SUGGESTION_EDIT_TITLE_LABEL' | translate}}</label>
           <input type="text" [(ngModel)]="titleText" class="form-control">
           <!-- <textarea   cols="30" rows="10" class="form-control"></textarea> -->
         </div>
         <div class="form-group">
-          <label for="">Issue</label>
+          <label for="">{{ 'MODAL_SUGGESTION_EDIT_ISSUE_LABEL' | translate}}</label>
           <!-- <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist> -->
 
           <textarea [(ngModel)]="issueText"  cols="30" rows="10" class="form-control"></textarea>
         </div>
         <div class="form-group">
-          <label for="">Suggession</label>
+          <label for="">{{ 'MODAL_SUGGESTION_EDIT_SUGGESTION_LABEL' | translate}}</label>
           <!-- <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist> -->
 
           <textarea [(ngModel)]="suggessionText"  cols="30" rows="10" class="form-control"></textarea>
         </div>
         <div class="form-group">
-          <label for="">File</label>
-          <file-pond #myPondUpload
-          label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
-          allow-multiple="true"
-          allowFileSizeValidation="true"
-          maxFileSize="5MB"
-          labelMaxFileSizeExceeded="File is too large"
-          [files]="file"
-          [options]="pondOptions"
-          (onprocessfile)="handleFileProcess($event)"
-          (onaddfile)="pondHandleAddFile($event)"
-          (onremovefile)="pondHandleRemoveFile($event)">
-        </file-pond>
+          <label for="">{{ 'MODAL_SUGGESTION_EDIT_FILE_LABEL' | translate}}</label>
+          <ng-container>
+            <ng-container *ngIf="locale === 'en'; else elseTemplate">
+              <file-pond #myPondUpload
+                allow-multiple="true"
+                allowFileSizeValidation="true"
+                maxFileSize="5MB"
+                labelMaxFileSizeExceeded="File is too large"
+                [files]="file"
+                [options]="pondOptionsEN"
+                (onprocessfile)="handleFileProcess($event)"
+                (onaddfile)="pondHandleAddFile($event)"
+                (onremovefile)="pondHandleRemoveFile($event)">
+              </file-pond>
+            </ng-container>
+
+            <ng-template #elseTemplate>
+              <file-pond #myPondUpload
+                allow-multiple="true"
+                allowFileSizeValidation="true"
+                maxFileSize="5MB"
+                labelMaxFileSizeExceeded="File is too large"
+                [files]="file"
+                [options]="pondOptionsZH"
+                (onprocessfile)="handleFileProcess($event)"
+                (onaddfile)="pondHandleAddFile($event)"
+                (onremovefile)="pondHandleRemoveFile($event)">
+              </file-pond>
+            </ng-template>
+
+          </ng-container>
+
 
           <div class="mt-3 d-flex justify-content-start">
 
@@ -245,19 +342,6 @@
                 </div>
               </li>
             </ul>
-            <!-- <ul class="list-group" style="width: 50%;" *ngIf="filesRight.length > 0">
-              <li class="list-group-item" *ngFor="let item of filesRight">
-                <div class="row">
-                  <div class="col-md-10">
-                    <a [id]='item.path' [href]="item.path">{{item.name}}</a>
-
-                  </div>
-                  <div class="col-md-2">
-                    <button (click)="removeFile(item)" type="button" class="btn btn-xs btn-danger"> X</button>
-                  </div>
-                </div>
-              </li>
-            </ul> -->
           </div>
         </div>
       </div>
@@ -266,8 +350,12 @@
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="saveEditSuggession()">Save</button>
-    <button type="submit" (click)='submitEditSuggession()' class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-light" (click)="saveEditSuggession()">
+      {{ 'MODAL_BUTTON_SAVE_LABEL' | translate}}
+    </button>
+    <button type="submit" (click)='submitEditSuggession()' class="btn btn-primary">
+      {{ 'MODAL_BUTTON_SUBMIT_LABEL' | translate}}
+    </button>
   </div>
 
 
@@ -279,7 +367,9 @@
 <ng-template #details let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Detail</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_DETAIL_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -288,24 +378,23 @@
     <div class="row mb-2">
       <div class="col-md-6">
 
-        <!-- <div class="row">
-          <div class="col-md-7">Proposer: {{nameTitle}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div> -->
-
         <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
           <tbody>
             <tr>
               <td>
-                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+                <label class="font-weight-bold">
+                  {{ 'MODAL_PROPOSER_LABEL' | translate}}:
+                </label>
+                <span> {{nameTitle}}</span>
 
               </td>
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">
+                  {{ 'MODAL_TITLE_LABEL' | translate}}:
+                </label>
+                <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -314,6 +403,7 @@
         </table>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-12">
         <ejs-grid  #grid
@@ -331,19 +421,50 @@
           <e-columns>
             <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
+                {{data.sequence}}
               </ng-template>
               <ng-template #editTemplate let-data>
                 #
               </ng-template>
             </e-column>
-            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
-            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+            <e-column field="name"  textAlign='Center' width="100" headerText="{{ 'Signee' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_SIGNEE_LABEL' | translate}}
+              </ng-template>
+
+
+
+            </e-column>
+            <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_COMMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
-                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+                <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                    <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    <ng-template #content >
+                      <span style="text-align: left;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                    <ng-template #content >
+                      <span>{{data.comment}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+
+                </ng-template>
               </ng-template>
             </e-column>
             <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_TIME_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -351,13 +472,20 @@
             </e-column>
 
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}">
-
+              <ng-template #headerTemplate>
+                {{ 'MODAL_STATUS_LABEL' | translate}}
+              </ng-template>
             </e-column>
 
             <e-column field="Attachment" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_ATTRACHMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">
-                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</button>
+                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i>
+                    {{ 'MODAL_VIEW_LABEL' | translate}}
+                  </button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
@@ -369,6 +497,7 @@
         </ejs-grid>
       </div>
     </div>
+
   </div>
   <div class="modal-body" *ngIf="accountGroupText === SPOKERMAN">
     <div class="row">
@@ -377,9 +506,9 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Comment:
+                {{ 'MODAL_COMMENT_LABEL' | translate}}:
                 <div class="panel-body">
-                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="write a comment..." rows="3"></textarea>
+                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="{{'PLACEHOLDER_COMMENT_LABEL' | translate}}" rows="3"></textarea>
 
                 </div>
               </div>
@@ -392,20 +521,37 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Attack file:
+                {{ 'MODAL_ATTACKFILE_LABEL' | translate}}:
                 <div class="panel-body">
-                  <file-pond #myPondUpload
-                    label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
-                    allow-multiple="true"
-                    allowFileSizeValidation="true"
-                    maxFileSize="5MB"
-                    labelMaxFileSizeExceeded="File is too large"
-                    [files]="file"
-                    [options]="pondOptions"
-                    (onprocessfile)="handleFileProcess($event)"
-                    (onaddfile)="pondHandleAddFile($event)"
-                    (onremovefile)="pondHandleRemoveFile($event)">
-                  </file-pond>
+                  <ng-container>
+                    <ng-container *ngIf="locale === 'en'; else elseTemplate">
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsEN"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsZH"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-template>
+
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -414,10 +560,17 @@
       </div>
     </div>
   </div>
+
   <div class="modal-footer">
-    <button type="submit" (click)="accept()" *ngIf="accountGroupText === SPOKERMAN" class="btn btn-success">Accept</button>
-    <button type="submit" (click)="reject()" *ngIf="accountGroupText === SPOKERMAN" class="btn btn-danger">Reject</button>
-    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    <button type="submit" (click)="accept()" *ngIf="accountGroupText === SPOKERMAN" class="btn btn-success">
+      {{ 'MODAL_ACCEPT_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="submit" (click)="reject()" *ngIf="accountGroupText === SPOKERMAN" class="btn btn-danger">
+      {{ 'MODAL_REJECT_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+      {{ 'MODAL_CLOSEMODAL_BUTTON_LABEL' | translate}}
+    </button>
   </div>
 
 
@@ -428,7 +581,9 @@
 <ng-template #tabProcess let-modal>
   <div class="modal-header">
     <h4 class="modal-title"> </h4>
-    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">Process Detail</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_PROCESSDETAIL_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -436,23 +591,18 @@
   <div class="modal-body">
     <div class="row mb-2">
       <div class="col-md-6">
-        <!-- <div class="row">
-          <div class="col-md-7">Proposer: {{nameTitle}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-7">Issue: {{issueTitle}}</div>
-        </div> -->
+
         <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
           <tbody>
             <tr>
               <td>
-                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_PROPOSER_LABEL' | translate}}: </label> <span> {{nameTitle}}</span>
 
               </td>
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_TITLE_LABEL' | translate}}: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -461,6 +611,7 @@
         </table>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-12">
         <ejs-grid  #grid
@@ -478,19 +629,47 @@
           <e-columns>
             <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
+                {{data.sequence}}
               </ng-template>
               <ng-template #editTemplate let-data>
                 #
               </ng-template>
             </e-column>
-            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
-            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+            <e-column field="name" width="100" textAlign='Center' headerText="{{ 'Signee' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_SIGNEE_LABEL' | translate}}
+              </ng-template>
+            </e-column>
+            <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_COMMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
-                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+                <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                    <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    <ng-template #content >
+                      <span style="text-align: left;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                    <ng-template #content >
+                      <span>{{data.comment}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+
+                </ng-template>
               </ng-template>
             </e-column>
             <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_TIME_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -498,13 +677,20 @@
             </e-column>
 
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}">
-
+              <ng-template #headerTemplate>
+                {{ 'MODAL_STATUS_LABEL' | translate}}
+              </ng-template>
             </e-column>
 
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+            <e-column field="Attachment" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_ATTRACHMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">
-                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</button>
+                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i>
+                    {{ 'MODAL_VIEW_LABEL' | translate}}
+                  </button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
@@ -516,6 +702,7 @@
         </ejs-grid>
       </div>
     </div>
+
   </div>
   <div class="modal-body" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING">
     <div class="row">
@@ -524,9 +711,9 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Comment:
+                {{'MODAL_COMMENT_LABEL' | translate}}:
                 <div class="panel-body">
-                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="write a comment..." rows="3"></textarea>
+                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="{{'PLACEHOLDER_COMMENT_LABEL' | translate}}" rows="3"></textarea>
                 </div>
               </div>
             </div>
@@ -538,20 +725,37 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Attack file:
+                {{'MODAL_ATTACKFILE_LABEL' | translate}}:
                 <div class="panel-body">
-                  <file-pond #myPondUpload
-                    label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
-                    allow-multiple="true"
-                    allowFileSizeValidation="true"
-                    maxFileSize="5MB"
-                    labelMaxFileSizeExceeded="File is too large"
-                    [files]="file"
-                    [options]="pondOptions"
-                    (onprocessfile)="handleFileProcess($event)"
-                    (onaddfile)="pondHandleAddFile($event)"
-                    (onremovefile)="pondHandleRemoveFile($event)">
-                  </file-pond>
+                  <ng-container>
+                    <ng-container *ngIf="locale === 'en'; else elseTemplate">
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsEN"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsZH"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-template>
+
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -561,10 +765,18 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" (click)="update()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING" class="btn btn-primary">Update</button>
-    <button type="submit" (click)="complete()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING" class="btn btn-success">Complete</button>
-    <button type="submit" (click)="terminate()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING"  class="btn btn-danger">Terminate</button>
-    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    <button type="submit" (click)="update()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING" class="btn btn-primary">
+      {{ 'MODAL_UPDATE_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="submit" (click)="complete()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING" class="btn btn-success">
+      {{ 'MODAL_COMPLETE_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="submit" (click)="terminate()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING"  class="btn btn-danger">
+      {{ 'MODAL_TERMINATE_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+      {{ 'MODAL_CLOSEMODAL_BUTTON_LABEL' | translate}}
+    </button>
   </div>
 
 
@@ -575,7 +787,9 @@
 <!-- Complete-Terminate Modal -->
 <ng-template #completeTerminateModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Detail</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_DETAIL_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -587,13 +801,13 @@
           <tbody>
             <tr>
               <td>
-                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_PROPOSER_LABEL' | translate}}: </label> <span> {{nameTitle}}</span>
 
               </td>
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_TITLE_LABEL' | translate}}: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -619,19 +833,45 @@
           <e-columns>
             <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
-              </ng-template>
-              <ng-template #editTemplate let-data>
-                #
+                {{data.sequence}}
               </ng-template>
             </e-column>
-            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
-            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+            <e-column field="name" width="100"  textAlign='Center' headerText="{{ 'Signee' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_SIGNEE_LABEL' | translate}}
+              </ng-template>
+
+            </e-column>
+            <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_COMMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
-                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+                <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                    <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    <ng-template #content >
+                      <span style="text-align: left;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                    <ng-template #content >
+                      <span>{{data.comment}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+
+                </ng-template>
               </ng-template>
             </e-column>
             <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_TIME_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -639,13 +879,20 @@
             </e-column>
 
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}">
-
+              <ng-template #headerTemplate>
+                {{ 'MODAL_STATUS_LABEL' | translate}}
+              </ng-template>
             </e-column>
 
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+            <e-column field="Attachment" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_ATTRACHMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">
-                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</button>
+                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i>
+                    {{ 'MODAL_VIEW_LABEL' | translate}}
+                  </button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
@@ -658,6 +905,7 @@
       </div>
     </div>
   </div>
+
   <div class="modal-body" *ngIf="accountGroupText === PROPOSAL">
     <div class="row">
       <div class="col-md-6">
@@ -665,9 +913,9 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Comment:
+                {{ 'MODAL_COMMENT_LABEL' | translate}}:
                 <div class="panel-body">
-                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="write a comment..." rows="3"></textarea>
+                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="{{'PLACEHOLDER_COMMENT_LABEL' | translate}}" rows="3"></textarea>
 
                 </div>
               </div>
@@ -680,20 +928,40 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Attack file:
+                {{ 'MODAL_ATTACKFILE_LABEL' | translate}}:
+
+
                 <div class="panel-body">
-                  <file-pond #myPondUpload
-                    label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
-                    allow-multiple="true"
-                    allowFileSizeValidation="true"
-                    maxFileSize="5MB"
-                    labelMaxFileSizeExceeded="File is too large"
-                    [files]="file"
-                    [options]="pondOptions"
-                    (onprocessfile)="handleFileProcess($event)"
-                    (onaddfile)="pondHandleAddFile($event)"
-                    (onremovefile)="pondHandleRemoveFile($event)">
-                  </file-pond>
+                  <ng-container>
+                    <ng-container *ngIf="locale === 'en'; else elseTemplate">
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsEN"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsZH"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-template>
+
+                  </ng-container>
+
                 </div>
               </div>
             </div>
@@ -701,11 +969,17 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
   <div class="modal-footer">
-    <button type="submit" (click)="satisfied()" *ngIf="accountGroupText === PROPOSAL" class="btn btn-success">Satisfied</button>
-    <button type="submit" (click)="dissatisfied()" *ngIf="accountGroupText === PROPOSAL" class="btn btn-danger">Dissatisfied</button>
-    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    <button type="submit" (click)="satisfied()" *ngIf="accountGroupText === PROPOSAL" class="btn btn-success">
+      {{ 'MODAL_SATISFIED_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="submit" (click)="dissatisfied()" *ngIf="accountGroupText === PROPOSAL" class="btn btn-danger">
+      {{ 'MODAL_DISSATISFIED_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+      {{ 'MODAL_CLOSEMODAL_BUTTON_LABEL' | translate}}
+    </button>
   </div>
 
 
@@ -715,7 +989,9 @@
 <!-- satisfied-Close Modal -->
 <ng-template #satisfiedCloseModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Satisfied</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_SATISFIED_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -728,13 +1004,13 @@
           <tbody>
             <tr>
               <td>
-                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_PROPOSER_LABEL' | translate}}: </label> <span> {{nameTitle}}</span>
 
               </td>
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_TITLE_LABEL' | translate}}: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -756,24 +1032,56 @@
           [allowExcelExport]='true'
           [textWrapSettings]="wrapSettings"
           [editSettings]='editSettings'
+
         >
           <e-columns>
+
             <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
+                {{data.sequence}}
               </ng-template>
               <ng-template #editTemplate let-data>
                 #
               </ng-template>
             </e-column>
-            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
-            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
-              <ng-template #template let-data>
-                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
-              </ng-template>
 
+            <e-column field="name" width="100" textAlign='Center' headerText="{{ 'Signee' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_SIGNEE_LABEL' | translate}}
+              </ng-template>
             </e-column>
+
+            <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_COMMENT_LABEL' | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                    <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    <ng-template #content >
+                      <span style="text-align: left; ">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                    <ng-template #content >
+                      <span>{{data.comment}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+
+                </ng-template>
+              </ng-template>
+            </e-column>
+
             <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_TIME_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -781,13 +1089,20 @@
             </e-column>
 
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}">
-
+              <ng-template #headerTemplate>
+                {{ 'MODAL_STATUS_LABEL' | translate}}
+              </ng-template>
             </e-column>
 
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+            <e-column field="Attachment" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_ATTRACHMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">
-                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</button>
+                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i>
+                    {{ 'MODAL_VIEW_LABEL' | translate}}
+                  </button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
@@ -801,7 +1116,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+      {{ 'MODAL_CLOSEMODAL_BUTTON_LABEL' | translate}}
+    </button>
   </div>
 
 
@@ -811,7 +1128,9 @@
 <!-- Reject Modal -->
 <ng-template #rejectModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Reject</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_REJECT_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -823,13 +1142,13 @@
           <tbody>
             <tr>
               <td>
-                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_PROPOSER_LABEL' | translate}}: </label> <span> {{nameTitle}}</span>
 
               </td>
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_TITLE_LABEL' | translate}}: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -851,23 +1170,52 @@
           [allowExcelExport]='true'
           [textWrapSettings]="wrapSettings"
           [editSettings]='editSettings'
+
         >
           <e-columns>
             <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
+                {{data.sequence}}
               </ng-template>
               <ng-template #editTemplate let-data>
                 #
               </ng-template>
             </e-column>
-            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
-            <e-column field="comment"  textAlign='Center' headerText="{{ 'Comment' | translate}}">
+            <e-column field="name" width="100" textAlign='Center' headerText="{{ 'Signee' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_SIGNEE_LABEL' | translate}}
+              </ng-template>
+            </e-column>
+            <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_COMMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
-                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+                <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                    <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    <ng-template #content >
+                      <span style="text-align: left;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                    <ng-template #content >
+                      <span >{{data.comment}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+
+                </ng-template>
               </ng-template>
             </e-column>
             <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_TIME_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -875,13 +1223,20 @@
             </e-column>
 
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}">
-
+              <ng-template #headerTemplate>
+                {{ 'MODAL_STATUS_LABEL' | translate}}
+              </ng-template>
             </e-column>
 
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+            <e-column field="Attachment" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_ATTRACHMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">
-                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</button>
+                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i>
+                    {{ 'MODAL_VIEW_LABEL' | translate}}
+                  </button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
@@ -901,9 +1256,9 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Comment:
+                {{ 'MODAL_COMMENT_LABEL' | translate}}:
                 <div class="panel-body">
-                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="write a comment..." rows="3"></textarea>
+                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="{{'PLACEHOLDER_COMMENT_LABEL' | translate}}" rows="3"></textarea>
 
                 </div>
               </div>
@@ -916,20 +1271,37 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Attack file:
+                {{ 'MODAL_ATTACKFILE_LABEL' | translate}}:
                 <div class="panel-body">
-                  <file-pond #myPondUpload
-                    label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
-                    allow-multiple="true"
-                    allowFileSizeValidation="true"
-                    maxFileSize="5MB"
-                    labelMaxFileSizeExceeded="File is too large"
-                    [files]="file"
-                    [options]="pondOptions"
-                    (onprocessfile)="handleFileProcess($event)"
-                    (onaddfile)="pondHandleAddFile($event)"
-                    (onremovefile)="pondHandleRemoveFile($event)">
-                  </file-pond>
+                  <ng-container>
+                    <ng-container *ngIf="locale === 'en'; else elseTemplate">
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsEN"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsZH"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-template>
+
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -939,9 +1311,15 @@
     </div>
 </div>
   <div class="modal-footer">
-    <button type="submit" *ngIf="accountGroupText !== SPOKERMAN && accountGroupText !== ERICK" (click)="satisfied()"  class="btn btn-success">Satisfied</button>
-    <button type="submit" *ngIf="accountGroupText !== SPOKERMAN && accountGroupText !== ERICK" (click)="dissatisfied()"  class="btn btn-danger">Dissatisfied</button>
-    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    <button type="submit" *ngIf="accountGroupText !== SPOKERMAN && accountGroupText !== ERICK" (click)="satisfied()"  class="btn btn-success">
+      {{ 'MODAL_SATISFIED_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="submit" *ngIf="accountGroupText !== SPOKERMAN && accountGroupText !== ERICK" (click)="dissatisfied()"  class="btn btn-danger">
+      {{ 'MODAL_DISSATISFIED_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+      {{ 'MODAL_CLOSEMODAL_BUTTON_LABEL' | translate}}
+    </button>
   </div>
 
 
@@ -951,7 +1329,9 @@
 <!-- dissatisfied Modal -->
 <ng-template #dissatisfiedModel let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Dissatisfied</h4>
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_DISSATIFIED_LABEL' | translate}}
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -963,13 +1343,13 @@
           <tbody>
             <tr>
               <td>
-                <label class="font-weight-bold">Proposer: </label> <span> {{nameTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_PROPOSER_LABEL' | translate}}: </label> <span> {{nameTitle}}</span>
 
               </td>
             </tr>
             <tr>
               <td>
-                <label class="font-weight-bold">Title: </label> <span> {{issueTitle}}</span>
+                <label class="font-weight-bold">{{ 'MODAL_TITLE_LABEL' | translate}}: </label> <span> {{issueTitle}}</span>
 
               </td>
             </tr>
@@ -991,23 +1371,58 @@
           [allowExcelExport]='true'
           [textWrapSettings]="wrapSettings"
           [editSettings]='editSettings'
+
         >
           <e-columns>
+
             <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
               <ng-template #template let-data>
-                {{NO(data.index)}}
+                {{data.sequence}}
               </ng-template>
               <ng-template #editTemplate let-data>
                 #
               </ng-template>
             </e-column>
-            <e-column field="name"  textAlign='Center' headerText="{{ 'Signee' | translate}}"> </e-column>
-            <e-column field="comment" textAlign='Center' headerText="{{ 'Comment' | translate}}">
+
+            <e-column field="name" width="100" textAlign='Center' headerText="{{ 'Signee' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_SIGNEE_LABEL' | translate}}
+              </ng-template>
+
+
+            </e-column>
+
+            <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_COMMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
-                <textarea autosize  type="text" class="form-control" readonly [value]="data.comment" name="comment"  style="text-align:left;" ></textarea>
+                <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                    <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    <ng-template #content >
+                      <span style="text-align: left;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ejs-tooltip >
+                    <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                    <ng-template #content >
+                      <span>{{data.comment}}</span>
+                    </ng-template>
+                  </ejs-tooltip>
+
+                </ng-template>
               </ng-template>
             </e-column>
+
             <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_TIME_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.createdTime | date:'yyyy/MM/dd, h:mm a'}}
               </ng-template>
@@ -1015,13 +1430,20 @@
             </e-column>
 
             <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Status' | translate}}">
-
+              <ng-template #headerTemplate>
+                {{ 'MODAL_STATUS_LABEL' | translate}}
+              </ng-template>
             </e-column>
 
-            <e-column field="statusName" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+            <e-column field="Attachment" width="100" textAlign='Center' headerText="{{ 'Attachment' | translate}}">
+              <ng-template #headerTemplate>
+                {{ 'MODAL_ATTRACHMENT_LABEL' | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">
-                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</button>
+                  <button type="button" (click)="attackFile(data)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i>
+                    {{ 'MODAL_VIEW_LABEL' | translate}}
+                  </button>
                 </div>
               </ng-template>
               <ng-template #editTemplate let-data>
@@ -1041,9 +1463,9 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Comment:
+                {{ 'MODAL_COMMENT_LABEL' | translate}}:
                 <div class="panel-body">
-                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="write a comment..." rows="3"></textarea>
+                  <textarea class="form-control" [(ngModel)]="commentText" placeholder="{{'PLACEHOLDER_COMMENT_LABEL' | translate}}" rows="3"></textarea>
 
                 </div>
               </div>
@@ -1056,20 +1478,38 @@
           <div class="col-md-12 col-md-offset-2 col-sm-12">
             <div class="comment-wrapper">
               <div class="panel panel-info">
-                Attack file:
+                {{ 'MODAL_ATTACKFILE_LABEL' | translate}}:
                 <div class="panel-body">
-                  <file-pond #myPondUpload
-                    label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>"
-                    allow-multiple="true"
-                    allowFileSizeValidation="true"
-                    maxFileSize="5MB"
-                    labelMaxFileSizeExceeded="File is too large"
-                    [files]="file"
-                    [options]="pondOptions"
-                    (onprocessfile)="handleFileProcess($event)"
-                    (onaddfile)="pondHandleAddFile($event)"
-                    (onremovefile)="pondHandleRemoveFile($event)">
-                  </file-pond>
+                  <ng-container>
+
+                    <ng-container *ngIf="locale === 'en'; else elseTemplate">
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsEN"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <file-pond #myPondUpload
+                        allow-multiple="true"
+                        allowFileSizeValidation="true"
+                        maxFileSize="5MB"
+                        labelMaxFileSizeExceeded="File is too large"
+                        [files]="file"
+                        [options]="pondOptionsZH"
+                        (onprocessfile)="handleFileProcess($event)"
+                        (onaddfile)="pondHandleAddFile($event)"
+                        (onremovefile)="pondHandleRemoveFile($event)">
+                      </file-pond>
+                    </ng-template>
+
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -1078,10 +1518,15 @@
       </div>
     </div>
 </div>
+
   <div class="modal-footer">
-    <button type="submit" *ngIf="accountGroupText === ERICK && this.tab === ERICKTAB" (click)="closeIdea()"  class="btn btn-success">Close</button>
-    <button type="submit" *ngIf="accountGroupText === ERICK && this.tab === ERICKTAB" (click)="asign()"  class="btn btn-danger">Asign</button>
-    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    <button type="submit" *ngIf="accountGroupText === ERICK && this.tab === ERICKTAB" (click)="closeIdea()"  class="btn btn-success">
+      {{ 'MODAL_CLOSE_BUTTON_LABEL' | translate}}
+    </button>
+    <button type="submit" *ngIf="accountGroupText === ERICK && this.tab === ERICKTAB" (click)="asign()"  class="btn btn-danger">
+      {{ 'MODAL_ASIGN_BUTTON_LABEL' | translate}}
+    </button>
+    <!-- <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button> -->
   </div>
 
 
@@ -1091,7 +1536,7 @@
 <ng-template #fileModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">
-      <i class="fas fa-plus"></i> Download File
+      <i class="fas fa-plus"></i> {{ 'MODAL_DOWNLOADFILE_LABEL' | translate}}
     </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
@@ -1118,7 +1563,9 @@
   </div>
   <div class="modal-footer">
 
-    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">
+      {{ 'MODAL_CLOSEMODAL_BUTTON_LABEL' | translate}}
+    </button>
   </div>
 
 

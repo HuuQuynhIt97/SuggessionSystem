@@ -132,20 +132,23 @@ export class Todolist2Service  {
   importSubmitEdit(formData) {
     return this.http.post(this.env.apiUrl + 'Idea/ImportSubmitEdit', formData);
   }
-  getTabProposal() {
-    return this.http.get(this.env.apiUrl + 'Idea/TabProposalGetAll', {});
+  getTabProposal(lang) {
+    return this.http.get(this.env.apiUrl + `Idea/TabProposalGetAll/${lang}`, {});
   }
-  getTabProcessing() {
-    return this.http.get(this.env.apiUrl + 'Idea/TabProcessingGetAll', {});
+  getTabProcessing(lang) {
+    return this.http.get(this.env.apiUrl + `Idea/TabProcessingGetAll/${lang}`, {});
   }
-  getTabErick() {
-    return this.http.get(this.env.apiUrl + 'Idea/TabErickGetAll', {});
+  getTabErick(lang) {
+    return this.http.get(this.env.apiUrl + `Idea/TabErickGetAll/${lang}`, {});
   }
-  getTabClose() {
-    return this.http.get(this.env.apiUrl + 'Idea/TabCloseGetAll', {});
+  getTabClose(lang) {
+    return this.http.get(this.env.apiUrl + `Idea/TabCloseGetAll/${lang}`, {});
   }
-  getIdeaHisById(id) {
-    return this.http.get(this.env.apiUrl + `Idea/GetIdeaHisById/${id}`, {});
+  getTabAnnouncement(lang) {
+    return this.http.get(this.env.apiUrl + `Idea/TabAnnouncementGetAll/${lang}`, {});
+  }
+  getIdeaHisById(id, lang) {
+    return this.http.get(this.env.apiUrl + `Idea/GetIdeaHisById/${id}/${lang}`, {});
   }
   accept(formData) {
     return this.http.post(this.env.apiUrl + `Idea/Accept`, formData);
@@ -155,6 +158,9 @@ export class Todolist2Service  {
   }
   update(model) {
     return this.http.post(this.env.apiUrl + `Idea/update`, model);
+  }
+  updateAnnouncement(id) {
+    return this.http.post(this.env.apiUrl + `Idea/UpdateAnnouncement/${id}`, {});
   }
   close(model) {
     return this.http.post(this.env.apiUrl + `Idea/Close`, model);
@@ -171,6 +177,7 @@ export class Todolist2Service  {
   dissatisfied(model) {
     return this.http.post(this.env.apiUrl + `Idea/Dissatisfied`, model);
   }
+
   protected handleError(errorResponse: any) {
     if (errorResponse?.error?.message) {
         return throwError(errorResponse?.error?.message || 'Server error');
@@ -186,5 +193,5 @@ export class Todolist2Service  {
         return throwError(modelStateErrors || 'Server error');
     }
     return throwError('Server error');
-}
+  }
 }

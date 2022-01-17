@@ -19,13 +19,14 @@
     },
     "Suggession": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://10.4.5.132:58"
+      "applicationUrl": "http://10.4.5.132:58",
+      //"applicationUrl": "http://10.4.5.174:59"
     },
     "API": {
       "commandName": "Executable"

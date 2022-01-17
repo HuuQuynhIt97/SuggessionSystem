@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Suggession._Repositories.Interface;
+using Suggession._Services.Interface;
 
 namespace Suggession._Services.Services
 {

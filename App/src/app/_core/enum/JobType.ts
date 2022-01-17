@@ -5,6 +5,7 @@ export enum StatusCode {
   Processing = "Processing",
   ErickTab = "Erick",
   Close = "Close",
+  Announcement = "Announcement",
 
   Propersal = 1,
   Spokesman = 2,
@@ -21,6 +22,6 @@ export enum StatusName {
   Update = "Update",
   Dissatisfied = "Dissatisfied",
   Satisfied = "Satisfied",
-  Close = "Dissatisfied"
+  Close = "Close"
 
 }

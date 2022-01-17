@@ -1,3 +1,4 @@
+import { SystemLanguageService } from './../../_core/_service/systemLanguage.service';
 import { PermissionService } from 'src/app/_core/_service/permission.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertifyService } from '../../_core/_service/alertify.service';
@@ -39,12 +40,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private authService: Authv2Service,
-    private permisisonService: PermissionService,
-    private roleService: RoleService,
     private spinner: NgxSpinnerService,
     private cookieService: CookieService,
     private permissionService: PermissionService,
-    private alertifyService: AlertifyService
+    private alertifyService: AlertifyService,
+    private systemLanguageService: SystemLanguageService
   ) {
     if (this.cookieService.get('remember') !== undefined) {
       if (this.cookieService.get('remember') === 'Yes') {
@@ -84,25 +84,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.spinner.show();
     this.busy = true;
     try {
+
       const data = await this.authentication();
-      // console.log('End authenication');
-
-      // this.role = JSON.parse(localStorage.getItem('user')).user.role;
-      // const userId = JSON.parse(localStorage.getItem('user')).user.id;
-
-      // console.log('end getRoleByUserID');
-
-      // console.log('Begin getMenu', userId);
-
-      // const menus = await this.permissionService.getMenuByLangID(userId, 'vi').toPromise();
-      // console.log('end nav', menus);
-
       const currentLang = localStorage.getItem('lang');
-      if (currentLang) {
-        localStorage.setItem('lang', currentLang);
-      } else {
-        localStorage.setItem('lang', 'en');
-      }
+
+
 
       if (this.remember) {
         this.cookieService.set('remember', 'Yes');
@@ -115,16 +101,15 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.cookieService.set('password', '');
         this.cookieService.set('systemCode', '');
       }
-      // setTimeout(() => {
-      //   const check = this.checkRole();
-      //   if (check) {
-      //     const uri = decodeURI(this.uri);
-      //     this.router.navigate([uri]);
-      //   } else {
-      //     this.router.navigate(['/system/account']);
-      //   }
 
-      // });
+      this.systemLanguageService.getLanguages(localStorage.getItem('lang') || 'zh').subscribe(res => {
+        localStorage.setItem('languages', JSON.stringify(res));
+      })
+      if (currentLang) {
+        localStorage.setItem('lang', currentLang);
+      } else {
+        localStorage.setItem('lang', 'zh');
+      }
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('token', data.token);
       this.router.navigate(['/transaction/todolist2']);

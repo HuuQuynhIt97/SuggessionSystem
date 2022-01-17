@@ -170,6 +170,9 @@ namespace Suggession.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAnnouncement")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Isshow")
                         .HasColumnType("bit");
 
@@ -210,6 +213,9 @@ namespace Suggession.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommentZh")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedTime")
@@ -263,9 +269,45 @@ namespace Suggession.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NameEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameZh")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Status");
+                });
+
+            modelBuilder.Entity("Suggession.Models.SystemLanguage", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SLEN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SLKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SLPage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SLTW")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SLType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SystemLanguages");
                 });
 
             modelBuilder.Entity("Suggession.Models.Tab", b =>
@@ -276,6 +318,15 @@ namespace Suggession.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameZh")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

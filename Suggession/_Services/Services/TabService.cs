@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Suggession._Repositories.Interface;
+using Suggession.Constants;
+using Suggession._Services.Interface;
 
 namespace Suggession._Services.Services
 {
@@ -28,17 +30,19 @@ namespace Suggession._Services.Services
             _configMapper = configMapper;
         }
 
-        public async Task<object> GetAll()
+        public async Task<object> GetAll(string lang)
         {
-            var data = _repo.FindAll().Select(x => new TabDto
+            var data = new List<TabDto>();
+            data = _repo.FindAll().Select(x => new TabDto
             { 
                 Id = x.Id,
-                Name = x.Name,
+                Name = x.NameEn,
+                Type = x.Type,
                 Statues = false
             }).ToList();
             foreach (var item in data)
             {
-                if (item.Name == "Proposal")
+                if (item.Type == "Proposal")
                 {
                     item.Statues = true;
                 }

@@ -2,7 +2,7 @@
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../../_core/_service/auth.service';
 import { AlertifyService } from '../../_core/_service/alertify.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from 'src/app/_core/_service/header.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CalendarsService } from 'src/app/_core/_service/calendars.service';
@@ -22,6 +22,10 @@ import * as signalr from '../../../assets/js/ec-client.js';
 import { HubConnectionState } from '@microsoft/signalr';
 import { navItems, navItemsEN, navItemsVI } from 'src/app/_nav';
 import { Authv2Service } from 'src/app/_core/_service/authv2.service';
+import { IRole } from 'src/app/_core/_model/role';
+import { FunctionSystem } from 'src/app/_core/_model/application-user';
+import { Account2Service } from 'src/app/_core/_service/account2.service';
+import { SystemLanguageService } from 'src/app/_core/_service/systemLanguage.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -53,6 +57,9 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   zh: any;
   menus: any;
   modalReference: any;
+  functions: any;
+  uri: string;
+  remember: any;
   @HostListener('window:scroll', ['$event'])
   onScroll(e) {
     console.log('window', e);
@@ -62,8 +69,11 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   userName: any;
   data: [] = [];
   firstItem: any;
+  userData: any;
+  values: string
+  fieldsRole: object = { text: 'fullName', value: 'username' };
   constructor(
-    private authService: AuthService,
+    private authService: Authv2Service,
     private authenticationService: Authv2Service,
     private roleService: RoleService,
     private alertify: AlertifyService,
@@ -76,7 +86,10 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     private spinner: NgxSpinnerService,
     private cookieService: CookieService,
     private modalService: NgbModal,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private service: Account2Service,
+    private route: ActivatedRoute,
+    private systemLanguageService: SystemLanguageService
 
   ) {
     this.vi = require('../../../assets/ej2-lang/vi.json');
@@ -84,10 +97,16 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     this.role = JSON.parse(localStorage.getItem('level'));
     this.value = localStorage.getItem('lang');
     const user = JSON.parse(localStorage.getItem("user"));
-    this.userName = user?.fullName;
+    if(localStorage.getItem('anonymous') === "yes") {
+      this.userName = "admin";
+    }
+    else {
+      this.userName = user?.fullName;
+    }
     this.userID = user?.id;
     const navs = this.value == 'vi'? navItemsVI : this.value === 'en'? navItemsEN : navItems;
     this.navItems = navs
+    this.uri = this.route.snapshot.queryParams.uri || '/transaction/todolist2';
   }
   toggleMinimize(e) {
     this.sidebarMinimized = e;
@@ -99,28 +118,13 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     //or document.querySelector('body').scrollTo(0,0)
   }
   ngOnInit(): void {
-    if (signalr.CONNECTION_HUB.state === HubConnectionState.Connected) {
-      signalr.CONNECTION_HUB
-        .invoke('CheckOnline', this.userID, this.userName)
-        .catch(error => {
-          console.log(`CheckOnline error: ${error}`);
-        }
-        );
-      signalr.CONNECTION_HUB.on('Online', (users) => {
-        this.online = users;
-      });
-
-      signalr.CONNECTION_HUB.on('UserOnline', (userNames: any) => {
-        const userNameList = JSON.stringify(userNames);
-        localStorage.setItem('userOnline', userNameList);
-      });
-    }
+    this.getAccounts()
     // this.versionService.getAllVersion().subscribe((item: any) => {
     //   this.data = item;
     //   this.firstItem = item[0] || {};
     // });
 
-    this.langsData = [, { id: 'zh', name: '中文' }, { id: 'en', name: 'EN' },{ id: 'vi', name: 'VI' }];
+    this.langsData = [, { id: 'zh', name: '中文' }, { id: 'en', name: 'EN' }];
     this.navAdmin = new Nav().getNavAdmin();
     this.navClient = new Nav().getNavClient();
     this.navEc = new Nav().getNavEc();
@@ -129,7 +133,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     this.currentUser = JSON.parse(localStorage.getItem('user')).fullName;
     this.page = 1;
     this.pageSize = 10;
-
+    this.values = JSON.parse(localStorage.getItem('user')).username;
     this.userid = JSON.parse(localStorage.getItem('user')).id;
     // this.getMenu();
     this.onService();
@@ -140,6 +144,66 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     // this.getBuilding();
   }
 
+  onChangeRole(args) {
+    // this.userID = data.id;
+    this.userName = args.itemData.username;
+    this.loginAnonymous()
+  }
+  getAccounts() {
+    this.service.getAll().subscribe(data => {
+      this.userData = data;
+      this.userData.unshift({ username: "admin", fullName: "Default(Admin)" });
+    });
+
+  }
+  authentication() {
+    return this.authService
+      .loginAnonymous(this.userName).toPromise();
+  }
+  async loginAnonymous() {
+    // this.authenticationService.logOut();
+    this.spinner.show();
+
+    try {
+      await this.authentication();
+      const currentLang = localStorage.getItem('lang');
+      if (this.remember) {
+        this.cookieService.set('remember', 'Yes');
+        this.cookieService.set('username', this.userName);
+      } else {
+        this.cookieService.set('remember', 'No');
+        this.cookieService.set('username', '');
+        this.cookieService.set('password', '');
+        this.cookieService.set('systemCode', '');
+      }
+      this.systemLanguageService.getLanguages(localStorage.getItem('lang') || 'zh').subscribe(res => {
+        localStorage.setItem('languages', JSON.stringify(res));
+      })
+      if (currentLang) {
+        localStorage.setItem('lang', currentLang);
+      } else {
+        localStorage.setItem('lang', 'zh');
+      }
+      this.router.navigate(['/transaction/todolist2']);
+      window.location.reload()
+      this.spinner.hide();
+
+    } catch (error) {
+      this.spinner.hide();
+    }
+  }
+
+  checkRole(): boolean {
+    const uri = decodeURI(this.uri);
+    const permissions = this.functions.map(x => x.url);
+    for (const url of permissions) {
+      if (uri.includes(url)) {
+        return true;
+      }
+    }
+    return false;
+
+  }
   getMenu() {
     const navs = JSON.parse(localStorage.getItem('navs'));
     if (navs === null) {
@@ -161,28 +225,13 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     return '/ec/execution/todolist2';
   }
   onChange(args) {
-    // this.spinner.show();
-    // const lang = args.itemData.id;
-    // localStorage.removeItem('lang');
-    // localStorage.setItem('lang', lang);
-    // this.dataService.setValueLocale(lang);
-    // this.permissionService.getMenuByLangID(this.userid, lang).subscribe((navs: []) => {
-    //   this.navItems = navs;
-    //   localStorage.setItem('navs', JSON.stringify(navs));
-    //   this.spinner.hide();
-    //   window.location.reload();
-
-    // }, (err) => {
-    //   this.spinner.hide();
-    // });
     this.spinner.show();
     const lang = args.itemData.id;
     localStorage.removeItem('lang');
     localStorage.setItem('lang', lang);
     this.dataService.setValueLocale(lang);
     this.translate.use(lang);
-     window.location.reload();
-
+    window.location.reload();
   }
   getBuilding() {
     const userID = JSON.parse(localStorage.getItem('user')).user.id;
@@ -217,6 +266,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   updateCurrentTime() {
     this.currentTime = moment().format('hh:mm:ss A');
   }
+
   logout() {
     this.cookieService.deleteAll();
     localStorage.clear();
@@ -225,6 +275,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     this.authenticationService.logOut();
     const uri = this.router.url;
     this.router.navigate(['login'], { queryParams: { uri }, replaceUrl: true });
+    // window.location.reload()
     this.alertify.message('Logged out');
 
   }
@@ -247,6 +298,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
       this.avatar = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64, ' + img);
     }
   }
+
   imageBase64(img) {
     if (img === 'null') {
       return this.defaultImage();
