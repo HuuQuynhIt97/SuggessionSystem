@@ -6,6 +6,7 @@ export enum StatusCode {
   ErickTab = "Erick",
   Close = "Close",
   Announcement = "Announcement",
+  Approval = "Approval",
 
   Propersal = 1,
   Spokesman = 2,

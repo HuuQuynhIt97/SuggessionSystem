@@ -414,7 +414,11 @@ namespace Suggession.Controllers
         {
             return Ok((await _service.GetIdeaHisById(id , lang)));
         }
-
+        [HttpGet("{id}/{lang}")]
+        public async Task<ActionResult> GetIdeaHisByIdWithoutFactoryHead(int id, string lang)
+        {
+            return Ok((await _service.GetIdeaHisByIdWithoutFactoryHead(id, lang)));
+        }
         [HttpGet("{lang}")]
         public async Task<ActionResult> TabProcessingGetAll(string lang)
         {
@@ -425,11 +429,19 @@ namespace Suggession.Controllers
         {
             return Ok((await _service.TabErickGetAll(lang)));
         }
+
         [HttpGet("{lang}")]
         public async Task<ActionResult> TabCloseGetAll(string lang)
         {
             return Ok((await _service.TabCloseGetAll(lang)));
         }
+
+        [HttpGet("{lang}")]
+        public async Task<ActionResult> TabApproveGetAll(string lang)
+        {
+            return Ok((await _service.TabApproveGetAll(lang)));
+        }
+
         [HttpGet("{lang}")]
         public async Task<ActionResult> TabAnnouncementGetAll(string lang)
         {
@@ -951,6 +963,18 @@ namespace Suggession.Controllers
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
             }
             return Ok(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ErickApproval([FromBody] IdeaDto model)
+        {
+            return Ok((await _service.ErickApproval(model)));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ErickReject([FromBody] IdeaDto model)
+        {
+            return Ok((await _service.ErickReject(model)));
         }
 
         [HttpPost]

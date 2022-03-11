@@ -14,6 +14,9 @@ namespace Suggession.Constants
         public static string FHO = "FHO";
         public static string FunctionalLeader = "FunctionalLeader";
         public static string GHR = "GHR";
+        public static int Propersal = 1;
+        public static int FactoryHead = 3;
+        public static int Spokesman = 2;
 
     }
 }

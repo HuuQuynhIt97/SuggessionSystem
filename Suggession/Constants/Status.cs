@@ -11,6 +11,11 @@
         public static int Dissatisfied = 6;
         public static int Satisfied = 7;
         public static int Close = 8;
+        public static int ApproveStatus = 9;
+        public static int NG = 1;
+        public static int OK = 2;
+
+        public static string Rejection = "Rejection";
     }
 
     

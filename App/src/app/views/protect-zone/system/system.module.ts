@@ -1,3 +1,4 @@
+import { StatusComponent } from './status/status.component';
 import { SystemLanguageComponent } from './system-language/system-language.component';
 import { CustomLoader } from './../../../_core/_helper/customLoader';
 
@@ -63,6 +64,7 @@ loadCldr(
     OcComponent,
     SystemLanguageComponent,
     OcUserComponent,
+    StatusComponent
   ],
   imports: [
     CommonModule,

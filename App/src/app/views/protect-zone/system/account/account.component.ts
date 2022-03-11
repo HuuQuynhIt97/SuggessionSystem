@@ -282,6 +282,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
   loadAccountGroupData() {
     this.accountGroupService.getAll().subscribe(data => {
+      console.log(data);
       this.accountGroupData = data;
     });
   }

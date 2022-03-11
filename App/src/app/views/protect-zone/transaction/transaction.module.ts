@@ -1,3 +1,6 @@
+import { AnnouncementModalComponent } from './todolist2/announcementModal/announcementModal.component';
+import { SatisfiedErickModalComponent } from './todolist2/satisfiedErickModal/satisfiedErickModal.component';
+import { SatisfiedSpokermanModalComponent } from './todolist2/satisfiedSpokermanModal/satisfiedSpokermanModal.component';
 import { LinebreaksPipe } from './../../../_core/_helper/linebreak.pipe';
 import { CoreModule } from './../../../_core/core.module';
 import { CustomLoader } from './../../../_core/_helper/customLoader';
@@ -75,7 +78,10 @@ loadCldr(
     Todolist2Component,
     NgTemplateNameDirective,
     LinebreaksPipe,
-    UploadFileComponent
+    UploadFileComponent,
+    SatisfiedSpokermanModalComponent,
+    SatisfiedErickModalComponent,
+    AnnouncementModalComponent
   ],
   imports: [
     NgxDocViewerModule,

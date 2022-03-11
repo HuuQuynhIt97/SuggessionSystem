@@ -1,3 +1,7 @@
+import { filter } from 'rxjs/operators';
+import { AnnouncementModalComponent } from './announcementModal/announcementModal.component';
+import { SatisfiedErickModalComponent } from './satisfiedErickModal/satisfiedErickModal.component';
+import { SatisfiedSpokermanModalComponent } from './satisfiedSpokermanModal/satisfiedSpokermanModal.component';
 import { StatusName } from './../../../../_core/enum/JobType';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Account2Service } from 'src/app/_core/_service/account2.service';
@@ -6,7 +10,7 @@ import { PerformanceService } from './../../../../_core/_service/performance.ser
 import { AccountGroupService } from './../../../../_core/_service/account.group.service';
 import { Component, OnInit, TemplateRef, ViewChild, QueryList, ViewChildren, OnDestroy, ElementRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { GridComponent, QueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
+import { GridComponent, QueryCellInfoEventArgs, RowDataBoundEventArgs } from '@syncfusion/ej2-angular-grids';
 import { ObjectiveService } from 'src/app/_core/_service/objective.service';
 import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
 import { environment } from 'src/environments/environment';
@@ -18,6 +22,7 @@ import { UploadFileComponent } from './upload-file/upload-file.component';
 import { StatusCode } from 'src/app/_core/enum/JobType';
 import { TranslateService } from '@ngx-translate/core';
 import { Tooltip } from '@syncfusion/ej2-angular-popups';
+import { PlanIdeaService } from 'src/app/_core/_service/planIdea.service';
 @Component({
   selector: 'app-todolist2',
   templateUrl: './todolist2.component.html',
@@ -25,22 +30,23 @@ import { Tooltip } from '@syncfusion/ej2-angular-popups';
   providers: [DatePipe]
 })
 export class Todolist2Component implements OnInit, OnDestroy {
-  editSettings = { showDeleteConfirmDialog: false, allowEditing: false, allowAdding: false, allowDeleting: false, mode: 'Normal' };
+  editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   editSettingsDisPatch = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: false, allowDeleting: false, mode: 'Normal' };
   data: any[] = [];
   dataHis: any[] = [];
   modalReference: NgbModalRef;
   fields: object = { text: 'name', value: 'id' };
-  toolbarOptions = ['Search'];
+  toolbarOptions = ['Add','Update','Delete','Cancel'];
   wrapSettings= { wrapMode: 'Content' };
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
-
   pageSettingsTodo = {
     pageCount: 10,
     pageSizes: [5, 10,15,20, 'All'],
     pageSize: 10,
   };
   @ViewChild('grid') public grid: GridComponent;
+
+  @ViewChild('gridToDo') public gridToDo: GridComponent;
   locale: string = null ;
   name: any;
   public enableVirtualization: boolean = true;
@@ -68,6 +74,9 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   @ViewChild('satisfiedCloseModel', { static: true })
   public satisfiedCloseModel: TemplateRef<any>;
+
+  @ViewChild('satisfiedCloseSpokerManModel', { static: true })
+  public satisfiedCloseSpokerManModel: TemplateRef<any>;
 
   @ViewChild('rejectModel', { static: true })
   public rejectModel: TemplateRef<any>;
@@ -116,7 +125,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   toId: number = 0 ;
   titleText: string = null
   issueText: string = null
-  commentText: string = null
+  commentText: string = ''
   suggessionText: string = null
   proposal: boolean = true
   files: any;
@@ -137,8 +146,8 @@ export class Todolist2Component implements OnInit, OnDestroy {
   ERICK = StatusCode.Erick
   PROCESSING = StatusCode.Processing
   ERICKTAB = StatusCode.ErickTab
+  flag: boolean;
   constructor(
-    private service: ObjectiveService,
     private router: Router,
     private alertify: AlertifyService,
     public todolistService: Todolistv2Service,
@@ -146,13 +155,20 @@ export class Todolist2Component implements OnInit, OnDestroy {
     private accountService: Account2Service,
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
-    private datePipe: DatePipe,
-    private performanceService: PerformanceService,
     public env: EnvService,
     private route: ActivatedRoute,
     public translate: TranslateService,
+    public planIdeaService: PlanIdeaService,
     private spinner: NgxSpinnerService
   ) {
+    this.planIdeaService.currentMessage.subscribe(res => {
+      if (res === 'Reload complete Tab') {
+        this.getTabClose()
+      }
+      if (res === 'Reload approval Tab') {
+        this.getTabApproval()
+      }
+    })
     // setTimeout(() => {
       // }, 300);
     setTimeout(() => {
@@ -164,7 +180,12 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
   }
-
+  rowDB(args: RowDataBoundEventArgs) {
+    const data = args.data as any;
+    if (data.isReject && this.tab === StatusCode.Close && this.accountGroupText === StatusCode.Spokesman) {
+      args.row.classList.add('bgcolor');
+    }
+  }
   changeTab(item) {
     this.spinner.show()
     this.tabData.forEach(element => {
@@ -201,6 +222,12 @@ export class Todolist2Component implements OnInit, OnDestroy {
         this.getTabAnnouncement()
         this.proposal = false
         break;
+      case StatusCode.Approval:
+        this.tab = "Approval";
+        this.router.navigate([`/transaction/todolist2/${this.tab}`]);
+        this.getTabApproval()
+        this.proposal = false
+        break;
       default:
         break;
     }
@@ -211,8 +238,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.tab = this.route.snapshot.params.tab || "Proposal";
     this.proposal = true
     this.accountGroupText = Number(JSON.parse(localStorage.getItem('user')).accountGroupSequence);
-
-
     this.getAllTab();
     this.spinner.show()
     // this.getTabProposal()
@@ -233,6 +258,10 @@ export class Todolist2Component implements OnInit, OnDestroy {
         this.getTabClose()
         this.proposal = false
         break;
+      case StatusCode.Approval:
+        this.getTabApproval()
+        this.proposal = false
+        break;
       case StatusCode.Announcement:
         this.getTabAnnouncement()
         this.proposal = false
@@ -244,7 +273,15 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     }
   }
-
+  
+  public dataBound(): void {
+    if(this.accountGroupText !== StatusCode.Spokesman)
+    {
+      this.gridToDo.showColumns('Announcement')
+    } else {
+      this.gridToDo.hideColumns('Announcement')
+    }
+  }
   loadDataByTab(tab) {
     switch (tab) {
       case StatusCode.Proposal:
@@ -414,33 +451,62 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.nameTitle = item.name
     this.issueTitle = item.title
     this.statusName = item.type
+    let size = 'xxl'
     switch (item.type) {
       case StatusName.NA:
         this.showModal(this.suggessionEdit)
         break;
       case StatusName.Apply:
-        this.showModalDetails(this.details)
+        this.showModalDetails(this.details,size)
         break;
       case StatusName.Update:
-        this.showModalDetails(this.tabProcess)
+        this.showModalDetails(this.tabProcess,size)
         break;
       case StatusName.Reject:
-        this.showModalDetails(this.rejectModel)
+        this.showModalDetails(this.rejectModel,size)
         break;
       case StatusName.Complete:
-        this.showModalDetails(this.completeTerminateModel)
+        this.showModalDetails(this.completeTerminateModel,size)
         break;
       case StatusName.Terminate:
-        this.showModalDetails(this.completeTerminateModel)
+        this.showModalDetails(this.completeTerminateModel,size)
         break;
       case StatusName.Dissatisfied:
-        this.showModalDetails(this.dissatisfiedModel)
+        this.showModalDetails(this.dissatisfiedModel,size)
         break;
       case StatusName.Satisfied:
-        this.showModalDetails(this.satisfiedCloseModel)
+        if(this.accountGroupText === StatusCode.Spokesman && this.tab === StatusCode.Close){
+          this.showModalDetails2(SatisfiedSpokermanModalComponent,item,'lg')
+        }else if(this.accountGroupText === StatusCode.Spokesman && this.tab === StatusCode.Proposal) {
+          this.showModalDetails(this.satisfiedCloseModel,size)
+        }else if(this.accountGroupText === StatusCode.Erick && this.tab === StatusCode.Approval) {
+          this.showModalDetails2(SatisfiedErickModalComponent,item,'lg')
+        }else if(this.accountGroupText === StatusCode.Erick && this.tab === StatusCode.Proposal) {
+          this.showModalDetails(this.satisfiedCloseModel,size)
+        }else if(this.accountGroupText === StatusCode.Erick && this.tab === StatusCode.Close) {
+          this.showModalDetails(this.satisfiedCloseModel,size)
+        }else if(this.accountGroupText === StatusCode.Propersal && this.tab === StatusCode.Close) {
+          this.showModalDetails(this.satisfiedCloseModel,size)
+        }else {
+          this.showModalDetails2(AnnouncementModalComponent,item,'lg')
+        }
+          
         break;
       case StatusName.Close:
-        this.showModalDetails(this.satisfiedCloseModel)
+        if(this.accountGroupText === StatusCode.Spokesman && this.tab === StatusCode.Close){
+          this.showModalDetails2(SatisfiedSpokermanModalComponent,item,'lg')
+        }else if(this.accountGroupText === StatusCode.Spokesman && this.tab === StatusCode.Proposal) {
+          this.showModalDetails(this.satisfiedCloseModel,size)
+        }else if(this.accountGroupText === StatusCode.Erick && this.tab === StatusCode.Approval) {
+          this.showModalDetails2(SatisfiedErickModalComponent,item,'lg')
+        }else if(this.accountGroupText === StatusCode.Erick && this.tab === StatusCode.Proposal) {
+          this.showModalDetails(this.satisfiedCloseModel,size)
+        }else if(this.accountGroupText === StatusCode.Propersal && this.tab === StatusCode.Close) {
+          this.showModalDetails(this.satisfiedCloseModel,size)
+        }
+        else {
+          this.showModalDetails2(AnnouncementModalComponent,item,'lg')
+        }
         break;
       default:
         break;
@@ -456,12 +522,16 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.accept(formData).subscribe(res => {
-      this.alertify.success("Accept Successfully")
-      this.getTabProposal()
-      this.file = []
-      this.modalReference.close()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.accept(formData).subscribe(res => {
+        this.alertify.success("Accept Successfully")
+        this.getTabProposal()
+        this.file = []
+        this.modalReference.close()
+      })
+    }
   }
 
   update() {
@@ -472,13 +542,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.update(formData).subscribe(res => {
-      this.alertify.success("Update Successfully")
-      this.modalReference.close()
-      this.file = []
-      this.commentText = ""
-      this.getTabProcessing()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.update(formData).subscribe(res => {
+        this.alertify.success("Update Successfully")
+        this.modalReference.close()
+        this.file = []
+        this.commentText = ""
+        this.getTabProcessing()
+      })
+    }
   }
 
   asign() {
@@ -489,13 +563,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.update(formData).subscribe(res => {
-      this.alertify.success("Successfully")
-      this.modalReference.close()
-      this.file = []
-      this.commentText = ""
-      this.getTabErick()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.update(formData).subscribe(res => {
+        this.alertify.success("Successfully")
+        this.modalReference.close()
+        this.file = []
+        this.commentText = ""
+        this.getTabErick()
+      })
+    }
   }
   closeIdea() {
     const formData = new FormData();
@@ -505,13 +583,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.close(formData).subscribe(res => {
-      this.alertify.success("Update Successfully")
-      this.modalReference.close()
-      this.file = []
-      this.commentText = ""
-      this.getTabErick()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.close(formData).subscribe(res => {
+        this.alertify.success("Update Successfully")
+        this.modalReference.close()
+        this.file = []
+        this.commentText = ""
+        this.getTabErick()
+      })
+    }
   }
   terminate() {
     const formData = new FormData();
@@ -521,13 +603,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.terminate(formData).subscribe(res => {
-      this.alertify.success("Successfully")
-      this.file = []
-      this.commentText = ""
-      this.getTabProcessing()
-      this.modalReference.close()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.terminate(formData).subscribe(res => {
+        this.alertify.success("Successfully")
+        this.file = []
+        this.commentText = ""
+        this.getTabProcessing()
+        this.modalReference.close()
+      })
+    }
   }
   complete() {
     const formData = new FormData();
@@ -537,13 +623,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.complete(formData).subscribe(res => {
-      this.alertify.success("Successfully")
-      this.file = []
-      this.commentText = ""
-      this.getTabProcessing()
-      this.modalReference.close()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.complete(formData).subscribe(res => {
+        this.alertify.success("Successfully")
+        this.file = []
+        this.commentText = ""
+        this.getTabProcessing()
+        this.modalReference.close()
+      })
+    }
   }
   reject() {
     const formData = new FormData();
@@ -553,13 +643,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.reject(formData).subscribe(res => {
-      this.alertify.success("Successfully")
-      this.file = []
-      this.commentText = ""
-      this.getTabProposal()
-      this.modalReference.close()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.reject(formData).subscribe(res => {
+        this.alertify.success("Successfully")
+        this.file = []
+        this.commentText = ""
+        this.getTabProposal()
+        this.modalReference.close()
+      })
+    }
   }
 
   satisfied() {
@@ -570,13 +664,17 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.satisfied(formData).subscribe(res => {
-      this.alertify.success("Successfully")
-      this.file = []
-      this.commentText = ""
-      this.getTabProposal()
-      this.modalReference.close()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+      this.todolist2Service.satisfied(formData).subscribe(res => {
+        this.alertify.success("Successfully")
+        this.file = []
+        this.commentText = ""
+        this.getTabProposal()
+        this.modalReference.close()
+      })
+    }
   }
 
   dissatisfied() {
@@ -587,20 +685,25 @@ export class Todolist2Component implements OnInit, OnDestroy {
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
-    this.todolist2Service.dissatisfied(formData).subscribe(res => {
-      this.alertify.success("Successfully")
-      this.file = []
-      this.commentText = ""
-      this.getTabProposal()
-      this.modalReference.close()
-    })
+    const check =  this.validateComment()
+    if(check === false) return;
+    if(check) {
+
+      this.todolist2Service.dissatisfied(formData).subscribe(res => {
+        this.alertify.success("Successfully")
+        this.file = []
+        this.commentText = ""
+        this.getTabProposal()
+        this.modalReference.close()
+      })
+    }
   }
   getTabProposal() {
     this.todolist2Service.getTabProposal(this.locale).subscribe((res: any) => {
       console.log(res);
       if(this.accountGroupText === StatusCode.Spokesman) {
         let index = 1;
-        this.data = res.filter(x => x.receiveID === this.userId).map(x => {
+        this.data = res.filter(x => x.receiveID === this.userId && x.description !== 'N/A').map(x => {
           return {
             createdBy: x.createdBy,
             createdTime: x.createdTime,
@@ -619,6 +722,8 @@ export class Todolist2Component implements OnInit, OnDestroy {
             type: x.type
           }
         })
+        
+        console.log(this.data)
       }
       if(this.accountGroupText === StatusCode.Propersal) {
         let index = 1;
@@ -645,7 +750,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       }
 
       if(this.accountGroupText === StatusCode.Erick) {
-        this.data = res
+        this.data = res.filter(x => x.description !== 'N/A')
       }
       // this.data = res
       this.spinner.hide()
@@ -685,14 +790,46 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   getTabAnnouncement() {
     this.todolist2Service.getTabAnnouncement(this.locale).subscribe((res: any) => {
+      console.log(res);
       this.data = res
       this.spinner.hide()
     })
   }
 
+
   getTabClose() {
     this.todolist2Service.getTabClose(this.locale).subscribe((res: any) => {
+      if (this.accountGroupText === StatusCode.Propersal) {
+        let index = 1;
+        this.data = res.filter(x => x.createdBy === this.userId).map(x => {
+          return {
+            createdBy: x.createdBy,
+            createdTime: x.createdTime,
+            description: x.description,
+            id: x.id,
+            index: index++,
+            issue: x.issue,
+            name: x.name,
+            comment: x.comment,
+            isAnnouncement: x.isAnnouncement,
+            IsShowApproveTab: x.IsShowApproveTab,
+            receiveID: x.receiveID,
+            sendID: x.sendID,
+            statusName: x.statusName,
+            suggession: x.suggession,
+            title: x.title,
+            type: x.type
+          }
+        })
+      } else {
+        this.data = res
+      }
+      this.spinner.hide()
+    })
+  }
 
+  getTabApproval() {
+    this.todolist2Service.getTabApprove(this.locale).subscribe((res: any) => {
       if (this.accountGroupText === StatusCode.Propersal) {
         let index = 1;
         this.data = res.filter(x => x.createdBy === this.userId).map(x => {
@@ -721,27 +858,34 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.spinner.hide()
     })
   }
+  validateComment() {
 
+    if (this.commentText === null || this.commentText === ''){
+      this.alertify.warning(this.translate.instant('MESSAGE_COMMENT_TEXT'));
+      return false;
+    }
+    return true;
+  }
 
   validate() {
 
     if (this.toId === 0) {
-      this.alertify.warning('Please select User');
+      this.alertify.warning(this.translate.instant('MESSAGE_SAVE_TO_SUGGESTION'));
       return false;
     }
 
     if (this.titleText === null || this.titleText === ''){
-      this.alertify.warning('Title is not empty');
+      this.alertify.warning(this.translate.instant('MESSAGE_SAVE_TITLE_SUGGESTION'));
       return false;
     }
 
     if (this.issueText === null || this.issueText === ''){
-      this.alertify.warning('Issue is not empty');
+      this.alertify.warning(this.translate.instant('MESSAGE_SAVE_ISSUE_SUGGESTION'));
       return false;
     }
 
     if (this.suggessionText === null || this.suggessionText === ''){
-      this.alertify.warning('Please fill in the suggession content');
+      this.alertify.warning(this.translate.instant('MESSAGE_SAVE_SUGGESTIONTEXT_SUGGESTION'));
       return false;
     }
 
@@ -789,6 +933,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     formData.append("Suggession", this.suggessionText);
     formData.append("Issue", this.issueText);
     // formData.append("topic", this.Topic_Name);
+    
     for (let item of this.file) {
       formData.append('UploadedFile', item);
     }
@@ -840,7 +985,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
         break;
       }
     }
-
   }
 
   openSuggessionModal() {
@@ -857,8 +1001,8 @@ export class Todolist2Component implements OnInit, OnDestroy {
     });
   }
 
-  showModalDetails(modal){
-    this.modalReference = this.modalService.open(modal, { size: 'xxl'});
+  showModalDetails(modal,size){
+    this.modalReference = this.modalService.open(modal, { size: size});
     // event click out side modal and close model
     this.modalReference.result.then((result) => {
       this.commentText = ""
@@ -870,8 +1014,19 @@ export class Todolist2Component implements OnInit, OnDestroy {
     // end event
   }
 
-  Upload() {
+  showModalDetails2(model,data,size){
+    const modalRef = this.modalService.open(model, { size: size, backdrop: 'static', keyboard: false });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.nameTitle = data.name;
+    modalRef.componentInstance.issueTitle = data.title;
+    modalRef.componentInstance.tab = this.tab;
 
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+
+  Upload() {
     const formData = new FormData();
     // formData.append("uploadBy", this.userID);
     // formData.append("file_code", this.makeid(8));
@@ -886,7 +1041,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
       //   this.modalReference.close();
       //   // this.Topic_Name = null;
       // })
-
     } else {
       this.alertify.error('Not File Upload!')
     }
@@ -904,14 +1058,14 @@ export class Todolist2Component implements OnInit, OnDestroy {
     const lang = localStorage.getItem('lang')
     this.accountGroupService.getAllTab(lang).subscribe(res => {
       if(this.accountGroupText === StatusCode.Spokesman) {
-        this.tabData = res.filter(x => x.type !== StatusCode.ErickTab)
+        this.tabData = res.filter(x => x.type !== StatusCode.ErickTab && x.type !== StatusCode.Approval)
       }
       if(this.accountGroupText === StatusCode.Propersal) {
-        this.tabData = res.filter(x => x.type !== StatusCode.Processing && x.type !== StatusCode.ErickTab  && x.type !== StatusCode.Announcement)
+        this.tabData = res.filter(x => x.type !== StatusCode.Processing && x.type !== StatusCode.ErickTab && x.type !== StatusCode.Approval)
       }
 
       if(this.accountGroupText === StatusCode.Erick) {
-        this.tabData = res.filter(x => x.type !== StatusCode.Announcement)
+        this.tabData = res
       }
       if(this.tabData.length > 0) {
         this.tabData.forEach(element => {
@@ -924,7 +1078,5 @@ export class Todolist2Component implements OnInit, OnDestroy {
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;
   }
-
-
 
 }

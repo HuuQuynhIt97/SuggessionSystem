@@ -1,3 +1,4 @@
+import { PlanIdea } from './../_model/planIdea';
 import { EnvService } from './env.service';
 import { environment } from 'src/environments/environment';
 import { CURDService } from './CURD.service';
@@ -144,11 +145,46 @@ export class Todolist2Service  {
   getTabClose(lang) {
     return this.http.get(this.env.apiUrl + `Idea/TabCloseGetAll/${lang}`, {});
   }
+  getTabApprove(lang) {
+    return this.http.get(this.env.apiUrl + `Idea/TabApproveGetAll/${lang}`, {});
+  }
   getTabAnnouncement(lang) {
     return this.http.get(this.env.apiUrl + `Idea/TabAnnouncementGetAll/${lang}`, {});
   }
   getIdeaHisById(id, lang) {
     return this.http.get(this.env.apiUrl + `Idea/GetIdeaHisById/${id}/${lang}`, {});
+  }
+  getIdeaHisByIdWithoutFactoryHead(id, lang) {
+    return this.http.get(this.env.apiUrl + `Idea/GetIdeaHisByIdWithoutFactoryHead/${id}/${lang}`, {});
+  }
+  getPlanIdea(id) {
+    return this.http.get<PlanIdea>(this.env.apiUrl + `PlanIdea/getPlanIdea/${id}`, {});
+  }
+  getPlanOkIdea(id) {
+    return this.http.get<PlanIdea>(this.env.apiUrl + `PlanIdea/getPlanOkIdea/${id}`, {});
+  }
+  getPlanStatus() {
+    return this.http.get(this.env.apiUrl + `PlanIdea/getPlanStatus`, {});
+  }
+
+  planIdeaCreate(model) {
+    return this.http.post(this.env.apiUrl + `PlanIdea/create`, model);
+  }
+
+  getFactoryHeadComment(id) {
+    return this.http.get(this.env.apiUrl + `PlanIdea/GetFactoryHeadComment/${id}`, {});
+  }
+
+  planIdeaUpdate(model) {
+    return this.http.put(this.env.apiUrl + `PlanIdea/update`, model);
+  }
+
+  planIdeaAddOrUpdate(model) {
+    return this.http.post(this.env.apiUrl + `PlanIdea/CreateOrUpdate`, model);
+  }
+
+  planIdeaDelete(id) {
+    return this.http.delete(this.env.apiUrl + `PlanIdea/delete/${id}`, {});
   }
   accept(formData) {
     return this.http.post(this.env.apiUrl + `Idea/Accept`, formData);

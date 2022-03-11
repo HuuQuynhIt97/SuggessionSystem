@@ -25,8 +25,10 @@ namespace Suggession._Services.Interface
         Task<object> TabProcessingGetAll(string lang);
         Task<object> TabErickGetAll(string lang);
         Task<object> TabCloseGetAll(string lang);
+        Task<object> TabApproveGetAll(string lang);
         Task<object> TabAnnouncementGetAll(string lang);
         Task<object> GetIdeaHisById(int id, string lang);
+        Task<object> GetIdeaHisByIdWithoutFactoryHead(int id, string lang);
         Task<bool> UploadFile(IdeaDto entity);
         Task<bool> EditSuggession(IdeaDto entity);
         Task<bool> EditSubmitSuggession(IdeaDto entity);
@@ -38,6 +40,8 @@ namespace Suggession._Services.Interface
         Task<bool> Close(IdeaDto entity);
         Task<bool> Complete(IdeaDto entity);
         Task<bool> Terminate(IdeaDto entity);
+        Task<bool> ErickApproval(IdeaDto entity);
+        Task<bool> ErickReject(IdeaDto entity);
         Task<bool> Satisfied(IdeaDto entity);
         Task<bool> Dissatisfied(IdeaDto entity);
     }

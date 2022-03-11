@@ -1,0 +1,282 @@
+<!-- satisfied-Close-Spokerman Modal -->
+
+<div class="modal-header">
+  <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+    {{ 'MODAL_SATISFIED_ERICK_LABEL' | translate}}
+  </h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row mb-2">
+    <div class="col-md-6">
+
+      <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+        <tbody>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{ 'MODAL_PROPOSER_LABEL' | translate}}: </label> <span> {{nameTitle}}</span>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{ 'MODAL_TITLE_LABEL' | translate}}: </label> <span> {{issueTitle}}</span>
+
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- <div class="col-md-6 ">
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered ">
+          <tbody >
+            <tr *ngFor="let item of factoryHeadCommentData">
+              <td>
+                <label class="font-weight-bold">{{ item.name}}: </label> <span> {{item.comment}} ({{item.time}})</span>
+              </td>
+            </tr>
+  
+          </tbody>
+      
+        </table>
+      </div>
+    </div> -->
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+
+
+        <div class="col-md-6">
+          <ejs-grid  #gridHis
+            id='grid'
+            [dataSource]="dataHis"
+            [allowResizing]='true'
+            [showColumnMenu]='true'
+            gridLines='Both'
+            isPrimaryKey='true'
+            height="400"
+            [showColumnChooser]='true'
+            [allowExcelExport]='true'
+            [textWrapSettings]="wrapSettings"
+
+          >
+            <e-columns>
+
+              <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
+                <ng-template #template let-data>
+                  {{data.sequence}}
+                </ng-template>
+                <ng-template #editTemplate let-data>
+                  #
+                </ng-template>
+              </e-column>
+
+              <e-column field="name" width="100" textAlign='Center' headerText="{{ 'Signee' | translate}}">
+                <ng-template #headerTemplate>
+                  {{ 'MODAL_SIGNEE_LABEL' | translate}}
+                </ng-template>
+              </e-column>
+
+              <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+                <ng-template #headerTemplate>
+                  {{ 'MODAL_TIME_LABEL' | translate}}
+                </ng-template>
+                <ng-template #template let-data>
+                  {{data.createdTime | date:'yyyy/MM/dd'}}
+                </ng-template>
+
+              </e-column>
+
+              <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+                <ng-template #headerTemplate>
+                  {{ 'MODAL_COMMENT_LABEL' | translate}}
+                </ng-template>
+                <ng-template #template let-data>
+                  <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                    <ejs-tooltip >
+                      <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                      <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                      <ng-template #content >
+                        <span style="text-align: left; ">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                        <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                      </ng-template>
+                    </ejs-tooltip>
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <ejs-tooltip >
+                      <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                      <ng-template #content >
+                        <span>{{data.comment}}</span>
+                      </ng-template>
+                    </ejs-tooltip>
+
+                  </ng-template>
+                </ng-template>
+              </e-column>
+
+
+            </e-columns>
+          </ejs-grid>
+        </div>
+
+        <!-- PlanIdea -->
+        <div class="col-md-6">
+          <ejs-grid  #grid
+            id='grid'
+            height="400"
+            [dataSource]="planIdeaData"
+            [allowResizing]='true'
+            [showColumnMenu]='true'
+            gridLines='Both'
+            isPrimaryKey='true'
+            [showColumnChooser]='true'
+            [allowExcelExport]='true'
+            [textWrapSettings]="wrapSettings"
+
+          >
+            <e-columns>
+
+              <e-column field="planStatusName" textAlign='center' width="100"  headerText="Status">
+                <ng-template #template let-data>
+                  <ng-container *ngIf="data.planStatusName === 'NG'; else elseTemplate">
+                    <i style="color: red;font-size: 18px;" class="fa fa-times-circle" ></i> {{data.planStatusName}}
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <i style="color: green;font-size: 18px;" class="fa fa-check-circle" ></i> {{data.planStatusName}}
+                  </ng-template>
+                </ng-template>
+                
+                <ng-template #editTemplate let-data>
+                  <ejs-dropdownlist 
+                    #icon id='icons'
+                    [dataSource]='planStatusData' 
+                    [fields]='fields' 
+                    placeholder="select"
+                    [value]="data.statusPlanID"
+                    popupWidth="120"
+                    [(ngModel)]="planIdeaDataAddOrUpdate.statusPlanID"
+                    [itemTemplate]='itemTemplate'
+                    >
+                    <ng-template #itemTemplate let-data>
+                     
+                      <!-- <span style="text-align: center;" class='badge badge-danger'>OK</span> -->
+                      <ng-container *ngIf="data.name === 'NG'; else elseTemplate">
+                        <i style="color: red;font-size: 18px;" class="fa fa-times-circle" ></i>
+                      </ng-container>
+                      <ng-template #elseTemplate>
+                        <i style="color: green;font-size: 18px;" class="fa fa-check-circle" ></i>
+                      </ng-template>
+                      <span>
+                        {{data.name}}
+                      </span>
+                      
+                    </ng-template>
+                  </ejs-dropdownlist>
+                </ng-template>
+              </e-column>
+
+              <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
+                <ng-template #template let-data>
+                  {{data.index}}
+                </ng-template>
+                <ng-template #editTemplate let-data>
+                  #
+                </ng-template>
+              </e-column>
+
+              <e-column field="plan" textAlign='Center' headerText="Plan">
+                <ng-template #headerTemplate>
+                  {{ 'MODAL_PLAN_LABEL' | translate}}
+                </ng-template>
+
+                <ng-template #template let-data>
+                  <textarea autosize  type="text" class="form-control" readonly [value]="data.plan" name="plan"  style="text-align:left;" ></textarea>
+                </ng-template>
+      
+                <ng-template #editTemplate let-data>
+                  <textarea autosize  type="text" [(ngModel)]="data.plan" class="form-control" [value]="data.plan" name="plan" style="text-align:left;min-height: 60px;"></textarea>
+                </ng-template>
+
+              </e-column>
+
+
+              <e-column field="description"  textAlign='Left' headerTextAlign='Center' headerText="Description">
+                <ng-template #headerTemplate>
+                  {{ 'MODAL_DESCRIPTION_LABEL' | translate}}
+                </ng-template>
+
+                <ng-template #template let-data>
+                  <textarea autosize  type="text" class="form-control" readonly [value]="data.description" name="description"  style="text-align:left;" ></textarea>
+                </ng-template>
+      
+                <ng-template #editTemplate let-data>
+                  <textarea autosize  type="text" [(ngModel)]="data.description" class="form-control" [value]="data.description" name="description" style="text-align:left;min-height: 60px;"></textarea>
+                </ng-template>
+                
+              </e-column>
+
+            </e-columns>
+          </ejs-grid>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+</div>
+<div *ngIf="tab !== StatusCode.Close" class="modal-body">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row bootstrap snippets">
+        <div class="col-md-12 col-md-offset-2 col-sm-12">
+          <div class="comment-wrapper">
+            <div class="panel panel-info">
+              {{'MODAL_COMMENT_LABEL' | translate}}:
+              <div class="panel-body">
+                <textarea class="form-control" [(ngModel)]="commentText" placeholder="{{'PLACEHOLDER_COMMENT_LABEL' | translate}}" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row bootstrap snippets">
+        <div class="col-md-12 col-md-offset-2 col-sm-12">
+          <div class="comment-wrapper">
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+              <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered ">
+                <tbody >
+                  <tr *ngFor="let item of factoryHeadCommentData">
+                    <td>
+                      <label class="font-weight-bold">{{ item.name}}: </label> <span> {{item.comment}} ({{item.time}})</span>
+                    </td>
+                  </tr>
+        
+                </tbody>
+            
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="tab !== StatusCode.Close"  class="modal-footer">
+  <button type="submit" (click)="approval()"  class="btn btn-success">
+    {{ 'MODAL_SATISFIED_ERICK_BUTTON_APPROVE_LABEL' | translate}}
+  </button>
+  <button type="submit" (click)="reject()"  class="btn btn-danger">
+    {{ 'MODAL_SATISFIED_ERICK_BUTTON_REJECT_LABEL' | translate}}
+  </button>
+
+</div>
+<!-- end satisfied-Close Modal-->

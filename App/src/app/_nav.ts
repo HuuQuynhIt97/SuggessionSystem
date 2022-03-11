@@ -27,7 +27,12 @@ export const navItems: INavData[] = [
         icon: 'icon-puzzle'
       },
       {
-        name: '0.3 System Language',
+        name: '0.3 Status',
+        url: '/system/status',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '0.4 System Language',
         url: '/system/system-language',
         icon: 'icon-puzzle'
       }
@@ -300,7 +305,12 @@ export const navItemsEN: INavData[] = [
         icon: 'icon-puzzle'
       },
       {
-        name: '0.3 System Language',
+        name: '0.3 Status',
+        url: '/system/status',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '0.4 System Language',
         url: '/system/system-language',
         icon: 'icon-puzzle'
       },

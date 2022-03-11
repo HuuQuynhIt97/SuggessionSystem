@@ -1,3 +1,4 @@
+import { StatusComponent } from './status/status.component';
 import { SystemLanguageComponent } from './system-language/system-language.component';
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
@@ -44,6 +45,17 @@ const routes: Routes = [
           title: 'Account Group',
           breadcrumb: 'Account Group',
           functionCode: 'account-group'
+        },
+        // canActivate: [AuthGuard]
+      },
+
+      {
+        path: 'status',
+        component: StatusComponent,
+        data: {
+          title: 'Status',
+          breadcrumb: 'Status',
+          functionCode: 'status'
         },
         // canActivate: [AuthGuard]
       },

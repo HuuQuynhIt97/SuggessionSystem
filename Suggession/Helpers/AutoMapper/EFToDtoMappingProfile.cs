@@ -29,6 +29,8 @@ namespace Suggession.Helpers.AutoMapper
             CreateMap<AccountGroupAccount, AccountGroupAccountDto>();
 
             CreateMap<Idea, IdeaDto>();
+            CreateMap<PlanIdea, PlanIdeaDto>();
+            CreateMap<Status, StatusDto>();
 
         }
     }

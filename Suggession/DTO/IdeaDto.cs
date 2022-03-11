@@ -29,7 +29,9 @@ namespace Suggession.DTO
         public string Name { get; set; }
         public int CreatedBy { get; set; }
         public bool Isshow { get; set; }
+        public bool IsReject { get; set; }
         public bool IsAnnouncement { get; set; }
+        public bool IsShowApproveTab { get; set; }
         public int? ModifiedBy { get; set; }
         public List<Files> File { get; set; }
         public DateTime CreatedTime { get; set; }

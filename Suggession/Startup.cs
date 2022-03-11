@@ -109,14 +109,19 @@ namespace Suggession
             services.AddScoped<ITabRepository, TabRepository>();
             services.AddScoped<IUploadFileRepository, UploadFileRepository>();
             services.AddScoped<ISystemLanguageRepository, SystemLanguageRepository>();
+            services.AddScoped<IPlanIdeaRepository, PlanIdeaRepository>();
+            services.AddScoped<IPlanStatusRepository, PlanStatusRepository>();
+            services.AddScoped<ITimeLineRepository, TimeLineRepository>();
 
             //Services
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAccountGroupService, AccountGroupService>();
+            services.AddScoped<IStatusService, StatusService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IAccountGroupAccountService, AccountGroupAccountService>();
             services.AddScoped<ITabService, TabService>();
+            services.AddScoped<IPlanIdeaService, PlanIdeaService>();
             services.AddScoped<IIdeaService, IdeaService>();
             services.AddScoped<ISystemLanguageService, SystemLanguageService>();
         }

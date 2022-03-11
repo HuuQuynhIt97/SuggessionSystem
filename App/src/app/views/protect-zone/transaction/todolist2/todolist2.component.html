@@ -58,6 +58,8 @@
           [textWrapSettings]="wrapSettings"
           [editSettings]='editSettings'
           (queryCellInfo)='tooltip($event)'
+          (dataBound)="dataBound()"
+          (rowDataBound)='rowDB($event)'
         >
         <!-- <ng-template #toolbarTemplate let-data>
           <ejs-toolbar (clicked)='clickHandler($event)'>
@@ -141,14 +143,14 @@
               </ng-template>
             </e-column>
 
-            <e-column [visible]='accountGroupText === SPOKERMAN  ? true : false' field="isAnnouncement" width="100" textAlign='Center'>
+            <!-- <e-column field="isAnnouncement" width="100" headerText='Announcement' textAlign='Center'>
               <ng-template #headerTemplate>
                 {{ 'TODOLIST_ANNOUNCEMENT_LABEL' | translate}}
               </ng-template>
               <ng-template #template let-data>
                 <ejs-switch  onLabel="ON" cssClass="custom-iOS" (change)='announcement(data)' offLabel="OFF" [(checked)]="data.isAnnouncement"></ejs-switch>
               </ng-template>
-            </e-column>
+            </e-column> -->
 
           </e-columns>
         </ejs-grid>
@@ -763,7 +765,7 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
   <div class="modal-footer">
     <button type="submit" (click)="update()" *ngIf="accountGroupText === SPOKERMAN && this.tab === PROCESSING" class="btn btn-primary">
       {{ 'MODAL_UPDATE_BUTTON_LABEL' | translate}}
@@ -986,6 +988,7 @@
 </ng-template>
 <!-- end Complete-Terminate Modal-->
 
+
 <!-- satisfied-Close Modal -->
 <ng-template #satisfiedCloseModel let-modal>
   <div class="modal-header">
@@ -1118,6 +1121,205 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
       {{ 'MODAL_CLOSEMODAL_BUTTON_LABEL' | translate}}
+    </button>
+  </div>
+
+
+</ng-template>
+<!-- end satisfied-Close Modal-->
+
+<!-- satisfied-Close-Spokerman Modal -->
+<ng-template #satisfiedCloseSpokerManModel let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"><img _ngcontent-eva-c300="" src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;">
+      {{ 'MODAL_SATISFIED_SPOKERMAN_LABEL' | translate}}
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row mb-2">
+      <div class="col-md-6">
+
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">{{ 'MODAL_PROPOSER_LABEL' | translate}}: </label> <span> {{nameTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">{{ 'MODAL_TITLE_LABEL' | translate}}: </label> <span> {{issueTitle}}</span>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <ejs-grid  #grid
+              id='grid'
+              [dataSource]="dataHis"
+              [allowResizing]='true'
+              [showColumnMenu]='true'
+              gridLines='Both'
+              isPrimaryKey='true'
+              height="400"
+              [showColumnChooser]='true'
+              [allowExcelExport]='true'
+              [textWrapSettings]="wrapSettings"
+              [editSettings]='editSettings'
+  
+            >
+              <e-columns>
+  
+                <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
+                  <ng-template #template let-data>
+                    {{data.sequence}}
+                  </ng-template>
+                  <ng-template #editTemplate let-data>
+                    #
+                  </ng-template>
+                </e-column>
+  
+                <e-column field="name" width="100" textAlign='Center' headerText="{{ 'Signee' | translate}}">
+                  <ng-template #headerTemplate>
+                    {{ 'MODAL_SIGNEE_LABEL' | translate}}
+                  </ng-template>
+                </e-column>
+  
+                <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+                  <ng-template #headerTemplate>
+                    {{ 'MODAL_TIME_LABEL' | translate}}
+                  </ng-template>
+                  <ng-template #template let-data>
+                    {{data.createdTime | date:'yyyy/MM/dd'}}
+                  </ng-template>
+  
+                </e-column>
+  
+                <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+                  <ng-template #headerTemplate>
+                    {{ 'MODAL_COMMENT_LABEL' | translate}}
+                  </ng-template>
+                  <ng-template #template let-data>
+                    <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                      <ejs-tooltip >
+                        <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                        <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                        <ng-template #content >
+                          <span style="text-align: left; ">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                          <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                        </ng-template>
+                      </ejs-tooltip>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <ejs-tooltip >
+                        <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                        <ng-template #content >
+                          <span>{{data.comment}}</span>
+                        </ng-template>
+                      </ejs-tooltip>
+  
+                    </ng-template>
+                  </ng-template>
+                </e-column>
+  
+  
+              </e-columns>
+            </ejs-grid>
+          </div>
+  
+          <div class="col-md-6">
+            <ejs-grid  #grid
+              id='grid'
+              height="360"
+              [dataSource]="dataHis"
+              [allowResizing]='true'
+              [showColumnMenu]='true'
+              gridLines='Both'
+              isPrimaryKey='true'
+              [showColumnChooser]='true'
+              [allowExcelExport]='true'
+              [textWrapSettings]="wrapSettings"
+              [editSettings]='editSettings'
+              [toolbar]="toolbarOptions"
+  
+            >
+              <e-columns>
+  
+                <e-column field="Id" textAlign='Center' width="35" isPrimaryKey="true" headerText="#">
+                  <ng-template #template let-data>
+                    {{data.sequence}}
+                  </ng-template>
+                  <ng-template #editTemplate let-data>
+                    #
+                  </ng-template>
+                </e-column>
+  
+                <e-column field="name" width="100" textAlign='Center' headerText="{{ 'Signee' | translate}}">
+                  <ng-template #headerTemplate>
+                    {{ 'MODAL_SIGNEE_LABEL' | translate}}
+                  </ng-template>
+                </e-column>
+  
+                <e-column field="" width="130" textAlign='Center' headerText="{{ 'Time' | translate}}">
+                  <ng-template #headerTemplate>
+                    {{ 'MODAL_TIME_LABEL' | translate}}
+                  </ng-template>
+                  <ng-template #template let-data>
+                    {{data.createdTime | date:'yyyy/MM/dd'}}
+                  </ng-template>
+  
+                </e-column>
+  
+                <e-column field="comment"  textAlign='Left' headerTextAlign='Center' headerText="{{ 'Comment' | translate}}">
+                  <ng-template #headerTemplate>
+                    {{ 'MODAL_COMMENT_LABEL' | translate}}
+                  </ng-template>
+                  <ng-template #template let-data>
+                    <ng-container *ngIf="data.description === StatusName.Apply || data.description === null; else elseTemplate">
+                      <ejs-tooltip >
+                        <span style="text-align: left; font-size: 14px;">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                        <span style="text-align: left; font-size: 14px;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                        <ng-template #content >
+                          <span style="text-align: left; ">{{'ISSUE_DATA_LABEL' | translate}}: {{data.issue}}</span> <br>
+                          <span style="text-align: left;">{{'SUGGESTION_DATA_LABEL' | translate}}: {{data.suggession}}</span>
+                        </ng-template>
+                      </ejs-tooltip>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <ejs-tooltip >
+                        <span style="text-align: left; font-size: 14px;">{{data.comment}}</span>
+                        <ng-template #content >
+                          <span>{{data.comment}}</span>
+                        </ng-template>
+                      </ejs-tooltip>
+  
+                    </ng-template>
+                  </ng-template>
+                </e-column>
+  
+  
+              </e-columns>
+            </ejs-grid>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary">
+      {{ 'MODAL_CLOSEMODAL_SPOKERMAN_BUTTON_LABEL' | translate}}
     </button>
   </div>
 

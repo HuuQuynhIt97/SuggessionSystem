@@ -13,8 +13,11 @@ namespace Suggession.Data
     public class DataContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<TimeLine> TimeLines { get; set; }
         public DbSet<AccountGroup> AccountGroups { get; set; }
         public DbSet<AccountGroupAccount> AccountGroupAccount { get; set; }
+        public DbSet<PlanIdea> PlanIdeas { get; set; }
+        public DbSet<PlanStatus> PlanStatus { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Models.SystemLanguage> systemLanguages { get; set; }
 

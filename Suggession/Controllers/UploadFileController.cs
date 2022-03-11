@@ -116,7 +116,7 @@ namespace Suggession.Controllers
                 Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "File removed succesfully";
                
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 HttpResponse Response = HttpContext.Response;
                 Response.Clear();
@@ -212,7 +212,6 @@ namespace Suggession.Controllers
                     Name = Path.GetFileName(filePath),
                     Path = file,
                     IdeaId = ideadID
-
                 });
             });
             return Ok(list);
@@ -221,13 +220,10 @@ namespace Suggession.Controllers
         [HttpDelete("{ideaId}/{file}")]
         public void RemoveFileIdea(int ideaId, string file)
         {
-
             try
             {
                 var fileSave = Path.Combine(_currentEnvironment.WebRootPath, "UploadedFiles");
-
                 var fileName = file;
-
                 var fileSavePath = Path.Combine(fileSave, fileName);
                 if (System.IO.File.Exists(fileSavePath))
                 {
@@ -242,7 +238,7 @@ namespace Suggession.Controllers
                 Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "File removed succesfully";
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 HttpResponse Response = HttpContext.Response;
                 Response.Clear();
@@ -328,19 +324,12 @@ namespace Suggession.Controllers
         private (string fileType, byte[] archiveData, string archiveName) DownloadFiles(int kpiId , DateTime uploadTime)
         {
             var zipName = $"archive-{DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss")}.zip";
-
             var kpiid = kpiId;
             var month = uploadTime.Month == 1 ? 12 : uploadTime.Month - 1;
             var year = uploadTime.Month == 1 ? uploadTime.Year - 1 : uploadTime.Year;
             var ut = new DateTime(year, month, 1);
-
             var data = _context.UploadFiles.Where(x => x.IdealID == kpiid && x.UploadTime == ut).ToList();
-
-
             var files = data.Select(x=> x.Path ).ToList();
-
-
-            
             using (var memoryStream = new MemoryStream())
             {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -349,7 +338,6 @@ namespace Suggession.Controllers
                     {
                         string filePath = _currentEnvironment.WebRootPath + file;
                         archive.CreateEntryFromFile(filePath, System.IO.Path.GetFileName(filePath));
-                      
                     });
                 }
 
